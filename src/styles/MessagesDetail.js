@@ -15,6 +15,9 @@ export const styles = StyleSheet.create({
         height: 30,
         marginLeft: 10,
     },
+    avatarFake: {
+      marginLeft: 2,
+    },
     avatarSent: {
       width: 30,
       height: 30,
@@ -31,6 +34,7 @@ export const styles = StyleSheet.create({
     },
     messagesContainer: {
       padding: 10,
+      flex: 1,
     },
     sentMessage: {
       alignSelf: 'flex-end',

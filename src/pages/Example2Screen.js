@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
-import { format, isToday  } from 'date-fns';
+import { format, isToday } from 'date-fns';
 import { styles } from '../styles/ListMessages';
 import Config from 'react-native-config';
 const Chats = ({ navigation }) => {
@@ -29,7 +29,18 @@ const Chats = ({ navigation }) => {
         console.error('Error al recibir los chats');
       }
     });
-    newSocket.on("chatUpdated", fetchChats); // Refrescar los chats cuando se recibe una actualización
+    newSocket.on("chatUpdated", (update) => {
+      console.log("Chat updated received:", update);
+      setChats(currentChats => {
+        const updatedChats = currentChats.map(chat => {
+          if (chat._id === update.chatId) {
+            return { ...chat, lastMessage: update.lastMessage.message, date: update.lastMessage.timestamp };
+          }
+          return chat;
+        });
+        return updatedChats;
+      });
+    });
 
     // Añadir un listener para el evento 'focus' para refrescar los chats
     const unsubscribe = navigation.addListener('focus', () => {
@@ -40,6 +51,8 @@ const Chats = ({ navigation }) => {
       unsubscribe();
     };
   }, []);
+
+  
   const goDetails = (chatId, name, avatar) => {
     navigation.navigate('Detalle', {
       chattingWith: {
@@ -65,11 +78,15 @@ const Chats = ({ navigation }) => {
       <View style={styles.userContainer}>
         <View style={styles.avatarContainer}>
           <Image source={{ uri: item.avatar }} style={styles.avatar} />
-          <View style={[styles.onlineIndicator, item.online ? styles.online : styles.offline]} />
         </View>
         <View style={styles.messageDetails}>
           <Text style={styles.userName}>{item.groupName}</Text>
-          <Text style={styles.lastMessage}>{item.lastMessage}</Text>
+          <Text
+            style={styles.lastMessage}
+            numberOfLines={1}
+            ellipsizeMode='tail'>
+            {item?.lastMessage?.length > 20 ? `${item.lastMessage.substring(0, 20)}...` : item.lastMessage}
+          </Text>
         </View>
         <View style={styles.dateAndBadgeContainer}>
           <Text style={styles.messageDate}>{formatTimestamp(item.date)}</Text>
@@ -82,7 +99,6 @@ const Chats = ({ navigation }) => {
       </View>
     </TouchableOpacity>
   ));
-
   return (
     <View style={styles.container}>
       <FlatList

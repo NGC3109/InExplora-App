@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, ScrollView, StyleSheet, TouchableOpacity, ImageBackground, Image } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+
 import { format, isToday  } from 'date-fns';
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
-import { styles } from '../styles/MessagesDetail';
+import MessageTemplate from '../../components/messages';
+import { Keyboard } from 'react-native';
 
 const MessageScreen = () => {
   const route = useRoute();
@@ -65,10 +65,36 @@ const MessageScreen = () => {
     };
   }, [chatId, currentUserId]);
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', _keyboardDidHide);
+  
+    function _keyboardDidShow() {
+      requestAnimationFrame(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      });
+    }
+  
+    function _keyboardDidHide() {
+      requestAnimationFrame(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: false });
+      });
+    }
+  
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   const formatMessages = (messages) => {
     let lastSenderId = null;
     return messages.map(msg => {
-      const showAvatar = lastSenderId !== msg.sender;
+      const isSentByCurrentUser = msg.sender === currentUserId.id;
+      let showAvatar = false;
+      if (lastSenderId !== msg.sender && !isSentByCurrentUser) {
+        showAvatar = true;
+      }
       lastSenderId = msg.sender; // Update the last sender ID for the next iteration
       return {
         ...msg,
@@ -83,13 +109,12 @@ const MessageScreen = () => {
     if (!messageText.trim()) return;
     
     const tempMessageId = Date.now(); // Temporal ID
-  
     const newMessage = {
       message: messageText,
       timestamp: new Date(),
       isSentByCurrentUser: true,
       tempMessageId,
-      sender: currentUserId.id,
+      sender: currentUserId.id
     };
   
     socket.emit("sendMessage", { ...newMessage, chatId });
@@ -122,72 +147,16 @@ const MessageScreen = () => {
     console.log('Attachment');
   };
   return (
-    <View style={styles.container}>
-      <ImageBackground 
-        source={require('../assets/pattern2.png')}
-        style={styles.container}
-        resizeMode="cover"
-      >
-        <ScrollView 
-          style={styles.messagesContainer} 
-          ref={scrollViewRef} 
-          onContentSizeChange={() => {
-            if (scrollViewRef.current) {
-              scrollViewRef.current.scrollToEnd({ animated: true });
-            }
-          }}
-        >
-          {messages.map((message, index) => (
-            <View key={index} style={[
-              message.isSentByCurrentUser ? styles.sentMessage : styles.receivedMessage,
-              { marginBottom: index === messages.length - 1 ? 20 : 3 }
-            ]}>
-              {message.showAvatar ? (
-                <Image
-                  source={{ uri: message.profilePicture }}
-                  style={message.isSentByCurrentUser ? styles.avatarSent : styles.avatarReceived}
-                />
-              ) : (<View style={styles.avatarPlaceholder} />)}
-              <View style={message.isSentByCurrentUser ? styles.messageBubbleSend : styles.messageBubbleReceive}>
-                  <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-                    {message.showAvatar && !message.isSentByCurrentUser && (
-                      <Text style={styles.senderName}>{message.displayName}</Text>
-                    )}
-                  <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                  <Text style={styles.messageText}>{message.message}</Text>
-                  <View style={styles.timestampContainer}>
-                    <Text style={styles.timestamp}>
-                      {formatTimestamp(message.timestamp)}
-                      <Icon name="check" size={12} color="#999" />
-                    </Text>
-                  </View>
-                </View>
-                </View>
-              </View>
-            </View>
-          ))}
-        </ScrollView>
-      </ImageBackground>
-      <View style={styles.inputContainer}>
-        <TouchableOpacity onPress={handleEmoji} style={styles.iconButton}>
-          <Icon name="smile-o" size={24} color="#999" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleAttachment} style={styles.iconButton}>
-          <Icon name="paperclip" size={24} color="#999" />
-        </TouchableOpacity>
-        <TextInput
-          style={styles.input}
-          placeholder="Type your message"
-          placeholderTextColor="#999"
-          value={messageText}
-          onChangeText={setMessageText}
-          onSubmitEditing={handleSend}
-        />
-        <TouchableOpacity onPress={handleSend} style={styles.iconButton}>
-          <Icon name="send" size={24} color="#999" />
-        </TouchableOpacity>
-      </View>
-    </View>
+    <MessageTemplate 
+        handleAttachment={handleAttachment}
+        handleEmoji={handleEmoji}
+        formatTimestamp={formatTimestamp}
+        handleSend={handleSend}
+        scrollViewRef={scrollViewRef}
+        messages={messages}
+        messageText={messageText}
+        setMessageText={setMessageText}
+    />
   );
 };
 

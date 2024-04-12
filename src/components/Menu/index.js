@@ -8,7 +8,7 @@ import Home from '../../pages/Home';
 import ExampleScreen2 from './../../pages/Example2Screen';
 import MiPerfil from './../../pages/MiPerfil';
 import Grupos from '../../pages/Grupos';
-import MessageScreen from '../../pages/Messages';
+import MessageScreen from '../../container/messages';
 import ChatHeader from '../../pages/ChatHeader';
 import CrearGrupo from '../../pages/CrearGrupo';
 import Step2 from '../../pages/steps/Step2';
