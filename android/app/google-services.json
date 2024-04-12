@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "876705955874",
+    "project_id": "inexplora",
+    "storage_bucket": "inexplora.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:876705955874:android:ef06de29d923431a5d4a7b",
+        "android_client_info": {
+          "package_name": "com.inexplora"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "876705955874-1pb1d5u8rrl85kng7cppjcegcl0r3rke.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inexplora",
+            "certificate_hash": "4f832fc8b56172b73c9ec3eaacd01b568f54a5ca"
+          }
+        },
+        {
+          "client_id": "876705955874-vp3v81qs4oj4sev0rchq2m9ruidlhl33.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inexplora",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "876705955874-navdusicbptqotc1b29msimv87roc6u4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCK0Tw1jYWun7XS55x7mf33BJWuAQM4ysk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "876705955874-598jnssdeuddbh40kkcdnal79e6suh8g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
