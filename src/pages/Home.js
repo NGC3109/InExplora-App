@@ -28,7 +28,7 @@ const Home = () => {
 
   return (
     <View>
-      <Carousel
+      {/* <Carousel
         data={banners}
         renderItem={renderItem}
         sliderWidth={Dimensions.get('window').width}
@@ -37,9 +37,9 @@ const Home = () => {
         autoplay={true}
         autoplayInterval={3000}
         layout={'default'}
-      />
+      /> */}
       {/* Other content of the screen */}
-      <View style={styles.textContainer}>
+      {/* <View style={styles.textContainer}>
         <Text style={styles.text}>Animate a viajar con estos destinos!</Text>
       </View>
       <Carousel
@@ -85,7 +85,7 @@ const Home = () => {
         inactiveSlideOpacity={1}
         inactiveSlideScale={1}
         loopClonesPerSide={banners.length}
-      />
+      /> */}
     </View>
   );
 };

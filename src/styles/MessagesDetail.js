@@ -38,12 +38,14 @@ export const styles = StyleSheet.create({
     },
     sentMessage: {
       alignSelf: 'flex-end',
+      marginHorizontal: 3,
       marginBottom: 3,
       flexDirection: 'row-reverse', // Cambia la dirección para los enviados
       alignItems: 'center', // Alinea los avatares y mensajes en el centro verticalmente
     },
     receivedMessage: {
       alignSelf: 'flex-start',
+      marginHorizontal: 3,
       marginBottom: 3,
       flexDirection: 'row',
       alignItems: 'center',

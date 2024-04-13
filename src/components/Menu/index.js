@@ -5,7 +5,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from '../../pages/Home';
-import ExampleScreen2 from './../../pages/Example2Screen';
 import MiPerfil from './../../pages/MiPerfil';
 import Grupos from '../../pages/Grupos';
 import MessageScreen from '../../container/messages';
@@ -26,6 +25,7 @@ import DetailGroup from '../../pages/GroupDetails';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import Svg, { Ellipse } from 'react-native-svg'; // Asegúrate de que `react-native-svg` esté instalado y de importar Svg y Ellipse
 import Login from '../../pages/login';
+import Chats from '../../pages/ChatContainer';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -113,7 +113,7 @@ const MainTabNavigator = () => {
       {/* <Tab.Screen name="DetailGroup" component={DetailGroup} options={{ headerShown: false }}/> */}
       <Tab.Screen name="Inicio" component={Home} options={{ title: 'InExplora', headerTitleAlign: 'center' }}/>
       <Tab.Screen name="Grupos" component={Grupos} options={{ headerTitleAlign: 'center' }} />
-      <Tab.Screen name="Mensajes" component={ExampleScreen2} options={{
+      <Tab.Screen name="Mensajes" component={Chats} options={{
           tabBarBadge: 10,
           headerTitleAlign: 'center',
         }}/>
