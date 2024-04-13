@@ -88,7 +88,7 @@ const Chats = ({ navigation }) => {
             </View>
           )}
         </View>
-      </View>8.614.981-8
+      </View>
     </TouchableWithoutFeedback>
   ));
   return (
