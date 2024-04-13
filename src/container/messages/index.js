@@ -26,7 +26,6 @@ const MessageScreen = () => {
     });
 
     newSocket.on("oldMessages", (oldMessages) => {
-      // Asegúrate de aplicar la función formatMessages también aquí
       const formattedOldMessages = formatMessages(oldMessages.map(msg => ({
         ...msg,
         isSentByCurrentUser: msg.sender === currentUserId.id,
@@ -38,10 +37,7 @@ const MessageScreen = () => {
 
     newSocket.on("newMessage", (newMessage) => {
       setMessages((prevMessages) => {
-        // Verificar si el mensaje ya existe para prevenir duplicados
         const messageExists = prevMessages.some(msg => msg._id === newMessage._id);
-        
-        // Si no existe, agrega el nuevo mensaje y formatea todos los mensajes
         if (!messageExists) {
           const updatedMessages = [...prevMessages, {
             ...newMessage,
@@ -51,12 +47,9 @@ const MessageScreen = () => {
           }];
           return formatMessages(updatedMessages);
         }
-        
-        // Si el mensaje ya existe, simplemente retorna los mensajes anteriores
         return prevMessages;
       });
     });
-    // Limpieza al desmontar el componente
     return () => {
       newSocket.off("connect");
       newSocket.off("oldMessages");
@@ -90,16 +83,17 @@ const MessageScreen = () => {
   const formatMessages = (messages) => {
     let lastSenderId = null;
     return messages.map(msg => {
-      const isSentByCurrentUser = msg.sender === currentUserId.id;
+      const senderId = msg.sender
+      const isSentByCurrentUser = senderId === currentUserId.id;
       let showAvatar = false;
-      if (lastSenderId !== msg.sender && !isSentByCurrentUser) {
+      if (lastSenderId !== senderId && !isSentByCurrentUser) {
         showAvatar = true;
       }
-      lastSenderId = msg.sender; // Update the last sender ID for the next iteration
+      lastSenderId = senderId;
       return {
         ...msg,
         showAvatar,
-        isSentByCurrentUser: msg.sender === currentUserId.id,
+        isSentByCurrentUser: senderId === currentUserId.id,
         isReceived: msg.receivedBy && msg.receivedBy.includes(currentUserId.id),
         isRead: msg.readBy && msg.readBy.includes(currentUserId.id)
       };
@@ -108,7 +102,7 @@ const MessageScreen = () => {
   const handleSend = () => {
     if (!messageText.trim()) return;
     
-    const tempMessageId = Date.now(); // Temporal ID
+    const tempMessageId = Date.now();
     const newMessage = {
       message: messageText,
       timestamp: new Date(),
@@ -118,8 +112,7 @@ const MessageScreen = () => {
     };
   
     socket.emit("sendMessage", { ...newMessage, chatId });
-  
-    // Aquí también debes aplicar formatMessages para formatear el nuevo mensaje
+
     setMessages(prevMessages => {
       const updatedMessages = [...prevMessages, newMessage];
       return formatMessages(updatedMessages);
@@ -131,10 +124,8 @@ const MessageScreen = () => {
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
     if (isToday(date)) {
-      // Si fue enviado hoy, solo muestra la hora
       return format(date, 'p');
     } else {
-      // Si no, muestra la fecha abreviada y la hora
       return format(date, 'MMM d, p');
     }
   };

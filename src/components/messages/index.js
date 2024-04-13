@@ -46,14 +46,14 @@ const MessageTemplate = ({
                     ]}>
                         {message.showAvatar ? (
                         <Image
-                            source={{ uri: message.sender.profilePicture ? message.sender.profilePicture : message.profilePicture }}
+                            source={{ uri: message.profilePicture }}
                             style={message.isSentByCurrentUser ? styles.avatarSent : styles.avatarReceived}
                         />
                         ) : (<View style={!message.isSentByCurrentUser && styles.avatarPlaceholder} />)}
                         <View style={message.isSentByCurrentUser ? styles.messageBubbleSend : styles.messageBubbleReceive}>
                             <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                             {message.showAvatar && !message.isSentByCurrentUser && (
-                                <Text style={styles.senderName}>{message.sender.displayName ? message.sender.displayName : message.displayName}</Text>
+                                <Text style={styles.senderName}>{message.displayName}</Text>
                             )}
                             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                             <Text style={styles.messageText}>{message.message}</Text>
