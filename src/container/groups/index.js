@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import GroupTemplate from '../../components/groups';
+import { saveGroupDestination } from '../../actions/groups/groupAction';
 
 const GroupContainer = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -10,7 +11,7 @@ const GroupContainer = ({ navigation }) => {
         setDestino(itemValue);
     };
     const continueButton = () => {
-        dispatch(saveGroupTravelMode(transporte))
+        dispatch(saveGroupDestination(destino))
         navigation.navigate('step3');
     };
     return (
