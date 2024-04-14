@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { useDispatch } from 'react-redux';
+import { saveGroupNumberOfPeople } from '../../actions/groups/groupAction';
 
-const Step4 = ({ navigation }) => {
+const P4_GroupSize = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [groupSize, setGroupSize] = useState(1);
 
   const continueButton = () => {
+    dispatch(saveGroupNumberOfPeople(groupSize))
     navigation.navigate('step5');
   };
 
@@ -59,4 +63,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Step4;
+export default P4_GroupSize;

@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { saveGroupDescription } from '../../actions/groups/groupAction';
 
-const Step8 = ({ navigation }) => {
+const P8_GroupDescription = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [descripcion, setDescripcion] = useState('');
   const limiteCaracteres = 300;
 
   const continueButton = () => {
+    dispatch(saveGroupDescription(descripcion))
     navigation.navigate('step9');
   };
 
@@ -78,4 +82,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Step8;
+export default P8_GroupDescription;

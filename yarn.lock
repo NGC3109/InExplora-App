@@ -2516,7 +2516,7 @@
   "resolved" "https://registry.npmjs.org/@react-native-google-signin/google-signin/-/google-signin-11.0.1.tgz"
   "version" "11.0.1"
 
-"@react-native-picker/picker@^2.7.2":
+"@react-native-picker/picker@^2.4.0", "@react-native-picker/picker@^2.7.2":
   "integrity" "sha512-a+UiyCu0XtXJK+VGIFggwA02PU3dgnvUPxlk2u99ZphTFp80Va8WH1OM9g2gyUXTVg9a5iybpDBa2+7fDfIMXA=="
   "resolved" "https://registry.npmjs.org/@react-native-picker/picker/-/picker-2.7.2.tgz"
   "version" "2.7.2"
@@ -7349,6 +7349,11 @@
   "resolved" "https://registry.npmjs.org/lodash.isnil/-/lodash.isnil-4.0.0.tgz"
   "version" "4.0.0"
 
+"lodash.isobject@^3.0.2":
+  "integrity" "sha512-3/Qptq2vr7WeJbB4KHUSKlq8Pl7ASXi3UG6CMbBm8WRtXi8+GHm7mKaU3urfpSEzWe2wCIChs6/sdocUsTKJiA=="
+  "resolved" "https://registry.npmjs.org/lodash.isobject/-/lodash.isobject-3.0.2.tgz"
+  "version" "3.0.2"
+
 "lodash.merge@^4.6.2":
   "integrity" "sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ=="
   "resolved" "https://registry.npmjs.org/lodash.merge/-/lodash.merge-4.6.2.tgz"
@@ -8879,6 +8884,11 @@
   "resolved" "https://registry.npmjs.org/pure-rand/-/pure-rand-6.1.0.tgz"
   "version" "6.1.0"
 
+"qs@~6.9.1":
+  "integrity" "sha512-IhMFgUmuNpyRfxA90umL7ByLlgRXu6tIfKPpF5TmcfRLlLCckfP/g3IQmju6jjpu+Hh8rA+2p6A27ZSPOOHdKw=="
+  "resolved" "https://registry.npmjs.org/qs/-/qs-6.9.7.tgz"
+  "version" "6.9.7"
+
 "query-string@^7.1.3":
   "integrity" "sha512-hh2WYhq4fi8+b+/2Kg9CEge4fDPvHS534aOOvOZeQ3+Vf2mCFsaFBYj0i+iXcAq6I9Vzp5fjMFBlONvayDC1qg=="
   "resolved" "https://registry.npmjs.org/query-string/-/query-string-7.1.3.tgz"
@@ -8994,6 +9004,15 @@
     "lodash" "^4.17.21"
     "prop-types" "^15.7.2"
 
+"react-native-google-places-autocomplete@^2.5.6":
+  "integrity" "sha512-Dy7mFKyEoiNeWPLd7HUkrI/SzJYe7GST55FGtiXzXDoPs05LYHIOCPrT9qFE51COh5X8kgDKm+f7D5aMY/aMbg=="
+  "resolved" "https://registry.npmjs.org/react-native-google-places-autocomplete/-/react-native-google-places-autocomplete-2.5.6.tgz"
+  "version" "2.5.6"
+  dependencies:
+    "lodash.debounce" "^4.0.8"
+    "prop-types" "^15.7.2"
+    "qs" "~6.9.1"
+
 "react-native-image-picker@^7.1.2":
   "integrity" "sha512-b5y5nP60RIPxlAXlptn2QwlIuZWCUDWa/YPUVjgHc0Ih60mRiOg1PSzf0IjHSLeOZShCpirpvSPGnDExIpTRUg=="
   "resolved" "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-7.1.2.tgz"
@@ -9018,6 +9037,14 @@
   "version" "1.13.0"
   dependencies:
     "@types/geojson" "^7946.0.13"
+
+"react-native-picker-select@^9.1.3":
+  "integrity" "sha512-O2EmlY4Mg5fZWxECTQJBDhO61as6RDbPYYiNoryaa0gmIkWxhANLsZI+ElEVru1h0Fp9UlCFtBDI5MwhHR9AxA=="
+  "resolved" "https://registry.npmjs.org/react-native-picker-select/-/react-native-picker-select-9.1.3.tgz"
+  "version" "9.1.3"
+  dependencies:
+    "lodash.isequal" "^4.5.0"
+    "lodash.isobject" "^3.0.2"
 
 "react-native-reanimated@^3.8.1", "react-native-reanimated@>= 1.0.0":
   "integrity" "sha512-EdM0vr3JEaNtqvstqESaPfOBy0gjYBkr1iEolWJ82Ax7io8y9OVUIphgsLKTB36CtR1XtmBw0RZVj7KArc7ZVA=="
@@ -9070,7 +9097,7 @@
     "prop-types" "^15.7.2"
     "yargs" "^16.1.1"
 
-"react-native@*", "react-native@>= 0.64.3", "react-native@>=0.42.0", "react-native@>=0.48.4", "react-native@>=0.50.0", "react-native@>=0.59", "react-native@0.73.6":
+"react-native@*", "react-native@>= 0.59", "react-native@>= 0.64.3", "react-native@>=0.42.0", "react-native@>=0.48.4", "react-native@>=0.50.0", "react-native@>=0.59", "react-native@0.73.6":
   "integrity" "sha512-oqmZe8D2/VolIzSPZw+oUd6j/bEmeRHwsLn1xLA5wllEYsZ5zNuMsDus235ONOnCRwexqof/J3aztyQswSmiaA=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.73.6.tgz"
   "version" "0.73.6"

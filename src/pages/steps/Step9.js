@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
+import { useDispatch } from 'react-redux';
 
 const Step9 = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [images, setImages] = useState(Array(5).fill(null));
 
   const continueButton = () => {
+    
     navigation.navigate('congratulations');
   };
 

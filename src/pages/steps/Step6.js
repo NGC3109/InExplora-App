@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { useDispatch } from 'react-redux';
+import { saveGroupTravelWithChildren } from '../../actions/groups/groupAction';
 
-const Step6 = ({ navigation }) => {
+const P6_GroupTravelWithChildren = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [incluyeMenores, setIncluyeMenores] = useState('');
   const [edadMayorMenor, setEdadMayorMenor] = useState(0);
 
@@ -11,6 +14,7 @@ const Step6 = ({ navigation }) => {
   };
 
   const continueButton = () => {
+    dispatch(saveGroupTravelWithChildren(incluyeMenores))
     navigation.navigate('step7');
   };
 
@@ -88,4 +92,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Step6;
+export default P6_GroupTravelWithChildren;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet} from 'react-native';
+import Config from 'react-native-config';
 
 const GroupHeader = () => (
     <View style={styles.header}>
@@ -12,13 +13,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#fff',
-    borderBottomColor: '#f0f0f0',
-    borderBottomWidth: 1,
+    backgroundColor: 'transparent',
   },
   headerText: {
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 22,
+    color: Config.COLOR_BLUE
   },
 });
 

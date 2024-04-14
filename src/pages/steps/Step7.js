@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { useDispatch } from 'react-redux';
+import { saveGroupTravelWithPets } from '../../actions/groups/groupAction';
 
-const Step7 = ({ navigation }) => {
+const P7_GroupTravelWithPets = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [incluyeMascotas, setIncluyeMascotas] = useState('no');
   const [tamanoMascota, setTamanoMascota] = useState('');
 
@@ -11,6 +14,7 @@ const Step7 = ({ navigation }) => {
   };
 
   const continueButton = () => {
+    dispatch(saveGroupTravelWithPets(incluyeMascotas))
     navigation.navigate('step8');
   };
 
@@ -89,4 +93,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Step7;
+export default P7_GroupTravelWithPets;

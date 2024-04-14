@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { useDispatch } from 'react-redux';
+import { saveGroupMaximumAge, saveGroupMinimumAge } from '../../actions/groups/groupAction';
 
-const Step5 = ({ navigation }) => {
+const P5_GroupMinMax = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [minGroupSize, setMinGroupSize] = useState(18);
   const [maxGroupSize, setMaxGroupSize] = useState(80);
 
@@ -15,6 +18,8 @@ const Step5 = ({ navigation }) => {
   };
 
   const continueButton = () => {
+    dispatch(saveGroupMinimumAge(minGroupSize))
+    dispatch(saveGroupMaximumAge(maxGroupSize))
     navigation.navigate('step6');
   };
 
@@ -83,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Step5;
+export default P5_GroupMinMax;

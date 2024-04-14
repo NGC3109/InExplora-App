@@ -5,7 +5,6 @@ import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
 import MessageTemplate from '../../components/messages';
-import { Keyboard } from 'react-native';
 
 const MessageScreen = () => {
     const route = useRoute();

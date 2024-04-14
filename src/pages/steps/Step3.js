@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { saveGroupAccommodation } from '../../actions/groups/groupAction';
 
-const Step3 = ({ navigation }) => {
+const P3_Accommodation = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [hotels, setHotels] = useState('');
+  const currentGroup = useSelector(state => state.groupReducer.groups);
 
   const handleHotelsChange = (itemValue) => {
     setHotels(itemValue);
   };
+  console.log('currentGroup: ', currentGroup)
   const continueButton = () => {
+    dispatch(saveGroupAccommodation(hotels))
     navigation.navigate('step4');
   }
   return (
@@ -81,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Step3;
+export default P3_Accommodation;

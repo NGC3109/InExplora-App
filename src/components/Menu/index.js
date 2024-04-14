@@ -9,7 +9,7 @@ import MiPerfil from './../../pages/MiPerfil';
 import Grupos from '../../pages/Grupos';
 import MessageScreen from '../../container/messages';
 import ChatHeader from '../../pages/ChatHeader';
-import CrearGrupo from '../../pages/CrearGrupo';
+import CrearGrupo from '../groups';
 import Step2 from '../../pages/steps/Step2';
 import Step3 from '../../pages/steps/Step3';
 import Step4 from '../../pages/steps/Step4';
@@ -26,6 +26,9 @@ import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-na
 import Svg, { Ellipse } from 'react-native-svg'; // Asegúrate de que `react-native-svg` esté instalado y de importar Svg y Ellipse
 import Login from '../../pages/login';
 import Chats from '../../pages/ChatContainer';
+import ArrowLeft from '../../assets/vectores/ArrowLeft'
+import Config from 'react-native-config';
+import GroupContainer from '../../container/groups';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -142,63 +145,88 @@ const RootStackNavigator = () => {
             headerTitle: () => <ChatHeader navigation={navigation} {...route.params.chattingWith} />,
             headerLeft: () => (
               <TouchableOpacity onPress={() => navigation.navigate('Mensajes')} style={{ marginLeft: 10 }}>
-                <Icon name="arrow-left" size={20} color="black" />
+                <ArrowLeft />
               </TouchableOpacity>
             ),
             drawerItemStyle: { height: 0 },
             headerTitleAlign: 'left',
             swipeEnabled: false,
+            headerStyle: {
+              backgroundColor: Config.COLOR_BLUE_OPACITY,
+              borderBottomWidth: 1,
+              borderBottomColor: Config.COLOR_BLUE // Establece el color de fondo del header
+            },
           })}
         />
-        <RootStack.Screen name="crearGrupo" component={CrearGrupo} options={({navigation}) => ({
+        <RootStack.Screen name="crearGrupo" component={GroupContainer} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} />,
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.navigate('MiPerfil')} style={{ marginLeft: 10 }}>
-              <Icon name="arrow-left" size={20} color="black" />
+              <ArrowLeft />
             </TouchableOpacity>
           ),
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
           swipeEnabled: false,
+          headerStyle: {
+            backgroundColor: Config.COLOR_BLUE_OPACITY,
+            borderBottomWidth: 1,
+            borderBottomColor: Config.COLOR_BLUE // Establece el color de fondo del header
+          },
         })}/>
         <RootStack.Screen name="step2" component={Step2} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} />,
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.navigate('crearGrupo')} style={{ marginLeft: 10 }}>
-              <Icon name="arrow-left" size={20} color="black" />
+              <ArrowLeft />
             </TouchableOpacity>
           ),
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
           swipeEnabled: false,
+          headerStyle: {
+            backgroundColor: Config.COLOR_BLUE_OPACITY,
+            borderBottomWidth: 1,
+            borderBottomColor: Config.COLOR_BLUE // Establece el color de fondo del header
+          },
         })}/>
         <RootStack.Screen name="step3" component={Step3} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} />,
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.navigate('step2')} style={{ marginLeft: 10 }}>
-              <Icon name="arrow-left" size={20} color="black" />
+              <ArrowLeft />
             </TouchableOpacity>
           ),
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
           swipeEnabled: false,
+          headerStyle: {
+            backgroundColor: Config.COLOR_BLUE_OPACITY,
+            borderBottomWidth: 1,
+            borderBottomColor: Config.COLOR_BLUE // Establece el color de fondo del header
+          },
         })}/>
         <RootStack.Screen name="step4" component={Step4} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} />,
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.navigate('step3')} style={{ marginLeft: 10 }}>
-              <Icon name="arrow-left" size={20} color="black" />
+              <ArrowLeft />
             </TouchableOpacity>
           ),
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
           swipeEnabled: false,
+          headerStyle: {
+            backgroundColor: Config.COLOR_BLUE_OPACITY,
+            borderBottomWidth: 1,
+            borderBottomColor: Config.COLOR_BLUE // Establece el color de fondo del header
+          },
         })}/>
         <RootStack.Screen name="step5" component={Step5} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} />,
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.navigate('step4')} style={{ marginLeft: 10 }}>
-              <Icon name="arrow-left" size={20} color="black" />
+              <ArrowLeft />
             </TouchableOpacity>
           ),
           drawerItemStyle: { height: 0 },
@@ -209,7 +237,7 @@ const RootStackNavigator = () => {
           headerTitle: () => <GroupHeader navigation={navigation} />,
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.navigate('step5')} style={{ marginLeft: 10 }}>
-              <Icon name="arrow-left" size={20} color="black" />
+              <ArrowLeft />
             </TouchableOpacity>
           ),
           drawerItemStyle: { height: 0 },
@@ -220,7 +248,7 @@ const RootStackNavigator = () => {
           headerTitle: () => <GroupHeader navigation={navigation} />,
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.navigate('step6')} style={{ marginLeft: 10 }}>
-              <Icon name="arrow-left" size={20} color="black" />
+              <ArrowLeft />
             </TouchableOpacity>
           ),
           drawerItemStyle: { height: 0 },
@@ -231,7 +259,7 @@ const RootStackNavigator = () => {
           headerTitle: () => <GroupHeader navigation={navigation} />,
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.navigate('step7')} style={{ marginLeft: 10 }}>
-              <Icon name="arrow-left" size={20} color="black" />
+              <ArrowLeft />
             </TouchableOpacity>
           ),
           drawerItemStyle: { height: 0 },
@@ -242,7 +270,7 @@ const RootStackNavigator = () => {
           headerTitle: () => <GroupHeader navigation={navigation} />,
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.navigate('step8')} style={{ marginLeft: 10 }}>
-              <Icon name="arrow-left" size={20} color="black" />
+              <ArrowLeft />
             </TouchableOpacity>
           ),
           drawerItemStyle: { height: 0 },

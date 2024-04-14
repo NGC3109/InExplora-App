@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import { Checkbox, NativeBaseProvider  } from 'native-base';
+import { Checkbox, NativeBaseProvider, Select } from 'native-base';
+import ButtonCustom from '../../components/ui/Button';
+import { saveGroupTravelMode } from '../../actions/groups/groupAction';
+import { useDispatch } from 'react-redux';
 
-const Step2 = ({ navigation }) => {
+const P2_TravelMode = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [transporte, setTransporte] = useState('');
   const [mostrarCheckbox, setMostrarCheckbox] = useState(false);
   const [compartirConduccion, setCompartirConduccion] = useState(false);
@@ -13,45 +16,53 @@ const Step2 = ({ navigation }) => {
     setMostrarCheckbox(itemValue === 'autoParticular');
   };
   const continueButton = () => {
+    dispatch(saveGroupTravelMode(transporte))
     navigation.navigate('step3');
-  }
+  };
+
   return (
-    <NativeBaseProvider >
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.label}>¿Cómo prefieren viajar?</Text>
-        <Picker
+    <NativeBaseProvider>
+      <View style={styles.container}>
+        <Select
           selectedValue={transporte}
-          onValueChange={handleTransporteChange}
-          style={styles.picker} // Asegúrate de definir un estilo para el Picker si es necesario
+          minWidth={200}
+          accessibilityLabel="Seleccione un transporte"
+          placeholder="Seleccione un transporte"
+          _selectedItem={{
+            bg: 'rgba(57, 103, 176, 0.4)',
+          }}
+          mt={1}
+          onValueChange={itemValue => handleTransporteChange(itemValue)}
         >
-          <Picker.Item label="Avión" value="avion" />
-          <Picker.Item label="Auto particular" value="autoParticular" />
-          <Picker.Item label="Bus" value="bus" />
-          <Picker.Item label="Mochileo" value="mochileo" />
-          <Picker.Item label="Moto" value="moto" />
-          <Picker.Item label="Arriendo de vehículo" value="arriendoVehiculo" />
-        </Picker>
+          <Select.Item label="Avión" value="avion" />
+          <Select.Item label="Auto particular" value="autoParticular" />
+          <Select.Item label="Bus" value="bus" />
+          <Select.Item label="Mochileo" value="mochileo" />
+          <Select.Item label="Moto" value="moto" />
+          <Select.Item label="Arriendo de vehículo" value="arriendoVehiculo" />
+        </Select>
+        <Text style={styles.infoText}>¿Cómo prefieren viajar?</Text>
         <Text style={styles.helperText}>
-            Seleccionen el medio de transporte para su viaje.
+          Seleccionen el medio de transporte para su viaje.
         </Text>
         {mostrarCheckbox && (
           <View style={styles.checkboxContainer}>
             <Checkbox
-              value={compartirConduccion}
-              onValueChange={setCompartirConduccion}
-              style={styles.checkbox}
+              isChecked={compartirConduccion}
+              onChange={setCompartirConduccion}
+              value="compartir"
+              accessibilityLabel="Compartir conducción"
             />
-            <Text style={styles.checkboxLabel}>¿Es importante para ustedes que todas las personas conductoras cuenten con licencia de conducción válida para compartir el volante?</Text>
+            <Text style={styles.checkboxLabel}>¿Es importante para ustedes que todas las personas cuenten con licencia de conducción válida para compartir el volante?</Text>
           </View>
         )}
+        <View style={{ flex: 1 }} />
+        <ButtonCustom
+          title="Continuar"
+          onPress={() => continueButton()}
+        />
       </View>
-      <View style={{ flex: 1 }} />
-      <TouchableOpacity style={styles.button} onPress={() => continueButton()}>
-        <Text style={styles.buttonText}>Continuar</Text>
-      </TouchableOpacity>
-    </View>
-    </NativeBaseProvider >
+    </NativeBaseProvider>
   );
 };
 
@@ -61,8 +72,42 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF', // Fondo amarillo de la imagen
     padding: 20, // Agrega un poco de padding alrededor
   },
-  picker: {
+  infoText: {
+    position: 'absolute',
+    top: 15,
+    left: 25, // Ajusta según necesidades
+    backgroundColor: '#fff',
+    paddingHorizontal: 10,
+    fontSize: 12,
+    color: '#000',
+  },
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    color: 'black',
+    paddingRight: 30, // para asegurar que el texto no se corte
+    backgroundColor: '#fff', // Color de fondo
     marginBottom: 20, // Espaciado debajo del Picker
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'purple',
+    borderRadius: 8,
+    color: 'black',
+    paddingRight: 30, // para asegurar que el texto no se corte
+    backgroundColor: '#fff', // Color de fondo
+    marginBottom: 20, // Espaciado debajo del Picker
+  },
+  iconContainer: {
+    top: 5,
+    right: 15,
   },
   label: {
     fontSize: 16,
@@ -86,6 +131,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   checkboxContainer: {
+    marginTop: 10,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
@@ -95,9 +141,10 @@ const styles = StyleSheet.create({
   },
   checkboxLabel: {
     fontSize: 14,
-    color: 'grey',
+    color: '#413A3A',
     flexShrink: 1, // Asegura que el texto se ajuste si es demasiado largo
+    marginLeft: 10,
   },
 });
 
-export default Step2;
+export default P2_TravelMode;
