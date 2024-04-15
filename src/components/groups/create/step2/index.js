@@ -29,17 +29,14 @@ const P2_TravelMode_Template = ({
           mt={1}
           onValueChange={itemValue => handleTransporteChange(itemValue)}
         >
-          <Select.Item label="Avión" value="avion" />
-          <Select.Item label="Auto particular" value="autoParticular" />
-          <Select.Item label="Bus" value="bus" />
-          <Select.Item label="Mochileo" value="mochileo" />
-          <Select.Item label="Moto" value="moto" />
-          <Select.Item label="Arriendo de vehículo" value="arriendoVehiculo" />
-        </Select>
+            <Select.Item label="Avión" value="avion" />
+            <Select.Item label="Auto particular" value="autoParticular" />
+            <Select.Item label="Bus" value="bus" />
+            <Select.Item label="Mochileo" value="mochileo" />
+            <Select.Item label="Moto" value="moto" />
+            <Select.Item label="Arriendo de vehículo" value="arriendoVehiculo" />
+          </Select>
         <Text style={styles.infoText}>¿Cómo prefieren viajar?</Text>
-        <Text style={styles.helperText}>
-          
-        </Text>
         {
             messageAlert ? 
                 <>
