@@ -3,7 +3,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Config from 'react-native-config';
-import CreateGroupTemplate from '../../../../../components/groups/steps/step9';
+import CreateGroupTemplate from '../../../../components/groups/create/step9';
 
 const CreateGroupContainer = ({ navigation }) => {
   const currentGroup = useSelector(state => state.groupReducer.groups);

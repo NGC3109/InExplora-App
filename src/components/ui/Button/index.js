@@ -4,10 +4,11 @@ import { styles } from '../../../styles/Button';
 
 const ButtonCustom = ({ 
   onPress, 
-  title 
+  title,
+  disabled,
 }) => {
     return (
-      <TouchableOpacity style={styles.button} onPress={onPress}>
+      <TouchableOpacity disabled={disabled} style={styles.button} onPress={onPress}>
         <Text style={styles.buttonText}>{title}</Text>
       </TouchableOpacity>
     );

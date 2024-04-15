@@ -6,19 +6,29 @@ import { saveGroupDestination } from '../../actions/groups/groupAction';
 const GroupContainer = ({ navigation }) => {
     const dispatch = useDispatch();
     const [destino, setDestino] = useState('');
+    const [messageAlert, setMessageAlert] = useState(false);
 
     const onChangeText = (itemValue) => {
         setDestino(itemValue);
     };
     const continueButton = () => {
-        dispatch(saveGroupDestination(destino))
-        navigation.navigate('step3');
+        if(isDestinoValid()){
+            dispatch(saveGroupDestination(destino))
+            navigation.navigate('step2');
+            setMessageAlert(false)
+        }else{
+            setMessageAlert(true)
+        }
+    };
+    const isDestinoValid = () => {
+        return destino.trim().length > 0;
     };
     return (
         <GroupTemplate 
             continueButton={continueButton}
             onChangeText={onChangeText}
             textValue={destino}
+            messageAlert={messageAlert}
         />
     );
 };
