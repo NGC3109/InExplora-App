@@ -10,7 +10,6 @@ import Grupos from '../../pages/Grupos';
 import MessageScreen from '../../container/messages';
 import ChatHeader from '../../pages/ChatHeader';
 import CrearGrupo from '../groups';
-import Step4 from '../../pages/steps/Step4';
 import Step5 from '../../pages/steps/Step5';
 import Step6 from '../../pages/steps/Step6';
 import Step7 from '../../pages/steps/Step7';
@@ -27,6 +26,7 @@ import P2_TravelMode_Container from '../../container/groups/create/step2';
 import { Header } from '../ui/Header';
 import { headerStyle } from '../../container/menu/constants';
 import P3_Accommodation_Container from '../../container/groups/create/step3';
+import P4_GroupSize_Container from '../../container/groups/create/step4';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -153,7 +153,7 @@ const RootStackNavigator = () => {
           swipeEnabled: false,
           headerStyle,
         })}/>
-        <RootStack.Screen name="step4" component={Step4} options={({navigation}) => ({
+        <RootStack.Screen name="step4" component={P4_GroupSize_Container} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} />,
           headerLeft: () => (
             <Header onPress={() => navigation.navigate('step3')} />
