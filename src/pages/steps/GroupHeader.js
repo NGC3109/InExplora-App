@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontWeight: 'bold',
     fontSize: 22,
-    color: Config.COLOR_BLUE
+    color: 'black'
   },
 });
 

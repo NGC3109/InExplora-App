@@ -1109,7 +1109,7 @@
     "@babel/types" "^7.4.4"
     "esutils" "^2.0.2"
 
-"@babel/preset-typescript@^7.13.0", "@babel/preset-typescript@^7.16.7":
+"@babel/preset-typescript@^7.13.0", "@babel/preset-typescript@^7.16.7", "@babel/preset-typescript@^7.17.12":
   "integrity" "sha512-1DBaMmRDpuYQBPWD8Pf/WEwCrtgRHxsZnP4mIy9G/X+hFfbI47Q2G4t1Paakld84+qsk2fSsUPMKg71jkoOOaQ=="
   "resolved" "https://registry.npmjs.org/@babel/preset-typescript/-/preset-typescript-7.24.1.tgz"
   "version" "7.24.1"
@@ -8985,6 +8985,13 @@
   "resolved" "https://registry.npmjs.org/react-native-config/-/react-native-config-1.5.1.tgz"
   "version" "1.5.1"
 
+"react-native-draggable-flatlist@^4.0.1":
+  "integrity" "sha512-ZO1QUTNx64KZfXGXeXcBfql67l38X7kBcJ3rxUVZzPHt5r035GnGzIC0F8rqSXp6zgnwgUYMfB6zQc5PKmPL9Q=="
+  "resolved" "https://registry.npmjs.org/react-native-draggable-flatlist/-/react-native-draggable-flatlist-4.0.1.tgz"
+  "version" "4.0.1"
+  dependencies:
+    "@babel/preset-typescript" "^7.17.12"
+
 "react-native-fireworks@^0.2.6":
   "integrity" "sha512-87X/CfNm8e2YGnI/SI+oRP4OVgCDhTXWAlS6QENOSG/ntImUfn6Pf2KsJFcMZISmVsK/RzDbOBO2uatTwak/nA=="
   "resolved" "https://registry.npmjs.org/react-native-fireworks/-/react-native-fireworks-0.2.6.tgz"
@@ -8993,7 +9000,7 @@
     "react" "16.11.0"
     "react-native" "0.62.2"
 
-"react-native-gesture-handler@^2.16.0", "react-native-gesture-handler@>= 1.0.0":
+"react-native-gesture-handler@^2.16.0", "react-native-gesture-handler@>= 1.0.0", "react-native-gesture-handler@>=2.0.0":
   "integrity" "sha512-1hFkx7RIfeJSyTQQ0Nkv4icFVZ5+XjQkd47OgZMBFzoB7ecL+nFSz8KLi3OCWOhq+nbHpSPlSG5VF3CQNCJpWA=="
   "resolved" "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-2.16.0.tgz"
   "version" "2.16.0"
@@ -9046,7 +9053,7 @@
     "lodash.isequal" "^4.5.0"
     "lodash.isobject" "^3.0.2"
 
-"react-native-reanimated@^3.8.1", "react-native-reanimated@>= 1.0.0":
+"react-native-reanimated@^3.8.1", "react-native-reanimated@>= 1.0.0", "react-native-reanimated@>=2.8.0":
   "integrity" "sha512-EdM0vr3JEaNtqvstqESaPfOBy0gjYBkr1iEolWJ82Ax7io8y9OVUIphgsLKTB36CtR1XtmBw0RZVj7KArc7ZVA=="
   "resolved" "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-3.8.1.tgz"
   "version" "3.8.1"
@@ -9097,7 +9104,7 @@
     "prop-types" "^15.7.2"
     "yargs" "^16.1.1"
 
-"react-native@*", "react-native@>= 0.59", "react-native@>= 0.64.3", "react-native@>=0.42.0", "react-native@>=0.48.4", "react-native@>=0.50.0", "react-native@>=0.59", "react-native@0.73.6":
+"react-native@*", "react-native@>= 0.59", "react-native@>= 0.64.3", "react-native@>=0.42.0", "react-native@>=0.48.4", "react-native@>=0.50.0", "react-native@>=0.59", "react-native@>=0.64.0", "react-native@0.73.6":
   "integrity" "sha512-oqmZe8D2/VolIzSPZw+oUd6j/bEmeRHwsLn1xLA5wllEYsZ5zNuMsDus235ONOnCRwexqof/J3aztyQswSmiaA=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.73.6.tgz"
   "version" "0.73.6"

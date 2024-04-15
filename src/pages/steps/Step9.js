@@ -4,22 +4,29 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Config from 'react-native-config';
+import IconPlus from '../../assets/vectores/IconPlus';
+import LoadingImages from '../../components/groups/steps/step9/loadingImages';
 
 const Step9 = ({ navigation }) => {
   const currentGroup = useSelector(state => state.groupReducer.groups);
   const [images, setImages] = useState(Array(5).fill(null));
 
-  const selectImage = (index) => {
-    const options = {};
+  const selectImage = () => {
+    const options = {
+      mediaType: 'photo',
+      multiple: true,
+      selectionLimit: 5, // Intentar limitar a 5 imágenes desde la galería
+    };
+  
     launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.assets) {
-        const newImages = [...images];
-        newImages[index] = response.assets[0].uri;
-        setImages(newImages);
+      if (!response.didCancel && !response.error && response.assets) {
+        const selected = response.assets.map(asset => asset.uri);
+        if (selected.length > 5) {
+          // Si por alguna razón se seleccionaron más de 5 imágenes, tomar solo las primeras 5
+          setImages(selected.slice(0, 5));
+        } else {
+          setImages(selected);
+        }
       }
     });
   };
@@ -56,103 +63,101 @@ const Step9 = ({ navigation }) => {
   const continueButton = () => {
     uploadAllImages(); // Sube todas las imágenes cuando se presiona este botón
   };
-
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Portada</Text>
-      <View style={styles.portadaContainer}>
-        <TouchableOpacity onPress={() => selectImage(0)} style={styles.portadaPlaceholder}>
-          {images[0] ? (
-            <Image source={{ uri: images[0] }} style={styles.portadaImage} />
-          ) : (
-            <Image source={require('../../assets/placeholder-portada.jpg')} style={styles.portadaImage} />
-          )}
-        </TouchableOpacity>
+      <Text style={styles.subtitle}>Agrega la esencia de tu próxima aventura</Text>
+      <Text style={styles.description}>
+        Selecciona hasta 5 de tus mejores fotos para compartir la visión única de tu viaje y encender la chispa de la exploración.
+      </Text>
+      <View style={styles.uploadButtonContainer}>
+      <TouchableOpacity style={styles.uploadButton} onPress={selectImage}>
+        <Text style={styles.uploadButtonText}>
+          <View style={styles.buttonContent}>
+            <View style={styles.iconContainer}>
+              <IconPlus />
+            </View>
+            <Text style={styles.buttonText}>Subir imágenes</Text>
+          </View>
+        </Text>
+      </TouchableOpacity>
       </View>
-      <Text style={styles.label}>Galería</Text>
-      <View style={styles.galleryContainer}>
-        {images.slice(1).map((imgSrc, index) => (
-          <TouchableOpacity key={`gallery_${index}`} onPress={() => selectImage(index + 1)} style={styles.galleryImagePlaceholder}>
-            {imgSrc ? (
-              <Image source={{ uri: imgSrc }} style={styles.galleryImage} />
-            ) : (
-              <Image source={require('../../assets/placeholder-galeria.jpg')} style={styles.galleryImage} />
-            )}
-          </TouchableOpacity>
-        ))}
+      <View style={styles.previewContainer}>
+        {/* Renderizar las imágenes seleccionadas aquí */}
       </View>
-      <View style={{flex: 1}} />
-      <TouchableOpacity style={styles.button} onPress={continueButton}>
-        <Text style={styles.buttonText}>Publicar</Text>
+      <TouchableOpacity  style={styles.publishButton} onPress={continueButton}>
+        <Text style={styles.publishButtonText}>Publicar</Text>
       </TouchableOpacity>
     </View>
   );
 }
-  const styles = StyleSheet.create({
-    // ... tus otros estilos ...
-    container: {
-      flex: 1,
-      backgroundColor: '#FFF',
-      padding: 20,
-    },
-    imagePlaceholder: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginBottom: 10,
-      borderRadius: 5,
-      overflow: 'hidden',
-    },
-    button: {
-      backgroundColor: '#5CB85D',
-      borderRadius: 5,
-      paddingVertical: 15,
-      alignItems: 'center',
-      marginTop: 20,
-    },
-    buttonText: {
-      color: 'white',
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    portadaContainer: {
-      marginBottom: 20,
-    },
-    portadaPlaceholder: {
-      width: '100%',
-      height: 200,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#e1e4e8',
-      borderRadius: 10,
-      overflow: 'hidden',
-    },
-    portadaImage: {
-      width: '100%',
-      height: '100%',
-    },
-    label: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      marginVertical: 10,
-    },
-    galleryContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      flexWrap: 'wrap',
-    },
-    galleryImagePlaceholder: {
-      width: '48%', // Ajustado para dos imágenes por fila
-      height: 100,
-      backgroundColor: '#e1e4e8',
-      borderRadius: 10,
-      overflow: 'hidden',
-      marginBottom: 10,
-    },
-    galleryImage: {
-      width: '100%',
-      height: '100%',
-      resizeMode: 'contain',
-    },
-  });
+const styles = StyleSheet.create({
+  // ... tus otros estilos ...
+  container: {
+    flex: 1,
+    backgroundColor: '#FFF',
+    padding: 20,
+  },
+  subtitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: 'black',
+    width: '70%'
+  },
+  description: {
+    fontSize: 14,
+    color: 'gray',
+    marginBottom: 50,
+    color: '#413A3A'
+  },
+  uploadButtonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    width: '100%'
+  },
+  uploadButton: {
+    alignItems: 'center',
+    borderRadius:13,
+    paddingVertical: 15,
+    width: '100%',
+    paddingHorizontal: 20,
+    backgroundColor: 'white',
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 2,
+    elevation: 4,
+  },
+  uploadButtonText: {
+    fontSize: 20,
+    color: '#000',
+    fontWeight: 'regular',
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconContainer: {
+    marginRight: 10, // ajusta la distancia entre el icono y el texto
+  },
+  buttonText: {
+    fontSize: 18,
+    color: '#000',
+    fontWeight: 'regular',
+  },
+  publishButton: {
+    backgroundColor: '#DDDDDD',
+    borderRadius: 5,
+    padding: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 'auto', // Esto asegura que el botón se quede en la parte inferior
+  },
+  publishButtonText: {
+    fontSize: 18,
+    color: '#FFF',
+    fontWeight: 'bold',
+  },
+});
 
 export default Step9;

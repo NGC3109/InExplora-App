@@ -17,7 +17,6 @@ import Step5 from '../../pages/steps/Step5';
 import Step6 from '../../pages/steps/Step6';
 import Step7 from '../../pages/steps/Step7';
 import Step8 from '../../pages/steps/Step8';
-import Step9 from '../../pages/steps/Step9';
 import GroupHeader from '../../pages/steps/GroupHeader';
 import Congratuilations from '../../pages/steps/Congratulations';
 import Itinerario from '../../pages/Itinerario';
@@ -29,6 +28,7 @@ import Chats from '../../pages/ChatContainer';
 import ArrowLeft from '../../assets/vectores/ArrowLeft'
 import Config from 'react-native-config';
 import GroupContainer from '../../container/groups';
+import CreateGroupContainer from '../../container/groups/create/steps/steps9';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -286,7 +286,7 @@ const RootStackNavigator = () => {
             borderBottomColor: Config.COLOR_BLUE // Establece el color de fondo del header
           },
         })}/>
-        <RootStack.Screen name="step9" component={Step9} options={({navigation}) => ({
+        <RootStack.Screen name="step9" component={CreateGroupContainer} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} />,
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.navigate('step8')} style={{ marginLeft: 10 }}>
@@ -297,9 +297,11 @@ const RootStackNavigator = () => {
           headerTitleAlign: 'center',
           swipeEnabled: false,
           headerStyle: {
-            backgroundColor: Config.COLOR_BLUE_OPACITY,
-            borderBottomWidth: 1,
-            borderBottomColor: Config.COLOR_BLUE // Establece el color de fondo del header
+            backgroundColor: 'white',
+            shadowColor: 'black', // Color de la sombra
+            shadowOffset: { width: 0, height: 2 }, // Desplazamiento de la sombra (horizontal, vertical)
+            shadowRadius: 2, // Radio de la sombra
+            elevation: 8 // Elevación para Android (si es necesario)
           },
         })}/>
         <RootStack.Screen name="congratulations" component={Congratuilations} options={{ title: 'Felicidades', headerTitleAlign: 'center' }}/>
