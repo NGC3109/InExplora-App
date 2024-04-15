@@ -232,6 +232,11 @@ const RootStackNavigator = () => {
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
           swipeEnabled: false,
+          headerStyle: {
+            backgroundColor: Config.COLOR_BLUE_OPACITY,
+            borderBottomWidth: 1,
+            borderBottomColor: Config.COLOR_BLUE // Establece el color de fondo del header
+          },
         })}/>
         <RootStack.Screen name="step6" component={Step6} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} />,
@@ -243,6 +248,11 @@ const RootStackNavigator = () => {
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
           swipeEnabled: false,
+          headerStyle: {
+            backgroundColor: Config.COLOR_BLUE_OPACITY,
+            borderBottomWidth: 1,
+            borderBottomColor: Config.COLOR_BLUE // Establece el color de fondo del header
+          },
         })}/>
         <RootStack.Screen name="step7" component={Step7} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} />,
@@ -254,6 +264,11 @@ const RootStackNavigator = () => {
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
           swipeEnabled: false,
+          headerStyle: {
+            backgroundColor: Config.COLOR_BLUE_OPACITY,
+            borderBottomWidth: 1,
+            borderBottomColor: Config.COLOR_BLUE // Establece el color de fondo del header
+          },
         })}/>
         <RootStack.Screen name="step8" component={Step8} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} />,
@@ -265,6 +280,11 @@ const RootStackNavigator = () => {
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
           swipeEnabled: false,
+          headerStyle: {
+            backgroundColor: Config.COLOR_BLUE_OPACITY,
+            borderBottomWidth: 1,
+            borderBottomColor: Config.COLOR_BLUE // Establece el color de fondo del header
+          },
         })}/>
         <RootStack.Screen name="step9" component={Step9} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} />,
@@ -276,6 +296,11 @@ const RootStackNavigator = () => {
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
           swipeEnabled: false,
+          headerStyle: {
+            backgroundColor: Config.COLOR_BLUE_OPACITY,
+            borderBottomWidth: 1,
+            borderBottomColor: Config.COLOR_BLUE // Establece el color de fondo del header
+          },
         })}/>
         <RootStack.Screen name="congratulations" component={Congratuilations} options={{ title: 'Felicidades', headerTitleAlign: 'center' }}/>
     </RootStack.Navigator>
