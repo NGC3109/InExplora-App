@@ -35,7 +35,6 @@ const P6_GroupTravelWithChildren_Template = ({
         <Text style={styles.helperText}>
           Seleccionen si viajarán con niñas/niños/adolescentes.
         </Text>
-        
         {
             messageAlert &&
                 <>
