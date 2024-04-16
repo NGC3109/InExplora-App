@@ -43,6 +43,7 @@ const P2_TravelMode_Template = ({
                     <Alert
                         message="Ingresa alguna opción de transporte."
                         type="danger"
+                        Customstyle={{marginTop: 5}}
                     />
                 </>
             : 

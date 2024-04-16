@@ -13,8 +13,8 @@ const P4_GroupSize_Container = ({ navigation }) => {
         setMessageAlert(false)
     }
     const continueButton = () => {
-        dispatch(saveGroupNumberOfPeople(groupSize))
         if(isGroupSizeValid()){
+            dispatch(saveGroupNumberOfPeople(groupSize))
             navigation.navigate('step5');
             setMessageAlert(false)
         }else{
@@ -22,9 +22,9 @@ const P4_GroupSize_Container = ({ navigation }) => {
         }
     };
   
-  const isGroupSizeValid = () => {
-    return groupSize > 0;
-  };
+    const isGroupSizeValid = () => {
+        return groupSize > 0;
+    };
   return (
     <P4_GroupSize_Template 
         groupSize={groupSize}

@@ -10,7 +10,6 @@ import Grupos from '../../pages/Grupos';
 import MessageScreen from '../../container/messages';
 import ChatHeader from '../../pages/ChatHeader';
 import CrearGrupo from '../groups';
-import Step5 from '../../pages/steps/Step5';
 import Step6 from '../../pages/steps/Step6';
 import Step7 from '../../pages/steps/Step7';
 import GroupHeader from '../../pages/steps/GroupHeader';
@@ -20,13 +19,14 @@ import DetailGroup from '../../pages/GroupDetails';
 import Login from '../../pages/login';
 import Chats from '../../pages/ChatContainer';
 import GroupContainer from '../../container/groups';
-import CreateGroupContainer from '../../container/groups/create/steps9';
-import P8_GroupDescriptionContainer from '../../container/groups/create/step8';
 import P2_TravelMode_Container from '../../container/groups/create/step2';
-import { Header } from '../ui/Header';
-import { headerStyle } from '../../container/menu/constants';
 import P3_Accommodation_Container from '../../container/groups/create/step3';
 import P4_GroupSize_Container from '../../container/groups/create/step4';
+import P5_GroupMinMax_Container from '../../container/groups/create/step5';
+import P8_GroupDescriptionContainer from '../../container/groups/create/step8';
+import CreateGroupContainer from '../../container/groups/create/step9';
+import { Header } from '../ui/Header';
+import { headerStyle } from '../../container/menu/constants';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -163,7 +163,7 @@ const RootStackNavigator = () => {
           swipeEnabled: false,
           headerStyle,
         })}/>
-        <RootStack.Screen name="step5" component={Step5} options={({navigation}) => ({
+        <RootStack.Screen name="step5" component={P5_GroupMinMax_Container} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} />,
           headerLeft: () => (
             <Header onPress={() => navigation.navigate('step4')} />
