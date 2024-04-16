@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { NativeBaseProvider, Select } from 'native-base';
 import { styles } from '../../../../styles/groups/step3';
 import { Alert } from '../../../ui/Alert';
+import ButtonCustom from '../../../ui/Button';
 
 const P3_Accommodation_Template = ({ 
     continueButton,
@@ -61,9 +62,10 @@ const P3_Accommodation_Template = ({
         }
         </View>
         <View style={{ flex: 1 }} />
-        <TouchableOpacity style={styles.button} onPress={() => continueButton()}>
-          <Text style={styles.buttonText}>Continuar</Text>
-        </TouchableOpacity>
+        <ButtonCustom 
+          onPress={continueButton}
+          title="Continuar"
+        />
       </View>
     </NativeBaseProvider>
   );

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { NativeBaseProvider, Select } from 'native-base';
 import { Alert } from '../../../ui/Alert';
 import { styles } from '../../../../styles/groups/step4';
+import ButtonCustom from '../../../ui/Button';
 
 const P4_GroupSize_Template = ({
     groupSize,
@@ -42,9 +43,10 @@ const P4_GroupSize_Template = ({
             }
         </View>
         <View style={{ flex: 1 }} />
-            <TouchableOpacity style={styles.button} onPress={() => continueButton()}>
-                <Text style={styles.buttonText}>Continuar</Text>
-            </TouchableOpacity>
+            <ButtonCustom 
+            onPress={continueButton}
+            title="Continuar"
+            />
         </View>
     </NativeBaseProvider>
   );

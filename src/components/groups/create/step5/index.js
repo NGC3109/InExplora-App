@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../../../../styles/groups/step5';
 import { NativeBaseProvider, Select } from 'native-base';
 import { Alert } from '../../../ui/Alert';
+import ButtonCustom from '../../../ui/Button';
 
 const P5_GroupMinMax_Template = ({
     updateMinGroupSize,
@@ -63,9 +64,10 @@ const P5_GroupMinMax_Template = ({
                 }
             </View>
         <View style={{ flex: 1 }} />
-        <TouchableOpacity style={styles.button} onPress={() => continueButton()}>
-            <Text style={styles.buttonText}>Continuar</Text>
-        </TouchableOpacity>
+            <ButtonCustom 
+                onPress={continueButton}
+                title="Continuar"
+            />
         </View>
     </NativeBaseProvider>
   );

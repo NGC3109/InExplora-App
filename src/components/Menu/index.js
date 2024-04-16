@@ -10,7 +10,6 @@ import Grupos from '../../pages/Grupos';
 import MessageScreen from '../../container/messages';
 import ChatHeader from '../../pages/ChatHeader';
 import CrearGrupo from '../groups';
-import Step6 from '../../pages/steps/Step6';
 import Step7 from '../../pages/steps/Step7';
 import GroupHeader from '../../pages/steps/GroupHeader';
 import Congratuilations from '../../pages/steps/Congratulations';
@@ -23,6 +22,7 @@ import P2_TravelMode_Container from '../../container/groups/create/step2';
 import P3_Accommodation_Container from '../../container/groups/create/step3';
 import P4_GroupSize_Container from '../../container/groups/create/step4';
 import P5_GroupMinMax_Container from '../../container/groups/create/step5';
+import P6_GroupTravelWithChildren_Container from '../../container/groups/create/step6';
 import P8_GroupDescriptionContainer from '../../container/groups/create/step8';
 import CreateGroupContainer from '../../container/groups/create/step9';
 import { Header } from '../ui/Header';
@@ -173,7 +173,7 @@ const RootStackNavigator = () => {
           swipeEnabled: false,
           headerStyle,
         })}/>
-        <RootStack.Screen name="step6" component={Step6} options={({navigation}) => ({
+        <RootStack.Screen name="step6" component={P6_GroupTravelWithChildren_Container} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} />,
           headerLeft: () => (
             <Header onPress={() => navigation.navigate('step5')} />

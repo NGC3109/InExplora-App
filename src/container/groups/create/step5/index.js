@@ -33,7 +33,6 @@ const P5_GroupMinMax_Container = ({ navigation }) => {
     };
     
     const isGroupSizeValid = () => {
-        console.log('minGroupSize: ', minGroupSize >= 18 && maxGroupSize <= 60)
         return minGroupSize >= 18 && maxGroupSize <= 60;
     };
   return (
