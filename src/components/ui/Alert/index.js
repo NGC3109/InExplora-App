@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native"
-import { AlertIcon } from "../../../assets/vectores"
+import { AlertIcon, InfoIcon } from "../../../assets/vectores"
 import { View, Text } from 'react-native';
 
 export const Alert = ({
@@ -14,7 +14,18 @@ export const Alert = ({
         </Text>
     </View>
 )
-
+export const AlertInfo = ({
+    message,
+    type,
+    Customstyle,
+}) => (
+    <View style={[type === "info" && styles.messageContainerError, Customstyle]}>
+        <InfoIcon />
+        <Text style={type === "info" && styles.helperTextError}>
+            {message}
+        </Text>
+    </View>
+)
 const styles = StyleSheet.create({
     messageContainerError: {
         flexDirection: 'row',

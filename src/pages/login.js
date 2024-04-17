@@ -7,11 +7,13 @@ import auth from '@react-native-firebase/auth';
 import Config from 'react-native-config';
 import { useDispatch } from 'react-redux';
 import { saveUser } from '../actions/users/userActions';
+import { Alert } from '../components/ui/Alert';
 
 const Login = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const [loading, setLoading] = useState(false);
+    const [alert, setAlert] = useState(false);
     GoogleSignin.configure({
         webClientId: Config.WEB_CLIENT_ID,
     });
@@ -42,6 +44,7 @@ const Login = () => {
             // }
         } catch (error) {
             console.error('Error de autenticación o conexión con el backend:', error);
+            setAlert(true)
         } finally {
             setLoading(false);
         }
@@ -61,6 +64,9 @@ const Login = () => {
         <Icon name="google" size={24} color="#DB4437" />
         <Text style={styles.buttonText}>Continuar con Google</Text>
       </TouchableOpacity>
+      {
+          alert && <Alert message="Error en el servicio de google, ingrese nuevamente." type="danger" />
+      }
       <TouchableOpacity style={styles.button}>
         <Icon name="apple" size={24} color="#000000" />
         <Text style={styles.buttonText}>Continuar con Apple</Text>

@@ -7,6 +7,7 @@ import CreateGroupTemplate from '../../../../components/groups/create/step9';
 
 const CreateGroupContainer = ({ navigation }) => {
   const currentGroup = useSelector(state => state.groupReducer.groups);
+  console.log('currentGroup: ', currentGroup)
   const [images, setImages] = useState([]);
   const selectImage = () => {
     const options = {
@@ -28,9 +29,7 @@ const CreateGroupContainer = ({ navigation }) => {
   };
   
   const removeImage = (index) => {
-    // Filtrar las imágenes para excluir la imagen en la posición 'index'
     const filteredImages = images.filter((_, i) => i !== index);
-    // Actualizar el estado con el nuevo arreglo de imágenes
     setImages(filteredImages);
   };
   const uploadAllImages = async () => {
@@ -63,7 +62,7 @@ const CreateGroupContainer = ({ navigation }) => {
   };
 
   const continueButton = () => {
-    uploadAllImages(); // Sube todas las imágenes cuando se presiona este botón
+    uploadAllImages();
   };
   return (
     <>
