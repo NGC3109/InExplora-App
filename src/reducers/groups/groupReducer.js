@@ -12,17 +12,18 @@ import {
   SAVE_GROUP_COVERPHOTO,
   SAVE_GROUP_GALLERY,
   SAVE_GROUP_BUDGET,
-  SAVE_GROUP_DESTINATION_PLACE_DATA,
+  SAVE_GROUP_GENRE,
+  SAVE_GROUP_STARTING_TRAVEL
 } from "../../utils/constants";
 
 const groupReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SAVE_GROUP_DESTINATION_PLACE_DATA:
+    case SAVE_GROUP_GENRE:
       return {
         ...state,
         groups: {
           ...state.groups,
-          placeData: action.payload
+          genre: action.payload
         }
       };
     case SAVE_GROUP_DESTINATION:
@@ -119,6 +120,14 @@ const groupReducer = (state = initialState, action) => {
         groups: {
           ...state.groups,
           budget: action.payload
+        }
+      };
+    case SAVE_GROUP_STARTING_TRAVEL:
+      return {
+        ...state,
+        groups: {
+          ...state.groups,
+          startingTravel: action.payload
         }
       };
     default:

@@ -9,6 +9,19 @@ export const styles = StyleSheet.create({
     picker: {
       marginBottom: 20,
     },
+    subtitle: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 5,
+      color: 'black',
+      width: '70%'
+    },
+    description: {
+      fontSize: 14,
+      color: 'gray',
+      marginBottom: 30,
+      color: '#413A3A'
+    },
     infoText: {
       position: 'absolute',
       top: -5,

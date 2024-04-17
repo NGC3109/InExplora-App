@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -9,7 +9,6 @@ import MiPerfil from './../../pages/MiPerfil';
 import Grupos from '../../pages/Grupos';
 import MessageScreen from '../../container/messages';
 import ChatHeader from '../../pages/ChatHeader';
-import CrearGrupo from '../groups';
 import GroupHeader from '../../pages/steps/GroupHeader';
 import Congratuilations from '../../pages/steps/Congratulations';
 import Itinerario from '../../pages/Itinerario';
@@ -17,6 +16,7 @@ import DetailGroup from '../../pages/GroupDetails';
 import Login from '../../pages/login';
 import Chats from '../../pages/ChatContainer';
 import GroupContainer from '../../container/groups';
+import P1_GroupTravelWith_Women_Men_Container from '../../container/groups/create/step1';
 import P2_TravelMode_Container from '../../container/groups/create/step2';
 import P3_Accommodation_Container from '../../container/groups/create/step3';
 import P4_GroupSize_Container from '../../container/groups/create/step4';
@@ -24,9 +24,11 @@ import P5_GroupMinMax_Container from '../../container/groups/create/step5';
 import P6_GroupTravelWithChildren_Container from '../../container/groups/create/step6';
 import P7_GroupTravelWithPets_Container from '../../container/groups/create/step7';
 import P8_GroupDescriptionContainer from '../../container/groups/create/step8';
+import P8_9_Budget_Container from '../../container/groups/create/step8_9';
 import CreateGroupContainer from '../../container/groups/create/step9';
 import { Header } from '../ui/Header';
 import { headerStyle } from '../../container/menu/constants';
+import P8_9_1_StartingTravel_Container from '../../container/groups/create/step8_9_1';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -124,7 +126,7 @@ const RootStackNavigator = () => {
           })}
         />
         <RootStack.Screen name="crearGrupo" component={GroupContainer} options={({navigation}) => ({
-          headerTitle: () => <GroupHeader navigation={navigation} />,
+          headerTitle: () => <GroupHeader navigation={navigation} step={1}/>,
           headerLeft: () => (
             <Header onPress={() => navigation.navigate('MiPerfil')} />
           ),
@@ -133,8 +135,8 @@ const RootStackNavigator = () => {
           swipeEnabled: false,
           headerStyle,
         })}/>
-        <RootStack.Screen name="step2" component={P2_TravelMode_Container} options={({navigation}) => ({
-          headerTitle: () => <GroupHeader navigation={navigation} />,
+        <RootStack.Screen name="step1" component={P1_GroupTravelWith_Women_Men_Container} options={({navigation}) => ({
+          headerTitle: () => <GroupHeader navigation={navigation} step={2}/>,
           headerLeft: () => (
             <Header onPress={() => navigation.navigate('crearGrupo')} />
           ),
@@ -143,8 +145,18 @@ const RootStackNavigator = () => {
           swipeEnabled: false,
           headerStyle,
         })}/>
+        <RootStack.Screen name="step2" component={P2_TravelMode_Container} options={({navigation}) => ({
+          headerTitle: () => <GroupHeader navigation={navigation} step={3}/>,
+          headerLeft: () => (
+            <Header onPress={() => navigation.navigate('step1')} />
+          ),
+          drawerItemStyle: { height: 0 },
+          headerTitleAlign: 'center',
+          swipeEnabled: false,
+          headerStyle,
+        })}/>
         <RootStack.Screen name="step3" component={P3_Accommodation_Container} options={({navigation}) => ({
-          headerTitle: () => <GroupHeader navigation={navigation} />,
+          headerTitle: () => <GroupHeader navigation={navigation} step={4}/>,
           headerLeft: () => (
             <Header onPress={() => navigation.navigate('step2')} />
           ),
@@ -154,7 +166,7 @@ const RootStackNavigator = () => {
           headerStyle,
         })}/>
         <RootStack.Screen name="step4" component={P4_GroupSize_Container} options={({navigation}) => ({
-          headerTitle: () => <GroupHeader navigation={navigation} />,
+          headerTitle: () => <GroupHeader navigation={navigation} step={5}/>,
           headerLeft: () => (
             <Header onPress={() => navigation.navigate('step3')} />
           ),
@@ -164,7 +176,7 @@ const RootStackNavigator = () => {
           headerStyle,
         })}/>
         <RootStack.Screen name="step5" component={P5_GroupMinMax_Container} options={({navigation}) => ({
-          headerTitle: () => <GroupHeader navigation={navigation} />,
+          headerTitle: () => <GroupHeader navigation={navigation} step={6}/>,
           headerLeft: () => (
             <Header onPress={() => navigation.navigate('step4')} />
           ),
@@ -174,7 +186,7 @@ const RootStackNavigator = () => {
           headerStyle,
         })}/>
         <RootStack.Screen name="step6" component={P6_GroupTravelWithChildren_Container} options={({navigation}) => ({
-          headerTitle: () => <GroupHeader navigation={navigation} />,
+          headerTitle: () => <GroupHeader navigation={navigation} step={7}/>,
           headerLeft: () => (
             <Header onPress={() => navigation.navigate('step5')} />
           ),
@@ -184,7 +196,7 @@ const RootStackNavigator = () => {
           headerStyle,
         })}/>
         <RootStack.Screen name="step7" component={P7_GroupTravelWithPets_Container} options={({navigation}) => ({
-          headerTitle: () => <GroupHeader navigation={navigation} />,
+          headerTitle: () => <GroupHeader navigation={navigation} step={8}/>,
           headerLeft: () => (
             <Header onPress={() => navigation.navigate('step6')} />
           ),
@@ -194,7 +206,7 @@ const RootStackNavigator = () => {
           headerStyle,
         })}/>
         <RootStack.Screen name="step8" component={P8_GroupDescriptionContainer} options={({navigation}) => ({
-          headerTitle: () => <GroupHeader navigation={navigation} />,
+          headerTitle: () => <GroupHeader navigation={navigation} step={9} />,
           headerLeft: () => (
             <Header onPress={() => navigation.navigate('step7')} />
           ),
@@ -203,10 +215,31 @@ const RootStackNavigator = () => {
           swipeEnabled: false,
           headerStyle,
         })}/>
-        <RootStack.Screen name="step9" component={CreateGroupContainer} options={({navigation}) => ({
-          headerTitle: () => <GroupHeader navigation={navigation} />,
+        <RootStack.Screen name="step8_9" component={P8_9_Budget_Container} options={({navigation}) => ({
+          headerTitle: () => <GroupHeader navigation={navigation} step={10}/>,
           headerLeft: () => (
             <Header onPress={() => navigation.navigate('step8')} />
+          ),
+          drawerItemStyle: { height: 0 },
+          headerTitleAlign: 'center',
+          swipeEnabled: false,
+          headerStyle,
+        })}/>
+        <RootStack.Screen name="step8_9_1" component={P8_9_1_StartingTravel_Container} options={({navigation}) => ({
+          headerTitle: () => <GroupHeader navigation={navigation} step={10}/>,
+          headerLeft: () => (
+            <Header onPress={() => navigation.navigate('step8_9')} />
+          ),
+          drawerItemStyle: { height: 0 },
+          headerTitleAlign: 'center',
+          swipeEnabled: false,
+          headerStyle,
+        })}/>
+        
+        <RootStack.Screen name="step9" component={CreateGroupContainer} options={({navigation}) => ({
+          headerTitle: () => <GroupHeader navigation={navigation} step={11}/>,
+          headerLeft: () => (
+            <Header onPress={() => navigation.navigate('step8_9_1')} />
           ),
           
           drawerItemStyle: { height: 0 },

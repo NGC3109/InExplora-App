@@ -12,7 +12,7 @@ const P8_GroupDescriptionContainer = ({ navigation }) => {
     const continueButton = () => {
         dispatch(saveGroupDescription(descripcion))
         if(isDescriptionValid()){
-            navigation.navigate('step9');
+            navigation.navigate('step8_9');
             setMessageAlert(false)
         }else{
             setMessageAlert(true)

@@ -10,15 +10,19 @@ const P7_GroupTravelWithPets_Template = ({
     handleIncluyeMascotasChange,
     incluyeMascotas,
     tamanoMascota,
-    setTamanoMascota,
+    handlePetSize,
     messageAlert,
 }) => {
   return (
     <NativeBaseProvider>
         <View style={styles.container}>
+            <Text style={styles.subtitle}>¿Planean viajar con mascotas?</Text>
+            <Text style={styles.description}>
+            Al decidir si incluir mascotas en su viaje, consideren las restricciones de los destinos que visitarán. Muchos parques nacionales y áreas protegidas no permiten mascotas para proteger la fauna local y prevenir la transmisión de enfermedades. Asegúrense de revisar las regulaciones específicas para cada destino y elijan sabiamente para garantizar una experiencia segura y respetuosa para todos.
+            </Text>
         <View>
             <Select
-                selectedValue={incluyeMascotas}
+                selectedValue={incluyeMascotas.incluyeMascotas}
                 minWidth={200}
                 accessibilityLabel="Seleccione una respuesta"
                 placeholder="Seleccione una respuesta"
@@ -45,9 +49,9 @@ const P7_GroupTravelWithPets_Template = ({
                         />
                     </>
             }
-            {incluyeMascotas === 'si' && (
+            {incluyeMascotas.incluyeMascotas === 'si' && (
             <View>
-                <Text style={styles.label}>¿De qué tamaño es su mascota más grande?</Text>            
+                <Text style={styles.label}>¿De qué tamaño es su mascota?</Text>            
                 <Select
                     selectedValue={tamanoMascota}
                     minWidth={200}
@@ -57,7 +61,7 @@ const P7_GroupTravelWithPets_Template = ({
                         bg: 'rgba(57, 103, 176, 0.4)',
                     }}
                     mt={1}
-                    onValueChange={itemValue => setTamanoMascota(itemValue)}
+                    onValueChange={itemValue => handlePetSize(itemValue)}
                 >
                     <Select.Item label="Pequeño" value="Pequeño" />
                     <Select.Item label="Mediano" value="Mediano" />

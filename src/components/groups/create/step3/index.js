@@ -14,6 +14,10 @@ const P3_Accommodation_Template = ({
   return (
     <NativeBaseProvider>
       <View style={styles.container}>
+        <Text style={styles.subtitle}>Define tu espacio en el mundo</Text>
+        <Text style={styles.description}>
+          Elige tu alojamiento ideal. ¡Prepara el escenario para una aventura memorable!
+        </Text>
         <View>
           <Select
             selectedValue={hotels}
@@ -33,7 +37,6 @@ const P3_Accommodation_Template = ({
               <Select.Item label="Casa rural" value="casaRural" />
               <Select.Item label="Casa de huéspedes" value="casaDeHuespedes" />
               <Select.Item label="Resort" value="resort" />
-              <Select.Item label="Albergue juvenil" value="albergueJuvenil" />
               <Select.Item label="Camping" value="camping" />
               <Select.Item label="Alojamiento de uso compartido" value="alojamientoCompartido" />
               <Select.Item label="Motel" value="motel" />

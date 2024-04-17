@@ -6,8 +6,18 @@ export const styles = StyleSheet.create({
       backgroundColor: '#FFF',
       padding: 20,
     },
-    closeButton: {
-      // Style for the close button
+    subtitle: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 5,
+      color: 'black',
+      width: '70%'
+    },
+    description: {
+      fontSize: 14,
+      color: 'gray',
+      marginBottom: 30,
+      color: '#413A3A'
     },
     closeButtonText: {
       color: '#FFFFFF', // Text color for the close button

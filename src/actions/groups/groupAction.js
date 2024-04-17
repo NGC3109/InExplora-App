@@ -11,14 +11,15 @@ import {
     SAVE_GROUP_COVERPHOTO,
     SAVE_GROUP_GALLERY,
     SAVE_GROUP_BUDGET,
-    SAVE_GROUP_DESTINATION_PLACE_DATA,
+    SAVE_GROUP_GENRE,
+    SAVE_GROUP_STARTING_TRAVEL,
 } from "../../utils/constants";
 
-export const saveGroupDestinationPlaceData = (destinationPlaceData) => {
+export const saveGroupGenre = (genre) => {
   return (dispatch) => {
     dispatch({
-      type: SAVE_GROUP_DESTINATION_PLACE_DATA,
-      payload: destinationPlaceData
+      type: SAVE_GROUP_GENRE,
+      payload: genre
     });
   };
 };
@@ -126,6 +127,15 @@ export const saveGroupAccommodation = (accommodation) => {
       dispatch({
         type: SAVE_GROUP_BUDGET,
         payload: budget
+      });
+    };
+  };
+  
+  export const saveGroupStartingTravel = (startingTravel) => {
+    return (dispatch) => {
+      dispatch({
+        type: SAVE_GROUP_STARTING_TRAVEL,
+        payload: startingTravel
       });
     };
   };

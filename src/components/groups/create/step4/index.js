@@ -14,6 +14,10 @@ const P4_GroupSize_Template = ({
   return (
     <NativeBaseProvider>
         <View style={styles.container}>
+            <Text style={styles.subtitle}>Comparte la aventura</Text>
+            <Text style={styles.description}>
+                Elige cuántos compañeros te acompañarán en esta travesía. Cada viaje es mejor con buenos amigos.
+            </Text>
         <View>
             <Select
                 selectedValue={groupSize}

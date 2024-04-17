@@ -12,7 +12,6 @@ const GroupTemplate = ({
   destino,
   getPhotoUrl,
 }) => {
-  console.log('destino.photos: ', destino.length)
   const Review = ({ author, rating, text, photo_profile }) => {
     return (
       <View style={styles.review}>

@@ -16,8 +16,10 @@ const P5_GroupMinMax_Template = ({
   return (
     <NativeBaseProvider>
         <View style={styles.container}>
+            <Text style={styles.subtitle}>Afinando la sintonía del grupo</Text>
+            <Text style={styles.description}>
+            Selecciona rangos de edad compatibles para viajar con quienes compartan tus intereses y estilo. ¡Viaja a tu medida!</Text>
             <View>
-                <Text style={styles.label}>¿Prefieren un rango de edad específico para los integrantes del grupo?</Text>
                 <Text style={styles.helperText}>Edad mínima:</Text>
                 <Select
                     selectedValue={minGroupSize}

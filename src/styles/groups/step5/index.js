@@ -12,6 +12,19 @@ export const styles = StyleSheet.create({
       fontWeight: 'bold',
       marginBottom: 5,
     },
+    subtitle: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 5,
+      color: 'black',
+      width: '70%'
+    },
+    description: {
+      fontSize: 14,
+      color: 'gray',
+      marginBottom: 30,
+      color: '#413A3A'
+    },
     helperText: {
       fontSize: 14,
       marginBottom: 5,

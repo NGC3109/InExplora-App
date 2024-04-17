@@ -1,19 +1,24 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, Text } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { View, TextInput, Text } from 'react-native';
 import { styles } from '../../../styles/InputSearch';
+import { DolarIcon } from '../../../assets/vectores';
 
-const SearchInput = ({ icon, placeholder, placeholderTextColor, infoText, onChangeText, textValue }) => {
+const MoneyInput = ({ placeholder, placeholderTextColor, infoText, onChangeText, textValue }) => {
   return (
     <View style={styles.container}>
       <View style={styles.searchSection}>
-        <Icon style={styles.searchIcon} name={icon} size={20} color="#000" />
+        <DolarIcon />
         <TextInput
           style={styles.input}
           placeholder={placeholder}
           placeholderTextColor={placeholderTextColor}
           value={textValue}
-          onChangeText={onChangeText}  // Función para manejar el cambio de texto
+          onChangeText={text => {
+            const nonNumericRemoved = text.replace(/[^0-9]/g, '');
+            const formattedText = nonNumericRemoved.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            onChangeText(formattedText);
+          }}
+          keyboardType='numeric'
         />
       </View>
       <Text style={styles.infoText}>{infoText}</Text>
@@ -21,11 +26,10 @@ const SearchInput = ({ icon, placeholder, placeholderTextColor, infoText, onChan
   );
 };
 
-SearchInput.defaultProps = {
-  icon: 'search',
-  placeholder: 'Torres del paine',
+MoneyInput.defaultProps = {
+  placeholder: 'Ingresa un presupuesto',
   placeholderTextColor: '#C3C3C3',
-  infoText: '¿Dónde te gustaría ir de aventura?'
+  infoText: '¿Cuánto es el mínimo que recomiendas para viajar?'
 };
 
-export default SearchInput;
+export default MoneyInput;

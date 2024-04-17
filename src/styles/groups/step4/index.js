@@ -15,6 +15,19 @@ export const styles = StyleSheet.create({
       fontSize: 12,
       color: '#000',
     },
+    subtitle: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 5,
+      color: 'black',
+      width: '70%'
+    },
+    description: {
+      fontSize: 14,
+      color: 'gray',
+      marginBottom: 50,
+      color: '#413A3A'
+    },
     button: {
       backgroundColor: '#2196F3',
       borderRadius: 5,

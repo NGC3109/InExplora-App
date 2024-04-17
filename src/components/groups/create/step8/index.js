@@ -9,7 +9,9 @@ const P8_GroupDescriptionTemplate = ({ descripcion, setDescripcion, continueButt
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.label}>Redacte una descripción que inspire a otras personas a unirse a su grupo de viaje.</Text>
+        <Text style={styles.subtitle}>Crea una Invitación Irresistible</Text>
+        <Text style={styles.description}>
+        ¡Explora el camino hacia nuevas aventuras! Describe qué hace único a tu viaje y las experiencias que aguardan.</Text>
         <TextInput
           style={styles.textarea}
           multiline
@@ -31,9 +33,9 @@ const P8_GroupDescriptionTemplate = ({ descripcion, setDescripcion, continueButt
             : 
                 <>
                     <Text style={styles.caracteresLimit}>{`${descripcion.length}/${limiteCaracteres}`}</Text>
-                    <Text style={styles.helperText}>
-                        Compartan lo que hace especial a este viaje y por qué otros deberían unirse.
-                    </Text>
+                  <Text style={styles.helperText}>
+                      Compartan lo que hace especial a este viaje y por qué otros deberían unirse.
+                  </Text>
                 </>
         }
         

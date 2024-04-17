@@ -16,6 +16,9 @@ const P6_GroupTravelWithChildren_Template = ({
   return (
     <NativeBaseProvider>
     <View style={styles.container}>
+      <Text style={styles.subtitle}>¿Prefieres viajar con o sin niños?</Text>
+      <Text style={styles.description}>
+      Decidan si incluirán niños en su grupo de viaje para conectar con otras familias. Viajar juntos ofrece una experiencia más segura y enriquecedora para los pequeños      </Text>
       <View>
         <Select
             selectedValue={incluyeMenores}
@@ -45,7 +48,7 @@ const P6_GroupTravelWithChildren_Template = ({
                     />
                 </>
         }
-        {incluyeMenores === 'si' && (
+        {/* {incluyeMenores === 'si' && (
           <View>
             <Text style={styles.label}>¿Que edad tiene?</Text>            
             <Select
@@ -67,7 +70,7 @@ const P6_GroupTravelWithChildren_Template = ({
               Si viaja con más de uno, seleccione la edad del o la mayor.
             </Text>
           </View>
-        )}
+        )} */}
       </View>
       <View style={{ flex: 1 }} />
       <ButtonCustom 

@@ -19,14 +19,15 @@ const GroupContainer = ({ navigation }) => {
     const continueButton = () => {
         if(isDestinoValid()){
             dispatch(saveGroupDestination(destino))
-            navigation.navigate('step2');
+            navigation.navigate('step1');
             setMessageAlert(false)
         }else{
             setMessageAlert(true)
         }
     };
     const isDestinoValid = () => {
-        return  destino.description && destino.description?.trim().length > 0;
+        // return  destino.description && destino.description?.trim().length > 0;
+        return true;
     };
     useEffect(() => {
         isDestinoValid && console.log('destino: ', destino.description && destino.description.trim())

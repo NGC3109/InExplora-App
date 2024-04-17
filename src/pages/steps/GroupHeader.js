@@ -2,9 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet} from 'react-native';
 import Config from 'react-native-config';
 
-const GroupHeader = () => (
+const GroupHeader = ({ step }) => (
     <View style={styles.header}>
-      <Text style={styles.headerText}>Preparando el viaje</Text>
+      <Text style={styles.headerText}>Preparando el viaje {step}/12</Text>
     </View>
   );
 
