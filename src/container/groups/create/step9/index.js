@@ -7,6 +7,7 @@ import CreateGroupTemplate from '../../../../components/groups/create/step9';
 
 const CreateGroupContainer = ({ navigation }) => {
   const currentGroup = useSelector(state => state.groupReducer.groups);
+  const currentUserId = useSelector(state => state.userReducer.user);
   console.log('currentGroup: ', currentGroup)
   const [images, setImages] = useState([]);
   const selectImage = () => {
@@ -45,7 +46,11 @@ const CreateGroupContainer = ({ navigation }) => {
     });
 
     Object.keys(currentGroup).forEach(key => {
-      formData.append(key, currentGroup[key]);
+      if (typeof currentGroup[key] === 'object') {
+        formData.append(key, JSON.stringify(currentGroup[key]));
+      } else {
+        formData.append(key, currentGroup[key]);
+      }
     });
 
     const config = {

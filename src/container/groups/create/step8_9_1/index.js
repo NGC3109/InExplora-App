@@ -30,7 +30,7 @@ const P8_9_1_StartingTravel_Container = ({ navigation }) => {
         }
     };
     const isStartingTravelValid = () => {
-        return startingTravel.trim().length > 0;
+        return startingTravel?.startingTravel?.trim().length > 0;
     };
     const handleSelect = (description, placeId) => {
         const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=geometry&key=${Config.API_KEY_MAPS}`;

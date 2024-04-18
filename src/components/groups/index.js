@@ -79,7 +79,7 @@ const GroupTemplate = ({
                 <View style={{alignContent: 'flex-start'}}>
                   {destino.weekday ? destino.weekday.map((day, index) => (
                     <Text style={{color: 'black'}} key={index}>{day}</Text>
-                  )) : 'Sin información'}
+                  )) : <Text style={{color: 'black'}} key="sn">Sin información</Text>}
                 </View>
               </View>
               <Text style={{color: 'black'}}>Numero: </Text>
