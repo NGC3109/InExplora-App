@@ -53,6 +53,7 @@ const GooglePlacesAutocomplete = ({ onSelect }) => {
         try {
             const result = await fetch(apiUrl);
             const json = await result.json();
+            console.log('json: ', json)
             const details = {
                 photos: json.result.photos && json.result.photos.length > 0 ? [{
                     photo_reference: json.result.photos[0].photo_reference,
