@@ -25,4 +25,24 @@ export const initialState = {
             longitude: null,
         }, // fecha de partida
     },
+    groupsByUser: {
+        loading: false,
+        data: null,
+        error: null
+    },
+    allGroups: {
+        data: [],
+        loading: false,
+        error: null
+    },
+    groupDetails: {
+        data: [],
+        loading: false,
+        error: null,
+    },
+    requestToJoin:{
+        data: [],
+        loading: false,
+        error: null,
+    }
 };

@@ -1,8 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { loadGroupByUser } from '../actions/groups/groupAction';
+import io from 'socket.io-client';
 
 export default function MiPerfil({ navigation }) {
   const [activeTab, setActiveTab] = useState(0);
+  const [requestCount, setRequestCount] = useState(0);
+  const currentUser = useSelector(state => state.userReducer.user);
+  const groupsByUser = useSelector(state => state.groupReducer.groupsByUser);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const socket = io("http://192.168.28.1:3001");
+    socket.on('connect', () => {
+      socket.emit('joinRoom', { userId: currentUser.id });
+    });
+    socket.emit('getJoinRequestCount', { userId: currentUser.id });
+    socket.on('pendingJoinRequestCount', (data) => {
+      console.log('Recuento de solicitudes de unión pendientes:', data);
+      if (data.success) {
+        setRequestCount(data.count);  // Actualizar el estado con el conteo recibido
+      }
+    });
+    socket.on('connect_error', (err) => {
+      console.error('Error de conexión:', err.message);
+    });
+    return () => {
+      socket.off('pendingJoinRequestCount');
+      socket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (currentUser && currentUser.id) {
+      dispatch(loadGroupByUser(currentUser.id));
+    }
+  }, [dispatch, currentUser]);
 
   const handleTabPress = (tabIndex) => {
     setActiveTab(tabIndex);
@@ -10,23 +44,25 @@ export default function MiPerfil({ navigation }) {
 
   const renderGridItem = ({ item }) => (
     <View style={styles.gridItem}>
-      <Image source={{ uri: item }} style={styles.image} />
+      <Image source={{ uri: item.profilePicture }} style={styles.image} />
     </View>
   );
+
   const createGroup = () => {
     navigation.navigate('crearGrupo');
-  }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
         <View style={styles.profileContent}>
           <Image
-            source={{ uri: 'https://via.placeholder.com/100' }}
+            source={{ uri: currentUser.profilePicture || 'https://via.placeholder.com/100' }}
             style={styles.profileImage}
           />
           <View style={styles.profileTextContainer}>
-            <Text style={styles.profileUserName}>Sam</Text>
-            <Text style={styles.profileFollowers}>100M seguidores</Text>
+            <Text style={styles.profileUserName}>{currentUser.displayName || 'Nombre de Usuario'}</Text>
+            <Text style={styles.profileFollowers}>100M seguidores</Text> 
           </View>
         </View>
         <Text style={styles.profileDescription}>
@@ -39,7 +75,12 @@ export default function MiPerfil({ navigation }) {
             </TouchableOpacity>
           </View>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button}>
+              {requestCount > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{requestCount}</Text>
+                </View>
+              )}
               <Text style={styles.buttonText}>Solicitudes</Text>
             </TouchableOpacity>
           </View>
@@ -62,23 +103,7 @@ export default function MiPerfil({ navigation }) {
       <View style={styles.tabContent}>
         {activeTab === 0 && (
           <FlatList
-            data={[
-              'https://via.placeholder.com/150',
-              'https://via.placeholder.com/150',
-              'https://via.placeholder.com/150',
-              'https://via.placeholder.com/150',
-              'https://via.placeholder.com/150',
-              'https://via.placeholder.com/150',
-              'https://via.placeholder.com/150',
-              'https://via.placeholder.com/150',
-              'https://via.placeholder.com/150',
-              'https://via.placeholder.com/150',
-              'https://via.placeholder.com/150',
-              'https://via.placeholder.com/150',
-              'https://via.placeholder.com/150',
-              'https://via.placeholder.com/150',
-              'https://via.placeholder.com/150',
-            ]}
+            data={groupsByUser?.data || []}
             renderItem={renderGridItem}
             keyExtractor={(item, index) => index.toString()}
             numColumns={3}
@@ -89,12 +114,28 @@ export default function MiPerfil({ navigation }) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 10,
     paddingHorizontal: 20,
+    backgroundColor: 'white'
+  },
+  badge: {
+    position: 'absolute',
+    right: -6,
+    top: -3,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  badgeText: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold'
   },
   profileContainer: {
     marginBottom: 20,
@@ -117,6 +158,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'left',
+    color: 'black'
   },
   profileFollowers: {
     fontSize: 14,
@@ -149,7 +191,7 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    height: 100, // Ajusta la altura según tus necesidades
+    height: 150, // Ajusta la altura según tus necesidades
     resizeMode: 'cover',
   },
   profileDescription: {
@@ -166,13 +208,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: 'white',
     padding: 10,
     marginHorizontal: 5,
     borderRadius: 5,
+    borderColor: 'black',
+    borderWidth: 0.5,
   },
   buttonText: {
-    color: 'white',
+    color: 'black',
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',

@@ -93,7 +93,20 @@ const MainTabNavigator = () => {
           tabBarBadge: 10,
           headerTitleAlign: 'center',
         }}/>
-      <Tab.Screen name="MiPerfil" component={MiPerfil}  options={{ title: 'Perfil', headerTitleAlign: 'center' }}/>
+      <Tab.Screen 
+        name="MiPerfil" 
+        component={MiPerfil}  
+        options={{ 
+          title: 'Perfil', 
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: 'white',
+            shadowColor: 'black',
+            shadowOffset: { width: 0, height: 2 },
+            shadowRadius: 2,
+            elevation: 8
+          }
+        }}/>
     </Tab.Navigator>
   );
 };
@@ -111,7 +124,7 @@ const RootStackNavigator = () => {
         component={MainTabNavigator}
         options={{ headerShown: false }} // Esconde la barra de navegación para este stack
       />
-      <RootStack.Screen
+        <RootStack.Screen
           name="Detalle"
           component={MessageScreen}
           options={({ navigation, route }) => ({
@@ -135,6 +148,17 @@ const RootStackNavigator = () => {
           swipeEnabled: false,
           headerStyle,
         })}/>
+        <RootStack.Screen name="detalleGrupo" component={DetailGroup} options={({navigation}) => ({
+          headerTitle: () => <GroupHeader navigation={navigation} step={1}/>,
+          headerLeft: () => (
+            <Header onPress={() => navigation.navigate('Grupos')} />
+          ),
+          drawerItemStyle: { height: 0 },
+          headerTitleAlign: 'center',
+          swipeEnabled: false,
+          headerStyle,
+        })}/>
+        
         <RootStack.Screen name="step1" component={P1_GroupTravelWith_Women_Men_Container} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} step={2}/>,
           headerLeft: () => (

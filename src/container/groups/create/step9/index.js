@@ -8,7 +8,6 @@ import CreateGroupTemplate from '../../../../components/groups/create/step9';
 const CreateGroupContainer = ({ navigation }) => {
   const currentGroup = useSelector(state => state.groupReducer.groups);
   const currentUserId = useSelector(state => state.userReducer.user);
-  const userId = currentUserId.id;
   const [images, setImages] = useState([]);
   const selectImage = () => {
     const options = {

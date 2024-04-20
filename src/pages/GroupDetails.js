@@ -1,22 +1,44 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5'; // Asegúrate de que esta biblioteca está instalada
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadGroupById, requestToJoinGroup } from '../actions/groups/groupAction';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-const DetailGroup = ({ navigation }) => {
+const DetailGroup = ({ route }) => {
+  const { groupId } = route.params;
+  const dispatch = useDispatch();
+  const currentUserId = useSelector(state => state.userReducer.user);
+  const groupDetails = useSelector(state => state.groupReducer.groupDetails);
+
+  const handleJoinGroup = () => {
+    const message = "Me gustaría unirme a su grupo porque...";
+    const superPower = "Organización de viajes";
+    console.log('click')
+    dispatch(requestToJoinGroup(currentUserId.id, groupId, message, superPower));
+  };
+
+  useEffect(() => {
+    if (groupId) {
+      dispatch(loadGroupById(groupId));
+    }
+  }, [dispatch, groupId]);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.imageContainer}>
           <Image
-            source={{ uri: 'https://ecosistemas.ovacen.com/wp-content/uploads/2018/01/bosque.jpg' }}
+            source={{ uri: groupDetails?.data?.profilePicture || 'https://ecosistemas.ovacen.com/wp-content/uploads/2018/01/bosque.jpg' }}
             style={styles.image}
           />
           <View style={styles.overlay}>
-            <Text style={styles.bannerText}>Hurray, we identified the plant!</Text>
+            <TouchableWithoutFeedback onPress={() => handleJoinGroup()}>
+                <Text style={styles.bannerText}>Solicitar unirme al grupo</Text>
+            </TouchableWithoutFeedback>
           </View>
         </View>
         <View style={styles.content}>
-          <Text style={styles.title}>Papaver Somniferum</Text>
+          <Text style={styles.title}>{groupDetails?.data?.title}</Text>
           <View style={styles.tagContainer}>
             <Text style={styles.tag}>Indoor</Text>
             <Text style={styles.tag}>Pet friendly</Text>
@@ -24,9 +46,7 @@ const DetailGroup = ({ navigation }) => {
           </View>
           <Text style={styles.subtitle}>Description</Text>
           <Text style={styles.description}>
-            Papaver somniferum, commonly known as the opium poppy or breadseed poppy, 
-            is a species of flowering plant in the family Papaveraceae. It is the species 
-            of plant from which both opium and poppy seeds are derived...
+            {groupDetails?.data?.description}
           </Text>
           {/* Aquí agregarías el resto de los elementos como 'Height', 'Water', etc. */}
           <View style={styles.infoContainer}>

@@ -13,7 +13,48 @@ export const styles = StyleSheet.create({
     container: {
       flex: 1,
       paddingTop: 10,
-      paddingHorizontal: 5,
+      paddingHorizontal: 20,
+      backgroundColor: 'white'
+    },
+    cardContainer: {
+      backgroundColor: 'white',
+      borderRadius: 10,
+      overflow: 'hidden',
+      marginBottom: 20,
+      // Sombras y otros estilos de tarjeta...
+    },
+    cardImage: {
+      width: '100%', // Asegúrate de que la imagen se ajuste al ancho de la tarjeta
+      height: 300, // Establece la altura según sea necesario
+      borderRadius: 20,
+      // Estilos de imagen...
+    },
+    cardDetailsContainer: {
+      padding: 10,
+      // Estilos del contenedor de detalles...
+    },
+    bestSellerTag: {
+      position: 'absolute',
+      top: 10,
+      left: 10,
+      backgroundColor: 'orange',
+      color: 'white',
+      padding: 5,
+      // Otros estilos para la etiqueta 'BEST SELLER'...
+    },
+    cardTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      // Estilos para el título...
+    },
+    cardSubTitle: {
+      fontSize: 14,
+      // Estilos para el subtítulo...
+    },
+    cardPrice: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      // Estilos para el precio...
     },
     profileContainer: {
       marginBottom: 10,

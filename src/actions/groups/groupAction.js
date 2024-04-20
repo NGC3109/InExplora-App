@@ -1,3 +1,5 @@
+import axios from "axios";
+import Config from "react-native-config";
 import {
     SAVE_GROUP_DESTINATION, 
     SAVE_GROUP_TRAVELMODE, 
@@ -13,7 +15,88 @@ import {
     SAVE_GROUP_BUDGET,
     SAVE_GROUP_GENRE,
     SAVE_GROUP_STARTING_TRAVEL,
+    LOAD_GROUP_BY_USER_SUCCESS,
+    LOAD_GROUP_BY_USER_FAIL,
+    LOAD_GROUP_BY_USER_REQUEST,
+    LOAD_GROUPS_REQUEST, 
+    LOAD_GROUPS_SUCCESS, 
+    LOAD_GROUPS_FAIL,
+    LOAD_GROUP_BY_ID_REQUEST, 
+    LOAD_GROUP_BY_ID_SUCCESS, 
+    LOAD_GROUP_BY_ID_FAIL,
+    REQUEST_TO_JOIN_GROUP_REQUEST,
+    REQUEST_TO_JOIN_GROUP_SUCCESS,
+    REQUEST_TO_JOIN_GROUP_FAIL,
 } from "../../utils/constants";
+
+export const requestToJoinGroup = (userId, groupId, message, superPower) => async (dispatch) => {
+  dispatch({ type: REQUEST_TO_JOIN_GROUP_REQUEST });
+  try {
+    const requestBody = {
+      user: userId,
+      message,
+      superPower
+    };
+    const response = await axios.post(`${Config.API_ENDPOINT}groups/users/${userId}/group/${groupId}/request-to-join`, requestBody);
+    dispatch({
+      type: REQUEST_TO_JOIN_GROUP_SUCCESS,
+      payload: response.data
+    });
+  } catch (error) {
+    dispatch({
+      type: REQUEST_TO_JOIN_GROUP_FAIL,
+      payload: error.response ? error.response.data.error : 'Error desconocido'
+    });
+  }
+};
+
+export const loadGroupById = (groupId) => async (dispatch) => {
+  dispatch({ type: LOAD_GROUP_BY_ID_REQUEST });
+  try {
+    const response = await axios.get(`${Config.API_ENDPOINT}groups/${groupId}`);
+    dispatch({
+      type: LOAD_GROUP_BY_ID_SUCCESS,
+      payload: response.data.data
+    });
+  } catch (error) {
+    dispatch({
+      type: LOAD_GROUP_BY_ID_FAIL,
+      payload: error.response ? error.response.data.error : 'Error desconocido'
+    });
+  }
+};
+
+export const loadGroups = () => async (dispatch) => {
+  dispatch({ type: LOAD_GROUPS_REQUEST });
+  try {
+    const response = await axios.get(`${Config.API_ENDPOINT}groups/`);
+    dispatch({
+      type: LOAD_GROUPS_SUCCESS,
+      payload: response.data.data
+    });
+  } catch (error) {
+    dispatch({
+      type: LOAD_GROUPS_FAIL,
+      payload: error.response ? error.response.data.error : 'Error desconocido'
+    });
+  }
+};
+
+export const loadGroupByUser = (userId) => async (dispatch) => {
+  dispatch({ type: LOAD_GROUP_BY_USER_REQUEST });
+  try {
+    const response = await axios.get(`${Config.API_ENDPOINT}groups/user/${userId}`);
+    dispatch({
+      type: LOAD_GROUP_BY_USER_SUCCESS,
+      payload: response.data.data
+    });
+  } catch (error) {
+    dispatch({
+      type: LOAD_GROUP_BY_USER_FAIL,
+      payload: error.response ? error.response.data.error : 'Error desconocido'
+    });
+  }
+};
 
 export const saveGroupGenre = (genre) => {
   return (dispatch) => {

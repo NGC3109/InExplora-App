@@ -1,19 +1,39 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
 import { Select, CheckIcon, NativeBaseProvider, FormControl, Input } from "native-base";
 import { dataImg, styles, filters } from './DataMock';
 import FiltersContainer from '../components/FiltersContainer'; // Importa el componente FiltersContainer
+import { loadGroups } from '../actions/groups/groupAction';
+import { useSelector, useDispatch } from 'react-redux';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-const Grupos = () => {
+const Grupos = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [service, setService] = useState("");
   const [destination, setDestination] = useState("");
   const [selectedFilters, setSelectedFilters] = useState({});
   const [showFilters, setShowFilters] = useState(false);
+  const groupsData = useSelector(state => state.groupReducer.allGroups); // Acceder al estado de los grupos
+
+  useEffect(() => {
+    dispatch(loadGroups()); // Despachar la acción para cargar grupos cuando el componente se monta
+  }, [dispatch]);
+
+  const goDetailsGroup = (item) => {
+    navigation.navigate('detalleGrupo', { groupId: item._id })
+  }
 
   const renderGridItem = useCallback(({ item }) => (
-    <View style={styles.gridItem}>
-      <Image source={{ uri: item }} style={styles.image} />
-    </View>
+    <TouchableWithoutFeedback onPress={() => goDetailsGroup(item)}>
+      <View style={styles.cardContainer}>
+        <Image source={{ uri: item.profilePicture || 'https://via.placeholder.com/150' }} style={styles.cardImage} />
+        <View style={styles.cardDetailsContainer}>
+          <Text style={styles.cardTitle}>Title</Text>
+          <Text style={styles.cardSubTitle}>Subtitle</Text>
+          <Text style={styles.cardPrice}>from $15.500 per adult</Text>
+        </View>
+      </View>
+    </TouchableWithoutFeedback>
   ), []);
 
   const applyFilters = useCallback(() => {
@@ -30,7 +50,7 @@ const Grupos = () => {
       [filterId]: itemValue === "Seleccionar" ? "" : itemValue
     }));
   }, []);
-
+  console.log('groupsData: ', groupsData)
   return (
     <NativeBaseProvider>
       <View style={styles.container}>
@@ -66,8 +86,8 @@ const Grupos = () => {
               </FormControl>
             </View>
             <TouchableOpacity style={styles.filterButton} onPress={toggleFilters}>
-      <Text style={styles.filterButtonText}>Filtros</Text>
-    </TouchableOpacity>
+              <Text style={styles.filterButtonText}>Filtros</Text>
+            </TouchableOpacity>
           </View>
           <TouchableOpacity style={styles.applyButton} onPress={applyFilters}>
             <Text style={styles.applyButtonText}>Aplicar filtros</Text>
@@ -82,15 +102,15 @@ const Grupos = () => {
         )}
         <View style={styles.tabContent}>
           <FlatList
-            data={dataImg}
+            data={groupsData?.data}
             renderItem={renderGridItem}
             keyExtractor={(item, index) => index.toString()}
-            numColumns={3}
+            numColumns={1}
+            showsVerticalScrollIndicator={false}
           />
         </View>
       </View>
     </NativeBaseProvider>
   );
 }
-
 export default Grupos;
