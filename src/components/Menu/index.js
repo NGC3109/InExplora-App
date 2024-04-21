@@ -33,6 +33,7 @@ import JoinRequestList_Template from '../groups/request';
 import Join_P1_Container from '../../container/groups/join/step1';
 import Join_P2_Container from '../../container/groups/join/step2';
 import CongratulationsRequestToJoin from '../../container/groups/join/congratulations';
+import SignUp_Container from '../Login/signup';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -280,6 +281,7 @@ const RootStackNavigator = () => {
         <RootStack.Screen name="join_step1" component={Join_P1_Container} options={{ title: 'Solicitud', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="join_step2" component={Join_P2_Container} options={{ title: 'Solicitud', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="congratulations_request_to_join" component={CongratulationsRequestToJoin} options={{ title: 'Felicidades', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="signup" component={SignUp_Container} options={{ title: 'Únete a InExplora Hoy ✨', headerTitleAlign: 'center' }}/>
     </RootStack.Navigator>
   );
 };
