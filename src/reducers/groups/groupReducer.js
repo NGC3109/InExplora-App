@@ -26,10 +26,20 @@ import {
   REQUEST_TO_JOIN_GROUP_REQUEST,
   REQUEST_TO_JOIN_GROUP_SUCCESS,
   REQUEST_TO_JOIN_GROUP_FAIL,
+  LOAD_JOIN_REQUESTS_REQUEST,
+  LOAD_JOIN_REQUESTS_SUCCESS,
+  LOAD_JOIN_REQUESTS_FAIL,
+  SAVE_JOIN_MESSAGE,
+  SAVE_JOIN_SUPERPOWER,
 } from "../../utils/constants";
 
 const groupReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SAVE_JOIN_MESSAGE: return { ...state, sendRequestToJoin: { ...state.sendRequestToJoin, message: action.payload } };
+    case SAVE_JOIN_SUPERPOWER: return { ...state, sendRequestToJoin: { ...state.sendRequestToJoin, superpower: action.payload } };
+    case LOAD_JOIN_REQUESTS_REQUEST: return { ...state, joinRequests: { loading: true,  error: null } };
+    case LOAD_JOIN_REQUESTS_SUCCESS: return { ...state, joinRequests: { data: action.payload, loading: false, error: null } };
+    case LOAD_JOIN_REQUESTS_FAIL: return {...state, joinRequests: { loading: false, error: action.payload } };
     case REQUEST_TO_JOIN_GROUP_REQUEST: return { ...state, requestToJoin: { loading: true, error: null } };
     case REQUEST_TO_JOIN_GROUP_SUCCESS: return { ...state, requestToJoin: { loading: false, data: action.payload } };
     case REQUEST_TO_JOIN_GROUP_FAIL: return { ...state, requestToJoin: { loading: false, error: action.payload } };

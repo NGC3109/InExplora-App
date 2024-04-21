@@ -44,5 +44,14 @@ export const initialState = {
         data: [],
         loading: false,
         error: null,
+    },
+    joinRequests: {
+        data: [],
+        loading: false,
+        error: null,
+    },
+    sendRequestToJoin: {
+        message: null,
+        superpower: [],
     }
 };

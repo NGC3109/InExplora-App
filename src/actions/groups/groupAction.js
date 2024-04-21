@@ -27,7 +27,46 @@ import {
     REQUEST_TO_JOIN_GROUP_REQUEST,
     REQUEST_TO_JOIN_GROUP_SUCCESS,
     REQUEST_TO_JOIN_GROUP_FAIL,
+    LOAD_JOIN_REQUESTS_REQUEST,
+    LOAD_JOIN_REQUESTS_SUCCESS,
+    LOAD_JOIN_REQUESTS_FAIL,
+    SAVE_JOIN_MESSAGE,
+    SAVE_JOIN_SUPERPOWER,
 } from "../../utils/constants";
+
+export const saveJoinSuperPower = (superpower) => {
+  return (dispatch) => {
+    dispatch({
+      type: SAVE_JOIN_SUPERPOWER,
+      payload: superpower
+    });
+  };
+};
+
+export const saveJoinMessage = (message) => {
+  return (dispatch) => {
+    dispatch({
+      type: SAVE_JOIN_MESSAGE,
+      payload: message
+    });
+  };
+};
+
+export const loadJoinRequestsByGroupId = (userId) => async (dispatch) => {
+  dispatch({ type: LOAD_JOIN_REQUESTS_REQUEST });
+  try {
+    const response = await axios.get(`${Config.API_ENDPOINT}groups/${userId}/join-requests`);
+    dispatch({
+      type: LOAD_JOIN_REQUESTS_SUCCESS,
+      payload: response.data.data
+    });
+  } catch (error) {
+    dispatch({
+      type: LOAD_JOIN_REQUESTS_FAIL,
+      payload: error.response ? error.response.data.error : 'Error desconocido'
+    });
+  }
+};
 
 export const requestToJoinGroup = (userId, groupId, message, superPower) => async (dispatch) => {
   dispatch({ type: REQUEST_TO_JOIN_GROUP_REQUEST });

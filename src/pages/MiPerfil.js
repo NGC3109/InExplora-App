@@ -10,7 +10,7 @@ export default function MiPerfil({ navigation }) {
   const currentUser = useSelector(state => state.userReducer.user);
   const groupsByUser = useSelector(state => state.groupReducer.groupsByUser);
   const dispatch = useDispatch();
-
+  
   useEffect(() => {
     const socket = io("http://192.168.28.1:3001");
     socket.on('connect', () => {
@@ -75,7 +75,7 @@ export default function MiPerfil({ navigation }) {
             </TouchableOpacity>
           </View>
           <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("joinRequest")}>
               {requestCount > 0 && (
                 <View style={styles.badge}>
                   <Text style={styles.badgeText}>{requestCount}</Text>

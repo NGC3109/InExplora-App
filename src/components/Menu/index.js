@@ -29,6 +29,10 @@ import CreateGroupContainer from '../../container/groups/create/step9';
 import { Header } from '../ui/Header';
 import { headerStyle } from '../../container/menu/constants';
 import P8_9_1_StartingTravel_Container from '../../container/groups/create/step8_9_1';
+import JoinRequestList_Template from '../groups/request';
+import Join_P1_Container from '../../container/groups/join/step1';
+import Join_P2_Container from '../../container/groups/join/step2';
+import CongratulationsRequestToJoin from '../../container/groups/join/congratulations';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -272,6 +276,10 @@ const RootStackNavigator = () => {
           headerStyle,
         })}/>
         <RootStack.Screen name="congratulations" component={Congratuilations} options={{ title: 'Felicidades', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="joinRequest" component={JoinRequestList_Template} options={{ title: 'Solicitudes', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="join_step1" component={Join_P1_Container} options={{ title: 'Solicitud', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="join_step2" component={Join_P2_Container} options={{ title: 'Solicitud', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="congratulations_request_to_join" component={CongratulationsRequestToJoin} options={{ title: 'Felicidades', headerTitleAlign: 'center' }}/>
     </RootStack.Navigator>
   );
 };
