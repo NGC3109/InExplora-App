@@ -7,7 +7,7 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import Config from 'react-native-config';
 import { useDispatch } from 'react-redux';
-import { saveUser } from '../actions/users/userActions';
+import { getUser } from '../actions/users/userActions';
 import { Alert } from '../components/ui/Alert';
 
 const Login = () => {
@@ -35,7 +35,7 @@ const Login = () => {
             displayName,
             email,
         };
-        dispatch(saveUser(userData));
+        dispatch(getUser(userData));
         navigation.navigate("MainTabs");
         // Verificar la respuesta del backend
         // if (response.status === 201) {

@@ -4,8 +4,11 @@ import { useNavigation } from '@react-navigation/native';
 import { isEmailValid } from '../../../utils/functions';
 import { passwordCriteria } from '../../../utils/errores';
 import auth from '@react-native-firebase/auth';
+import { useDispatch } from 'react-redux';
+import { prepareUser } from '../../../actions/users/userActions';
 
 const SignUp_Container = () => {
+    const dispatch = useDispatch();
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -21,8 +24,13 @@ const SignUp_Container = () => {
             if (email && password && confirmPassword && password === confirmPassword && Object.keys(passwordError).length === 0) {
                 try {
                     await auth().createUserWithEmailAndPassword(email, password);
+                    const userData = {
+                        email: email,
+                        password: password
+                    }
+                    dispatch(prepareUser(userData))
                     // await sendVerificationEmail(userCredential.user);
-                    navigation.navigate('MainTabs'); // Navega a la pantalla principal o de bienvenida
+                    navigation.navigate('signUp_displayname'); // Navega a la pantalla principal o de bienvenida
                 } catch (error) {
                     if (error.code === 'auth/email-already-in-use') {
                         setEmailError('Este correo electrónico ya está en uso.');
@@ -44,17 +52,14 @@ const SignUp_Container = () => {
         }
     };
 
-    const sendVerificationEmail = async (user) => {
-        try {
-          await user.sendEmailVerification({
-            // Opcional: Configura la URL de redirección después de la verificación
-            url: 'https://tu-app.com/after-verification', // Asegúrate de configurar esta URL en la consola de Firebase
-          });
-          console.log('Correo de verificación enviado');
-        } catch (error) {
-          console.error('Error al enviar el correo de verificación:', error);
-        }
-    };
+    // const sendVerificationEmail = async (user) => {
+    //     try {
+    //       await user.sendEmailVerification();
+    //       console.log('Correo de verificación enviado');
+    //     } catch (error) {
+    //       console.error('Error al enviar el correo de verificación:', error);
+    //     }
+    // };
 
     const validatePassword = (password) => {
         let errors = {};
