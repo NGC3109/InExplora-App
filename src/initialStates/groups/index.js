@@ -53,5 +53,10 @@ export const initialState = {
     sendRequestToJoin: {
         message: null,
         superpower: [],
+    },
+    joinRequestState: {
+        data: [],
+        loading: false,
+        error: null,
     }
 };

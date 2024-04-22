@@ -29,13 +29,8 @@ const Login = () => {
         const googleCredential = auth.GoogleAuthProvider.credential(idToken);
         const firebaseResult = await auth().signInWithCredential(googleCredential);
         
-        const { displayName, email } = firebaseResult.user;
-
-        const userData = {
-            displayName,
-            email,
-        };
-        dispatch(getUser(userData));
+        const { email } = firebaseResult.user;
+        dispatch(getUser(email));
         navigation.navigate("MainTabs");
         // Verificar la respuesta del backend
         // if (response.status === 201) {
@@ -57,11 +52,11 @@ const Login = () => {
     setAlert(false);
     try {
       const response = await auth().signInWithEmailAndPassword(email, password);
-      // Aquí manejar la respuesta exitosa y la navegación
+      dispatch(getUser(response.user.email));
       navigation.navigate("MainTabs");
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      setAlert(true); // Asegúrate de mostrar un mensaje de error relevante al usuario
+      setAlert(true);
     } finally {
       setLoading(false);
     }

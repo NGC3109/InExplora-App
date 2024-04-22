@@ -2,12 +2,13 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, FlatList, Image, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 import { NativeBaseProvider } from "native-base";
 import { useSelector, useDispatch } from 'react-redux';
-import { loadJoinRequestsByGroupId } from '../../../actions/groups/groupAction';
+import { acceptJoinRequest, loadJoinRequestsByGroupId } from '../../../actions/groups/groupAction';
 import { SuperManIcon } from '../../../assets/vectores';
 
 const JoinRequestList_Template = ({ navigation }) => {
   const dispatch = useDispatch();
   const joinRequest = useSelector(state => state.groupReducer.joinRequests);
+  console.log('joinRequest: ', joinRequest)
   const currentUserId = useSelector(state => state.userReducer.user);
 
   useEffect(() => {
@@ -16,6 +17,9 @@ const JoinRequestList_Template = ({ navigation }) => {
 
   const goDetailsGroup = (item) => {
     navigation.navigate('detalleGrupo', { groupId: item._id })
+  }
+  const handleChangeStatusRequest = (idRequest) => {
+    dispatch(acceptJoinRequest(idRequest))
   }
   const renderGridItem = useCallback(({ item }) => (
     <TouchableWithoutFeedback onPress={() => goDetailsGroup(item)}>
@@ -26,6 +30,9 @@ const JoinRequestList_Template = ({ navigation }) => {
           <Text style={styles.cardSubTitle}>{item.message}</Text>
           <Text style={styles.cardDate}>{new Date(item.requestDate).toLocaleDateString()}</Text>
           <Text><SuperManIcon /> Cocinero</Text>
+          <TouchableWithoutFeedback onPress={() => handleChangeStatusRequest(item.id)}>
+            <Text>Aceptar</Text>
+          </TouchableWithoutFeedback>
         </View>
       </View>
     </TouchableWithoutFeedback>
