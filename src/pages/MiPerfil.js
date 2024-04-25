@@ -2,35 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadGroupByUser } from '../actions/groups/groupAction';
-import io from 'socket.io-client';
 
 export default function MiPerfil({ navigation }) {
   const [activeTab, setActiveTab] = useState(0);
-  const [requestCount, setRequestCount] = useState(0);
   const currentUser = useSelector(state => state.userReducer.user);
   const groupsByUser = useSelector(state => state.groupReducer.groupsByUser);
   const dispatch = useDispatch();
-  
-  useEffect(() => {
-    const socket = io("http://192.168.28.1:3001");
-    socket.on('connect', () => {
-      socket.emit('joinRoom', { userId: currentUser.id });
-    });
-    socket.emit('getJoinRequestCount', { userId: currentUser.id });
-    socket.on('pendingJoinRequestCount', (data) => {
-      console.log('Recuento de solicitudes de unión pendientes:', data);
-      if (data.success) {
-        setRequestCount(data.count);  // Actualizar el estado con el conteo recibido
-      }
-    });
-    socket.on('connect_error', (err) => {
-      console.error('Error de conexión:', err.message);
-    });
-    return () => {
-      socket.off('pendingJoinRequestCount');
-      socket.disconnect();
-    };
-  }, []);
 
   useEffect(() => {
     if (currentUser && currentUser.id) {
@@ -72,16 +49,6 @@ export default function MiPerfil({ navigation }) {
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={() => createGroup()}>
               <Text style={styles.buttonText}>Crear Grupos</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("joinRequest")}>
-              {requestCount > 0 && (
-                <View style={styles.badge}>
-                  <Text style={styles.badgeText}>{requestCount}</Text>
-                </View>
-              )}
-              <Text style={styles.buttonText}>Solicitudes</Text>
             </TouchableOpacity>
           </View>
         </View>

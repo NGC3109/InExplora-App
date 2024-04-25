@@ -3,11 +3,13 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import userReducer from './reducers/users/userReducer';
 import groupReducer from './reducers/groups/groupReducer';
+import socketReducer from './reducers/sockets/socketReducer';
 
 // Combinamos los reductores si tienes más de uno
 const rootReducer = combineReducers({
   userReducer: userReducer,
-  groupReducer: groupReducer
+  groupReducer: groupReducer,
+  socketReducer: socketReducer,
 });
 
 // Creamos el almacenamiento (store) y aplicamos middleware (thunk en este caso) y herramientas de desarrollo

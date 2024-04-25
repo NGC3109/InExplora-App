@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from '../../pages/Home';
 import MiPerfil from './../../pages/MiPerfil';
@@ -35,6 +35,7 @@ import Join_P2_Container from '../../container/groups/join/step2';
 import CongratulationsRequestToJoin from '../../container/groups/join/congratulations';
 import SignUp_Container from '../Login/signup';
 import P1_SignUp_Container from '../../container/login/signup/step1';
+import HeaderWithIcons from '../ui/HeaderWithIcons';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -66,7 +67,6 @@ const CustomTabBarButton = ({ children, onPress, focused }) => {
     </TouchableOpacity>
   );
 };
-
 const MainTabNavigator = () => {
   return (
       <Tab.Navigator
@@ -82,23 +82,22 @@ const MainTabNavigator = () => {
               iconName = 'user';
             } else if (route.name === 'Grupos') {
               iconName = 'group';
-            } else if (route.name === 'Mensajes') {
-              iconName = 'paper-plane-o';
             }
             return <Icon name={iconName} size={20} color={color} />;
           },
           tabBarButton: (props) => (
             <CustomTabBarButton {...props} focused={props.accessibilityState.selected} />
           )
-        })}
+        })
+      }
       >
       {/* <Tab.Screen name="DetailGroup" component={DetailGroup} options={{ headerShown: false }}/> */}
-      <Tab.Screen name="Inicio" component={Home} options={{ title: 'InExplora', headerTitleAlign: 'center' }}/>
+      <Tab.Screen name="Inicio" component={Home} options={({ navigation, route }) => ({
+        headerTitle: () => 
+        <HeaderWithIcons />,
+        headerStyle,
+      })} />
       <Tab.Screen name="Grupos" component={Grupos} options={{ headerTitleAlign: 'center' }} />
-      <Tab.Screen name="Mensajes" component={Chats} options={{
-          tabBarBadge: 10,
-          headerTitleAlign: 'center',
-        }}/>
       <Tab.Screen 
         name="MiPerfil" 
         component={MiPerfil}  
@@ -119,7 +118,14 @@ const MainTabNavigator = () => {
 
 const RootStackNavigator = () => {
   return (
-    <RootStack.Navigator>
+    <RootStack.Navigator
+      screenOptions={{
+        headerShown: true,
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // Esta es la línea clave para animaciones de deslizamiento
+      }}
+    >
       <RootStack.Screen
         name="Login"
         component={Login}
@@ -284,6 +290,8 @@ const RootStackNavigator = () => {
         <RootStack.Screen name="congratulations_request_to_join" component={CongratulationsRequestToJoin} options={{ title: 'Felicidades', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="signup" component={SignUp_Container} options={{ title: 'Únete a InExplora Hoy ✨', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="signUp_displayname" component={P1_SignUp_Container} options={{ title: 'Registra un nombre', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="messages" component={Chats} options={{ title: 'Mensajes', headerTitleAlign: 'center' }}/>
+        
     </RootStack.Navigator>
   );
 };
