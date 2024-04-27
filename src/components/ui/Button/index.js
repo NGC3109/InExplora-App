@@ -6,9 +6,10 @@ const ButtonCustom = ({
   onPress, 
   title,
   disabled,
+  customStyle,
 }) => {
     return (
-      <TouchableOpacity disabled={disabled} style={styles.button} onPress={onPress}>
+      <TouchableOpacity disabled={disabled} style={[styles.button, customStyle]} onPress={onPress}>
         <Text style={styles.buttonText}>{title}</Text>
       </TouchableOpacity>
     );

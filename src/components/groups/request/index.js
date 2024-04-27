@@ -8,7 +8,6 @@ import { SuperManIcon } from '../../../assets/vectores';
 const JoinRequestList_Template = ({ navigation }) => {
   const dispatch = useDispatch();
   const joinRequest = useSelector(state => state.groupReducer.joinRequests);
-  console.log('joinRequest: ', joinRequest)
   const currentUserId = useSelector(state => state.userReducer.user);
 
   useEffect(() => {

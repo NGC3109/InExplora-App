@@ -48,7 +48,7 @@ export default function MiPerfil({ navigation }) {
         <View style={styles.buttonsContainer}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={() => createGroup()}>
-              <Text style={styles.buttonText}>Crear Grupos</Text>
+              <Text style={styles.buttonText}>Crear Grupo</Text>
             </TouchableOpacity>
           </View>
         </View>

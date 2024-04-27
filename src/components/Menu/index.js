@@ -142,7 +142,7 @@ const RootStackNavigator = () => {
           options={({ navigation, route }) => ({
             headerTitle: () => <ChatHeader navigation={navigation} {...route.params.chattingWith} />,
             headerLeft: () => (
-              <Header onPress={() => navigation.navigate('Mensajes')} />
+              <Header onPress={() => navigation.navigate('Inicio')} />
             ),
             drawerItemStyle: { height: 0 },
             headerTitleAlign: 'left',

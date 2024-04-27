@@ -1,123 +1,256 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
-import Carousel from 'react-native-snap-carousel';
+import {
+  View,
+  TextInput,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  FlatList,
+  Image,
+  ScrollView
+} from 'react-native';
+import { exploreMoreData, places } from './DataMock';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Home = () => {
-  const banners = [
-    { id: 1, imageUrl: 'https://dus6dayednven.cloudfront.net/app/uploads/2022/09/Imma-Barrera-United-States-Shortlist-01.jpg' },
-    { id: 2, imageUrl: 'https://mott.pe/noticias/wp-content/uploads/2018/05/que-es-la-astrofotografia-y-que-es-lo-que-necesitas-para-realizarla1.png' },
-    { id: 3, imageUrl: 'https://mott.pe/noticias/wp-content/uploads/2018/05/que-es-la-astrofotografia-y-que-es-lo-que-necesitas-para-realizarla1.png' },
-    { id: 4, imageUrl: 'https://www.astroshop.es/CMS/images/text/category/italien-panorama-berge_all.jpg' },
-    { id: 5, imageUrl: 'https://mott.pe/noticias/wp-content/uploads/2018/05/que-es-la-astrofotografia-y-que-es-lo-que-necesitas-para-realizarla1.png' },
-  ];
-
-  const renderItem = ({ item }) => {
-    return (
-      <View style={styles.carouselItem}>
-        <Image source={{ uri: item.imageUrl }} style={styles.carouselImage} />
+  const renderPlace = ({ item }) => (
+    <View style={styles.card}>
+      <Image source={item.image} style={styles.cardImage} />
+      <View style={styles.cardContent}>
+        <Text style={styles.placeName}>{item.name}</Text>
+        <View style={styles.placeMeta}>
+          <Text style={styles.placeCountry}>{item.country}</Text>
+          <View style={styles.ratingContainer}>
+            <Text style={styles.placeRating}>{item.rating}</Text>
+          </View>
+        </View>
       </View>
-    );
-  };
-  const renderItemBottom = ({ item }) => {
-    return (
-      <View style={styles.carouselItemBottom}>
-        <Image source={{ uri: item.imageUrl }} style={styles.carouselImage} />
-      </View>
-    );
-  };
-
-  return (
-    <View>
-      {/* <Carousel
-        data={banners}
-        renderItem={renderItem}
-        sliderWidth={Dimensions.get('window').width}
-        itemWidth={Dimensions.get('window').width}
-        loop={true}
-        autoplay={true}
-        autoplayInterval={3000}
-        layout={'default'}
-      /> */}
-      {/* Other content of the screen */}
-      {/* <View style={styles.textContainer}>
-        <Text style={styles.text}>Animate a viajar con estos destinos!</Text>
-      </View>
-      <Carousel
-        data={banners}
-        renderItem={renderItemBottom}
-        sliderWidth={Dimensions.get('window').width}
-        itemWidth={Dimensions.get('window').width / 3}
-        loop={true}
-        autoplay={true}
-        autoplayInterval={5000}
-        layout={'default'}
-        inactiveSlideOpacity={1}
-        inactiveSlideScale={1}
-        loopClonesPerSide={banners.length}
-      />
-      <View>
-        <Text>Other Content Here</Text>
-      </View>
-      
-      <Carousel
-        data={banners}
-        renderItem={renderItemBottom}
-        sliderWidth={Dimensions.get('window').width}
-        itemWidth={Dimensions.get('window').width / 3}
-        loop={true}
-        autoplay={true}
-        autoplayInterval={5000}
-        layout={'default'}
-        inactiveSlideOpacity={1}
-        inactiveSlideScale={1}
-        loopClonesPerSide={banners.length}
-      />
-      
-      <Carousel
-        data={banners}
-        renderItem={renderItemBottom}
-        sliderWidth={Dimensions.get('window').width}
-        itemWidth={Dimensions.get('window').width / 3}
-        loop={true}
-        autoplay={true}
-        autoplayInterval={5000}
-        layout={'default'}
-        inactiveSlideOpacity={1}
-        inactiveSlideScale={1}
-        loopClonesPerSide={banners.length}
-      /> */}
     </View>
+  );
+  const renderExploreMoreItem = ({ item }) => (
+    <View style={styles.exploreCard}>
+      <Image source={item.image} style={styles.exploreCardImage} />
+      <View style={styles.exploreCardBody}>
+        <Text style={styles.explorePlaceName}>{item.name}</Text>
+        <View style={styles.explorePlaceDetails}>
+          <Icon name="map-marker" size={14} color="#ff3b30" />
+          <Text style={styles.explorePlaceCountry}>{item.country}</Text>
+        </View>
+        <View style={styles.userLikesRow}>
+          {/* Suponiendo que tienes un arreglo de avatares en tus datos */}
+          {item.userImages.map((avatar, index) => (
+            <Image key={index} source={avatar} style={styles.avatarImage} />
+          ))}
+          <Text style={styles.likesCount}>{item.likes}</Text>
+        </View>
+      </View>
+    </View>
+  );
+  return (
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.searchSection}>
+          <TextInput
+            style={styles.input}
+            placeholder="Buscar"
+          />
+        </View>
+        <View style={styles.categoriesSection}>
+          <Text style={styles.categoriesTitle}>Categorias</Text>
+          <View style={styles.categoriesList}>
+            <TouchableOpacity style={[styles.categoryButton, styles.activeCategory]}>
+              <Text style={styles.categoryText}>All</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.categoryButton}>
+              <Text style={styles.categoryText}>Montaña</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.categoryButton}>
+              <Text style={styles.categoryText}>Playa</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.categoryButton}>
+              <Text style={styles.categoryText}>Camping</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <FlatList
+          horizontal
+          data={places}
+          renderItem={renderPlace}
+          keyExtractor={item => item.id}
+          showsHorizontalScrollIndicator={false}
+          style={styles.placesList}
+        />
+        <View style={styles.exploreMoreHeader}>
+          <Text style={styles.exploreMoreTitle}>Explora</Text>
+          <TouchableOpacity style={styles.seeAllButton}>
+            <Text style={styles.seeAllButtonText}>Ver todo</Text>
+          </TouchableOpacity>
+        </View>
+        <FlatList
+          data={exploreMoreData}
+          renderItem={renderExploreMoreItem}
+          keyExtractor={item => item.id}
+          vertical
+          showsVerticalScrollIndicator={false}
+          style={styles.exploreList}
+        />
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  carouselItem: {
-    backgroundColor: 'white',
-    height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#fff',
   },
-  carouselItemBottom: {
-    backgroundColor: 'white',
-    height: 170,
-    justifyContent: 'center',
+  exploreMoreHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 2,
+    marginTop: 20,
+    marginBottom: 10,
   },
-  carouselImage: {
+  exploreMoreTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  seeAllButtonText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#ff3b30',
+  },
+  exploreCard: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+    marginBottom: 20,
+  },
+  exploreCardImage: {
     width: '100%',
-    height: '100%',
+    height: 150, // Ajustar según tu diseño
+    resizeMode: 'cover',
   },
-  textContainer: {
-    alignSelf: 'flex-start', // Alinea el texto a la izquierda
-    marginLeft: 10, // Opcional: añade margen izquierdo para separar del borde izquierdo
-    marginBottom: 15,
-    marginTop: 15,
+  exploreCardBody: {
+    padding: 10,
   },
-  text: {
-    fontSize: 20, // Tamaño de la fuente
-    fontWeight: 'bold', // Peso de la fuente
-    color: 'black', // Color del texto
+  explorePlaceName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  explorePlaceDetails: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  userLikesRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  avatarImage: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    marginRight: 5,
+  },
+  likesCount: {
+    fontSize: 12,
+    color: '#666',
+  },
+  placesList: {
+    marginVertical: 15,
+    // Asegúrate de que haya suficiente espacio alrededor de la FlatList para las sombras
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 15, // Esquinas redondeadas
+    overflow: 'hidden',
+    marginRight: 15, // Espacio entre tarjetas
+    width: 155, // También puedes ajustar el ancho aquí si es necesario
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 6,
+    shadowOpacity: 0.1, // La opacidad de la sombra
+    elevation: 6, // La elevación para Android para la sombra
+    marginBottom: 20, // Espacio debajo de cada tarjeta para la sombra
+    marginLeft: 5
+  },
+  cardImage: {
+    width: '100%', // Ancho relativo al contenedor
+    height: 150, // Altura fija para las imágenes
+    resizeMode: 'cover',
+    borderTopLeftRadius: 15, // Redondear solo las esquinas superiores
+    borderTopRightRadius: 15,
+  },
+  cardContent: {
+    padding: 10,
+  },
+  placeName: {
+    fontWeight: 'bold',
+  },
+  placeMeta: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  placeCountry: {
+    fontStyle: 'italic',
+  },
+  ratingContainer: {
+    backgroundColor: 'gold',
+    borderRadius: 5,
+    padding: 3,
+  },
+  placeRating: {
+    fontWeight: 'bold',
+  },
+  searchSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f2f2f2',
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    marginBottom: 20,
+  },
+  input: {
+    flex: 1,
+    padding: 1,
+    backgroundColor: '#f2f2f2',
+    color: '#424242',
+  },
+  categoriesSection: {
+    // If you need any specific style for this section
+  },
+  categoriesTitle: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  categoriesList: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  categoryButton: {
+    backgroundColor: '#eaeaea',
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    marginHorizontal: 5,
+  },
+  activeCategory: {
+    backgroundColor: '#ff3b30',
+  },
+  categoryText: {
+    color: '#000',
   },
 });
 

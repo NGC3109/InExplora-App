@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Select, CheckIcon, NativeBaseProvider, FormControl, Input } from "native-base";
-import { dataImg, styles, filters } from './DataMock';
+import { dataImg, filters } from './DataMock';
 import FiltersContainer from '../components/FiltersContainer'; // Importa el componente FiltersContainer
 import { loadGroups } from '../actions/groups/groupAction';
 import { useSelector, useDispatch } from 'react-redux';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import FiltrosComponent from '../components/ui/Filtros';
 
 const Grupos = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -28,13 +29,23 @@ const Grupos = ({ navigation }) => {
       <View style={styles.cardContainer}>
         <Image source={{ uri: item.profilePicture || 'https://via.placeholder.com/150' }} style={styles.cardImage} />
         <View style={styles.cardDetailsContainer}>
-          <Text style={styles.cardTitle}>Title</Text>
-          <Text style={styles.cardSubTitle}>Subtitle</Text>
-          <Text style={styles.cardPrice}>from $15.500 per adult</Text>
+          <Text style={styles.cardTitle}>{item.title || "Bali"}</Text>
+          <Text style={styles.cardSubTitle}>{item.subtitle || "Indonesia"}</Text>
+          {/* Agregar más detalles aquí como se muestra en la imagen */}
+          <View style={styles.cardInteractions}>
+            <View style={styles.userAvatars}>
+              {/* Renderizar los avatares aquí */}
+            </View>
+            <View style={styles.likesContainer}>
+              {/* Renderizar el ícono de corazón y el número de 'likes' aquí */}
+              <Text style={styles.likesText}>+12k</Text>
+            </View>
+          </View>
         </View>
       </View>
     </TouchableWithoutFeedback>
   ), []);
+  
 
   const applyFilters = useCallback(() => {
     console.log("Filtros aplicados:", selectedFilters);
@@ -50,48 +61,11 @@ const Grupos = ({ navigation }) => {
       [filterId]: itemValue === "Seleccionar" ? "" : itemValue
     }));
   }, []);
-  console.log('groupsData: ', groupsData)
   return (
     <NativeBaseProvider>
+      <FiltrosComponent />
       <View style={styles.container}>
         <View style={styles.profileContainer}>
-          <Text style={styles.profileDescription}>
-            Aquí puedes agregar una descripción sobre el perfil del usuario...
-          </Text>
-          <View style={styles.inputsContainer}>
-            <View style={styles.selectContainer}>
-              <Select
-                selectedValue={service}
-                minWidth="50"
-                accessibilityLabel="País"
-                placeholder="País"
-                _selectedItem={{
-                  bg: "teal.600",
-                  endIcon: <CheckIcon size="1" />
-                }}
-                onValueChange={itemValue => setService(itemValue)}
-              >
-                {["Chile", "Argentina", "Brasil", "Paraguay", "Uruguay"].map((country, index) => (
-                  <Select.Item key={index} label={country} value={country.toLowerCase()} />
-                ))}
-              </Select>
-            </View>
-            <View style={styles.inputContainer}>
-              <FormControl>
-                <Input
-                  placeholder="Destino"
-                  value={destination}
-                  onChangeText={text => setDestination(text)}
-                />
-              </FormControl>
-            </View>
-            <TouchableOpacity style={styles.filterButton} onPress={toggleFilters}>
-              <Text style={styles.filterButtonText}>Filtros</Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity style={styles.applyButton} onPress={applyFilters}>
-            <Text style={styles.applyButtonText}>Aplicar filtros</Text>
-          </TouchableOpacity>
         </View>
         {showFilters && (
           <FiltersContainer // Usa el componente FiltersContainer
@@ -102,6 +76,7 @@ const Grupos = ({ navigation }) => {
         )}
         <View style={styles.tabContent}>
           <FlatList
+            contentContainerStyle={{ paddingBottom: 50 }}
             data={groupsData?.data}
             renderItem={renderGridItem}
             keyExtractor={(item, index) => index.toString()}
@@ -113,4 +88,71 @@ const Grupos = ({ navigation }) => {
     </NativeBaseProvider>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 10,
+    backgroundColor: 'white'
+  },
+  tabContent:{
+    marginHorizontal: 10
+  },
+  // ...otros estilos
+  cardContainer: {
+    marginHorizontal: 5,
+    flexDirection: 'row',
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    overflow: 'hidden',
+    marginBottom: 10, // Añade un margen para que la sombra no se corte
+    // Sombra para iOS
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 10.62,
+  
+    // Sombra para Android
+    elevation: 4,
+  },
+  cardImage: {
+    width: '40%',
+    height: 150,
+    // ajustar según sea necesario
+  },
+  cardDetailsContainer: {
+    flex: 1,
+    padding: 10,
+    justifyContent: 'space-between',
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    // ajustar según sea necesario
+  },
+  cardSubTitle: {
+    fontSize: 14,
+    // ajustar según sea necesario
+  },
+  cardInteractions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    // ajustar según sea necesario
+  },
+  userAvatars: {
+    // Estilo para contenedor de avatares
+  },
+  likesContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    // ajustar según sea necesario
+  },
+  likesText: {
+    // Estilo para el texto de 'likes'
+  }
+});
+
 export default Grupos;

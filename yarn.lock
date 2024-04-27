@@ -1831,6 +1831,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     "fastq" "^1.6.0"
 
+"@ptomasroos/react-native-multi-slider@^2.2.2":
+  "integrity" "sha512-HWyCnRD3Z3SbHK2FLWYmBBqd1B4iXipeKv1+AK0FoY/CElEDTEixHE8hN60TsqxalPrznn798LE2Q4tHuCiyaA=="
+  "resolved" "https://registry.npmjs.org/@ptomasroos/react-native-multi-slider/-/react-native-multi-slider-2.2.2.tgz"
+  "version" "2.2.2"
+
 "@react-aria/checkbox@3.2.1":
   "integrity" "sha512-XnypnlVIfhB3CD7eSjSds8hNkzHgnhu0t48I1D0jYdL1O6tQC4UytPdIqlemRYBVHDloZkWerbjenpHnxhv8iA=="
   "resolved" "https://registry.npmjs.org/@react-aria/checkbox/-/checkbox-3.2.1.tgz"
@@ -2495,6 +2500,11 @@
     "graceful-fs" "^4.1.3"
     "prompts" "^2.4.2"
     "semver" "^7.5.2"
+
+"@react-native-community/slider@^4.5.2":
+  "integrity" "sha512-DbFyCyI7rwl0FkBkp0lzEVp+5mNfS5qU/nM2sK2aSguWhj0Odkt1aKHP2iW/ljruOhgS/O4dEixXlne4OdZJDQ=="
+  "resolved" "https://registry.npmjs.org/@react-native-community/slider/-/slider-4.5.2.tgz"
+  "version" "4.5.2"
 
 "@react-native-firebase/app@^19.1.2", "@react-native-firebase/app@19.1.2":
   "integrity" "sha512-5PJSbsdl6xvWq+V5/MfmeLWkpf1tcIheP6UYHgIy8p/mfsQRQIzUSDD7MMKdJqSQOrjdu91hWGdDvnRIdk+f1g=="

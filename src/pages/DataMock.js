@@ -156,3 +156,56 @@ export const styles = StyleSheet.create({
       values: ["Seleccionar", "Mujeres y Hombres"]
     }
   ];
+
+  export const places = [
+    {
+      id: '1',
+      name: 'Lake Braise',
+      rating: '4.7',
+      country: 'Italy',
+      image: require('../assets/bg2.jpg'), // Asegúrate de reemplazar esto con la ruta correcta
+    },
+    {
+      id: '2',
+      name: 'Volcan',
+      rating: '4.6',
+      country: 'Greece',
+      image: require('../assets/bg1.jpg'), // Asegúrate de reemplazar esto con la ruta correcta
+    },
+    {
+      id: '3',
+      name: 'Patagonia',
+      rating: '4.9',
+      country: 'Chile',
+      image: require('../assets/bg3.jpg'), // Asegúrate de reemplazar esto con la ruta correcta
+    },
+    // ...otros lugares
+  ];
+
+  export const exploreMoreData = [
+    {
+      id: '3',
+      name: 'Bali',
+      country: 'Indonesia',
+      image: require('../assets/bg5.jpg'), // Asegúrate de cambiar esto por la ruta correcta de tu imagen
+      likes: '12k',
+      userImages: [
+        require('../assets/person1.jpg'), // Rutas de ejemplo, reemplácelas por las correctas
+        require('../assets/person4.jpg'),
+        require('../assets/person2.jpg'),
+      ],
+    },
+    {
+      id: '4',
+      name: 'Soneva Jani',
+      country: 'Maldives',
+      image: require('../assets/bg4.jpg'),
+      likes: '12k',
+      userImages: [
+        require('../assets/person5.jpg'),
+        require('../assets/person3.jpg'),
+        require('../assets/person6.jpg'),
+      ],
+    },
+    // ...más datos
+  ];
