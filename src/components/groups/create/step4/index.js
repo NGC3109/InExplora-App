@@ -30,7 +30,7 @@ const P4_GroupSize_Template = ({
                 mt={1}
                 onValueChange={itemValue => handleChangeSize(itemValue)}
             >
-                {Array.from({ length: 10 }, (_, i) => i + 1).map(value => (
+                {Array.from({ length: 9 }, (_, i) => i + 2).map(value => (
                     <Select.Item key={value} label={`${value}`} value={value} />
                 ))}
             </Select>

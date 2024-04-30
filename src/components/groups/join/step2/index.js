@@ -26,7 +26,7 @@ const Join_P2_Template = ({
           onPress={() => toggleSwitch(power.id, power.title)}
         >
            <Image
-            source={require('../../../../assets/check.jpg')} // Asegúrate de que la ruta de la imagen sea correcta
+            source={require('../../../../assets/check.png')} // Asegúrate de que la ruta de la imagen sea correcta
             style={styles.circleIcon}
           />
           <View style={styles.powerDescription}>

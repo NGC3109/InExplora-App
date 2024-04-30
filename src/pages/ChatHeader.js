@@ -12,10 +12,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#fff',
-    borderBottomColor: '#f0f0f0',
-    borderBottomWidth: 1,
+    padding: 5,
   },
   avatar: {
     width: 40,

@@ -61,7 +61,7 @@ const GooglePlacesAutocomplete = ({ onSelect }) => {
                     width: json.result.photos[0].width
                 }] : [],
                 rating: json.result.rating && json.result.rating,
-                description: description,
+                description: json.result.name,
                 reviews: json.result.reviews && json.result.reviews.map(review => ({
                     author_name: review.author_name,
                     profile_photo_url: review.profile_photo_url,

@@ -31,6 +31,7 @@ const Login = () => {
         
         const { email } = firebaseResult.user;
         dispatch(getUser(email));
+        console.log('email: ',email )
         navigation.navigate("MainTabs");
         // Verificar la respuesta del backend
         // if (response.status === 201) {
