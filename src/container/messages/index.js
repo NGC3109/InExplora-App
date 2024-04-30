@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback  } from 'react';
 
 import { format, isToday  } from 'date-fns';
 import io from 'socket.io-client';
@@ -83,8 +83,10 @@ const MessageScreen = () => {
       tempMessageId,
       sender: currentUserId.id
     };
-  
-    socket.emit("sendMessage", { ...newMessage, chatId });
+
+    if (socket) {
+      socket.emit("sendMessage", { ...newMessage, chatId });
+    }
 
     setMessages(prevMessages => {
       const updatedMessages = [newMessage, ...prevMessages];
@@ -105,6 +107,15 @@ const MessageScreen = () => {
   const handleAttachment = () => {
     console.log('Attachment');
   };
+
+  const handleViewableItemsChanged = useCallback(({ viewableItems }) => {
+    const ids = viewableItems.map(item => item.item._id);
+    if (socket && socket.connected) {
+      socket.emit("markMessagesRead", { messageIds: ids, userId: currentUserId.id, chatId });
+    }
+  }, [socket, currentUserId.id, chatId]); 
+  
+
   return (
     <MessageTemplate 
         handleAttachment={handleAttachment}
@@ -114,6 +125,7 @@ const MessageScreen = () => {
         messages={messages}
         messageText={messageText}
         setMessageText={setMessageText}
+        handleViewableItemsChanged={handleViewableItemsChanged}
         // handleScroll={handleScroll}
     />
   );

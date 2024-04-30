@@ -18,6 +18,7 @@ const MessageTemplate = ({
     messages,
     setMessageText,
     messageText,
+    handleViewableItemsChanged,
 }) => {
   const renderMessageItem = ({ item, index }) => (
     <View
@@ -63,6 +64,10 @@ const MessageTemplate = ({
                 onEndReachedThreshold={0.1}
                 keyboardShouldPersistTaps='handled'
                 contentContainerStyle={{ flexGrow: 1 }}
+                onViewableItemsChanged={handleViewableItemsChanged}
+                viewabilityConfig={{
+                  itemVisiblePercentThreshold: 50 // Considerar un mensaje como "visto" si el 50% es visible
+                }}
               />
         </ImageBackground>
         <View style={styles.inputContainer}>
