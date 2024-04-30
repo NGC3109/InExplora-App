@@ -5,6 +5,18 @@ export const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: 'white', // Fondo blanco
     },
+    messageCountContainer: {
+      padding: 5,
+      backgroundColor: 'red',  // Color de fondo del badge, puede ser ajustado
+      borderRadius: 10,         // Hace que el badge sea circular
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginLeft: 'auto'        // Alinea el badge a la derecha
+    },
+    messageCountText: {
+      color: 'white',           // Color del texto dentro del badge
+      fontSize: 14              // Tamaño del texto del badge
+    },
     avatarContainer: {
       position: 'relative',
     },

@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 const HeaderWithIcons = () => {
   const currentUser = useSelector(state => state.userReducer.user);
   const requestCount = useSelector(state => state.socketReducer.joinRequestCount);
+  const unreadMessageCount = useSelector(state => state.socketReducer.unreadMessageCount);
   const navigation = useNavigation()
   useSocket(currentUser.id)
   return(
@@ -24,10 +25,10 @@ const HeaderWithIcons = () => {
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("messages")} style={styles.iconButton}>
         <Icon name="envelope-o" size={24} />
-        {requestCount > 0 && (
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>{requestCount}</Text>
-          </View>
+        {unreadMessageCount > 0 && (
+            <View style={styles.badge}>
+                <Text style={styles.badgeText}>{unreadMessageCount}</Text>
+            </View>
         )}
       </TouchableOpacity>
     </View>

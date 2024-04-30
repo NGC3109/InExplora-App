@@ -82,9 +82,9 @@ const Chats = ({ navigation }) => {
         </View>
         <View style={styles.dateAndBadgeContainer}>
           <Text style={styles.messageDate}>{formatTimestamp(item.date)}</Text>
-          {item.messages > 0 && (
+          {item.unreadCount > 0 && (
             <View style={styles.messageCountContainer}>
-              <Text style={styles.messageCountText}>{item.messages}</Text>
+              <Text style={styles.messageCountText}>{item.unreadCount}</Text>
             </View>
           )}
         </View>

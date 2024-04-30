@@ -23,6 +23,18 @@ const MessageScreen = () => {
             newSocket.emit("joinChat", { chatId });
             newSocket.emit("getOldMessages", { _id: chatId });
         });
+        newSocket.on("messageConfirmation", (confirmation) => {
+          if (confirmation.status === 'confirmed') {
+            setMessages(prevMessages => {
+              return prevMessages.map(msg => {
+                if (msg.tempMessageId === confirmation.tempMessageId) {
+                  return { ...msg, _id: confirmation.messageId, tempMessageId: undefined, pending: false };
+                }
+                return msg;
+              });
+            });
+          }
+        });
         newSocket.on("oldMessages", (response) => {
           const formattedNewMessages = formatMessages(response.data.map(msg => ({
             ...msg,
@@ -51,9 +63,11 @@ const MessageScreen = () => {
         newSocket.off("connect");
         newSocket.off("oldMessages");
         newSocket.off("newMessage");
+        newSocket.off("messageConfirmation");
         newSocket.disconnect();
         };
-    }, [chatId, currentUserId]);
+  }, [chatId, currentUserId]);
+  
   const formatMessages = (messages) => {
     return messages.map((msg, index, array) => {
       const isSentByCurrentUser = msg.sender === currentUserId.id;
@@ -61,26 +75,26 @@ const MessageScreen = () => {
         index === array.length - 1 ||
         array[index + 1].sender !== msg.sender;
       const showAvatar = !isSentByCurrentUser && isLastUninterruptedMessageByUser;
+      const pendingStatus = msg.pending ? 'Enviando...' : 'Enviado';
   
       return {
         ...msg,
         showAvatar,
-        isSentByCurrentUser: isSentByCurrentUser,
+        isSentByCurrentUser,
+        pendingStatus, // Agrega estado pendiente al mensaje
         isReceived: msg.receivedBy && msg.receivedBy.includes(currentUserId.id),
         isRead: msg.readBy && msg.readBy.includes(currentUserId.id)
       };
     });
   };
+
   const handleSend = () => {
     if (!messageText.trim()) return;
-    
-    const tempMessageId = Date.now();
+
     const newMessage = {
-      _id: Date.now().toString(),
       message: messageText,
       timestamp: new Date(),
       isSentByCurrentUser: true,
-      tempMessageId,
       sender: currentUserId.id
     };
 
@@ -110,8 +124,10 @@ const MessageScreen = () => {
 
   const handleViewableItemsChanged = useCallback(({ viewableItems }) => {
     const ids = viewableItems.map(item => item.item._id);
-    if (socket && socket.connected) {
+    if (ids.length > 0 && socket) {
       socket.emit("markMessagesRead", { messageIds: ids, userId: currentUserId.id, chatId });
+    } else {
+      console.log('Socket no está conectado o es null:', socket);
     }
   }, [socket, currentUserId.id, chatId]); 
   
