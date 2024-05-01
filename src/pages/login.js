@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Asegúrate de tener esta librería
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import Config from 'react-native-config';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../actions/users/userActions';
 import { Alert } from '../components/ui/Alert';
 import { styles } from '../styles/login/signIn';
@@ -17,6 +17,8 @@ const Login = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(false);
+  const currentUserId = useSelector(state => state.userReducer.user);
+
   GoogleSignin.configure({
       webClientId: Config.WEB_CLIENT_ID,
   });
@@ -30,16 +32,6 @@ const Login = () => {
         
         const { email } = firebaseResult.user;
         dispatch(getUser(email));
-        console.log('email: ',email )
-        navigation.navigate("MainTabs");
-        // Verificar la respuesta del backend
-        // if (response.status === 201) {
-        //     // Usuario creado exitosamente, procede según sea necesario
-        //     navigation.navigate("MainTabs");
-        // } else {
-        //     // Manejar respuesta no exitosa, según sea necesario
-        //     console.error('Error en la creación del usuario en el backend');
-        // }
     } catch (error) {
         console.error('Error de autenticación o conexión con el backend:', error);
         setAlert(true)
@@ -53,7 +45,6 @@ const Login = () => {
     try {
       const response = await auth().signInWithEmailAndPassword(email, password);
       dispatch(getUser(response.user.email));
-      navigation.navigate("MainTabs");
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
       setAlert(true);

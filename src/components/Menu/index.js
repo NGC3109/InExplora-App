@@ -1,11 +1,10 @@
-import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from '../../pages/Home';
-import MiPerfil from './../../pages/MiPerfil';
 import Grupos from '../../pages/Grupos';
 import MessageScreen from '../../container/messages';
 import ChatHeader from '../../pages/ChatHeader';
@@ -36,6 +35,10 @@ import CongratulationsRequestToJoin from '../../container/groups/join/congratula
 import SignUp_Container from '../Login/signup';
 import P1_SignUp_Container from '../../container/login/signup/step1';
 import HeaderWithIcons from '../ui/HeaderWithIcons';
+import auth from '@react-native-firebase/auth';
+import { getUser } from '../../actions/users/userActions';
+import PerfilContainer from '../../container/perfil';
+import { useDispatch } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -92,7 +95,7 @@ const MainTabNavigator = () => {
       }
       >
       {/* <Tab.Screen name="DetailGroup" component={DetailGroup} options={{ headerShown: false }}/> */}
-      <Tab.Screen name="Inicio" component={Home} options={({ navigation, route }) => ({
+      <Tab.Screen name="Inicio" component={Home} options={() => ({
         headerTitle: () => 
         <HeaderWithIcons />,
         headerStyle,
@@ -100,23 +103,14 @@ const MainTabNavigator = () => {
       <Tab.Screen name="Grupos" component={Grupos} options={{ headerTitleAlign: 'center' }} />
       <Tab.Screen 
         name="MiPerfil" 
-        component={MiPerfil}  
-        options={{ 
-          title: 'Perfil', 
-          headerTitleAlign: 'center',
-          headerStyle: {
-            backgroundColor: 'white',
-            shadowColor: 'black',
-            shadowOffset: { width: 0, height: 2 },
-            shadowRadius: 2,
-            elevation: 8
-          }
-        }}/>
+        component={PerfilContainer}
+        options={{ headerShown: false }}
+      />
     </Tab.Navigator>
   );
 };
 
-const RootStackNavigator = () => {
+const RootStackNavigator = ({ user }) => {
   return (
     <RootStack.Navigator
       screenOptions={{
@@ -126,16 +120,19 @@ const RootStackNavigator = () => {
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // Esta es la línea clave para animaciones de deslizamiento
       }}
     >
-      <RootStack.Screen
-        name="Login"
-        component={Login}
-        options={{ headerShown: false }} // Esconde la barra de navegación para este stack
-      />
-      <RootStack.Screen
-        name="MainTabs"
-        component={MainTabNavigator}
-        options={{ headerShown: false }} // Esconde la barra de navegación para este stack
-      />
+      { user ? (
+        <RootStack.Screen
+          name="MainTabs"
+          component={MainTabNavigator}
+          options={{ headerShown: false }} // Esconde la barra de navegación para este stack
+        />
+      ) : (
+        <RootStack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }} // Esconde la barra de navegación para este stack
+        />
+      )}
         <RootStack.Screen
           name="Detalle"
           component={MessageScreen}
@@ -297,9 +294,28 @@ const RootStackNavigator = () => {
 };
 
 const Menu = () => {
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  const onAuthStateChanged = (user) => {
+    if(user){
+      dispatch(getUser(user.email));
+    }
+    setUser(user);
+    if (initializing) setInitializing(false);
+  };
+
+  if (initializing) return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}><ActivityIndicator size="large" /></View>;
+
   return (
     <NavigationContainer>
-      <RootStackNavigator />
+      <RootStackNavigator user={user}/>
     </NavigationContainer>
   );
 };

@@ -1,6 +1,12 @@
 import axios from 'axios';
 import Config from 'react-native-config';
-import { PREPARE_TO_CREATE, SAVE_USER, DISPLAYNAME_TO_CREATE, GET_USER } from '../../utils/constants';
+import { PREPARE_TO_CREATE, SAVE_USER, DISPLAYNAME_TO_CREATE, GET_USER, CLEAR_USER } from '../../utils/constants';
+
+export const clearUserData = () => {
+  return {
+    type: CLEAR_USER
+  };
+};
 
 export const saveUser = (userData) => {
   return async (dispatch) => {
