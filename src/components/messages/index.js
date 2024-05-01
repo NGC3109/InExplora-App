@@ -58,7 +58,7 @@ const MessageTemplate = ({
               <FlatList
                 data={messages}
                 renderItem={renderMessageItem}
-                keyExtractor={(item) => item._id}
+                keyExtractor={item => item._id}
                 onEndReached={() => {}}
                 inverted
                 onEndReachedThreshold={0.1}

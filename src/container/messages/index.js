@@ -5,6 +5,8 @@ import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
 import MessageTemplate from '../../components/messages';
+import { ObjectId } from 'bson';
+import 'react-native-get-random-values';
 
 const MessageScreen = () => {
     const route = useRoute();
@@ -15,6 +17,7 @@ const MessageScreen = () => {
     const [socket, setSocket] = useState(null);
     const scrollViewRef = useRef(null);
     const currentUserId = useSelector(state => state.userReducer.user);
+
     useEffect(() => {
         const newSocket = io("http://192.168.28.1:3001");
         setSocket(newSocket);
@@ -22,18 +25,6 @@ const MessageScreen = () => {
         newSocket.on("connect", () => {
             newSocket.emit("joinChat", { chatId });
             newSocket.emit("getOldMessages", { _id: chatId });
-        });
-        newSocket.on("messageConfirmation", (confirmation) => {
-          if (confirmation.status === 'confirmed') {
-            setMessages(prevMessages => {
-              return prevMessages.map(msg => {
-                if (msg.tempMessageId === confirmation.tempMessageId) {
-                  return { ...msg, _id: confirmation.messageId, tempMessageId: undefined, pending: false };
-                }
-                return msg;
-              });
-            });
-          }
         });
         newSocket.on("oldMessages", (response) => {
           const formattedNewMessages = formatMessages(response.data.map(msg => ({
@@ -76,7 +67,6 @@ const MessageScreen = () => {
         array[index + 1].sender !== msg.sender;
       const showAvatar = !isSentByCurrentUser && isLastUninterruptedMessageByUser;
       const pendingStatus = msg.pending ? 'Enviando...' : 'Enviado';
-  
       return {
         ...msg,
         showAvatar,
@@ -85,6 +75,7 @@ const MessageScreen = () => {
         isReceived: msg.receivedBy && msg.receivedBy.includes(currentUserId.id),
         isRead: msg.readBy && msg.readBy.includes(currentUserId.id)
       };
+      
     });
   };
 
@@ -92,6 +83,7 @@ const MessageScreen = () => {
     if (!messageText.trim()) return;
 
     const newMessage = {
+      _id: new ObjectId().toString(),
       message: messageText,
       timestamp: new Date(),
       isSentByCurrentUser: true,
@@ -106,7 +98,6 @@ const MessageScreen = () => {
       const updatedMessages = [newMessage, ...prevMessages];
       return formatMessages(updatedMessages);
     });
-  
     setMessageText('');
   };
 

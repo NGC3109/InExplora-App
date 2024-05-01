@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Asegúrate de tener esta librería
-import { Checkbox, NativeBaseProvider } from 'native-base';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import Config from 'react-native-config';
 import { useDispatch } from 'react-redux';
 import { getUser } from '../actions/users/userActions';
 import { Alert } from '../components/ui/Alert';
+import { styles } from '../styles/login/signIn';
 
 const Login = () => {
   const dispatch = useDispatch();
-  const [isSelected, setSelection] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
@@ -63,14 +62,21 @@ const Login = () => {
     }
   };
   return (
-    <NativeBaseProvider>
+    <>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        <Text style={styles.welcomeBack}>Bienvenidos 👋</Text>
-        <Text style={styles.signInText}>Inicia sesion y comienza con la gran aventura de descubrir lo InExplora-do</Text>
+        <Text 
+          style={styles.welcomeBack} 
+          accessibilityLabel='Bienvenidos'
+        >Bienvenidos 👋</Text>
+        <Text 
+          style={styles.signInText} 
+          accessibilityLabel='Inicia sesion y comienza con la gran aventura de descubrir lo InExplora-do'
+        >Inicia sesion y comienza con la gran aventura de descubrir lo InExplora-do</Text>
         <TextInput
            style={styles.input}
            placeholder="Correo electrónico"
            value={email}
+           accessibilityLabel='Correo electrónico'
            onChangeText={setEmail}
            autoCapitalize="none"
            keyboardType="email-address"
@@ -79,114 +85,62 @@ const Login = () => {
           style={styles.input}
           placeholder="Contraseña"
           secureTextEntry
+          accessibilityLabel='Contraseña'
           value={password}
           onChangeText={setPassword}
         />
         <View style={styles.checkboxContainer}>
-          <Checkbox
-            isChecked={isSelected}
-            onChange={setSelection}
-            accessibilityLabel="Recuerdame"
-          />
-          <Text style={styles.label}> Recuerdame</Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+            accessibilityLabel='Olvidaste tu contraseña?'
+          >
             <Text style={styles.forgotPassword}>Olvidaste tu contraseña?</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.signInButton} onPress={handleEmailLogin} disabled={loading}>
+        <TouchableOpacity 
+          style={styles.signInButton} 
+          onPress={handleEmailLogin} 
+          disabled={loading}
+          accessibilityLabel="Iniciar sesión con correo y contraseña"
+        >
           <Text style={styles.signInButtonText}>Iniciar sesion</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('signup')}>
+        <TouchableOpacity 
+          onPress={() => navigation.navigate('signup')}
+          accessibilityLabel="Crear una nueva cuenta"
+        >
             <Text style={styles.forgotPassword}>Crear cuenta</Text>
           </TouchableOpacity>
         {
-          alert && <Alert message="Error en el servicio de google, ingrese nuevamente." type="danger" />
+          alert && <Alert 
+                      accessibilityLabel="Error en el servicio de google, ingrese nuevamente." 
+                      message="Error en el servicio de google, ingrese nuevamente." 
+                      type="danger" 
+                    />
         }
-        <Text style={styles.orText}>o</Text>
-        <TouchableOpacity style={[styles.button, { marginTop: 8 }]} onPress={handleLogin} disabled={loading}>
+        <Text 
+          style={styles.orText} 
+          accessibilityLabel="o"
+        >o</Text>
+        <TouchableOpacity 
+          style={[styles.button, { marginTop: 8 }]} 
+          onPress={handleLogin} 
+          disabled={loading}
+          accessibilityLabel="Iniciar sesión con Google"
+        >
           <Icon name="google" size={24} color="#DB4437" />
           <Text style={styles.buttonText}>Continuar con Google</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity 
+          accessibilityLabel="Iniciar sesión con Facebook"
+          style={styles.button}
+        >
           <Icon name="facebook" size={24} color="#3b5998" />
           <Text style={styles.buttonText}>Continuar con Facebook</Text>
         </TouchableOpacity>
       </ScrollView>
-    </NativeBaseProvider>
+    </>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  contentContainer: {
-    padding: 16,
-    alignItems: 'center',
-  },
-  welcomeBack: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    marginTop: 50,
-  },
-  signInText: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 30,
-    textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 10,
-    padding: 12,
-    width: '100%',
-    marginBottom: 10,
-  },
-  checkboxContainer: {
-    flexDirection: 'row',
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  checkbox: {
-    marginRight: 8,
-  },
-  label: {
-    marginRight: 10,
-  },
-  forgotPassword: {
-    color: '#007bff',
-  },
-  signInButton: {
-    backgroundColor: '#007bff',
-    borderRadius: 10,
-    padding: 12,
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  signInButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  orText: {
-    alignSelf: 'center',
-    marginVertical: 12,
-  },
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 10,
-    padding: 12,
-    width: '100%',
-    marginBottom: 10,
-  },
-  buttonText: {
-    marginLeft: 10,
-    fontWeight: 'bold',
-  },
-});
+
 export default Login;
