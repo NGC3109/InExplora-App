@@ -65,32 +65,34 @@ const Chats = ({ navigation }) => {
       return format(date, 'MMM d, p');
     }
   };
-  const UserItem = React.memo(({ item }) => (
-    <TouchableWithoutFeedback onPress={() => goDetails(item._id, item.groupName, item.avatar)} style={styles.userContainer}>
-      <View style={styles.userContainer}>
-        <View style={styles.avatarContainer}>
-          <Image source={{ uri: item.avatar }} style={styles.avatar} />
+  const UserItem = React.memo(({ item }) => {
+    return(
+      <TouchableWithoutFeedback onPress={() => goDetails(item._id, item.groupName, item.avatar)} style={styles.userContainer}>
+        <View style={styles.userContainer}>
+          <View style={styles.avatarContainer}>
+            <Image source={{ uri: item.avatar }} style={styles.avatar} />
+          </View>
+          <View style={styles.messageDetails}>
+            <Text style={styles.userName}>{item.groupName}</Text>
+            <Text
+              style={styles.lastMessage}
+              numberOfLines={1}
+              ellipsizeMode='tail'>
+              {item?.lastMessage?.message.length > 20 ? `${item.displayName}: ${item.lastMessage.message.substring(0, 20)}...` : `${item.displayName}: ${item.lastMessage.message}`}
+            </Text>
+          </View>
+          <View style={styles.dateAndBadgeContainer}>
+            <Text style={styles.messageDate}>{formatTimestamp(item.date)}</Text>
+            {item.unreadCount > 0 && (
+              <View style={styles.messageCountContainer}>
+                <Text style={styles.messageCountText}>{item.unreadCount}</Text>
+              </View>
+            )}
+          </View>
         </View>
-        <View style={styles.messageDetails}>
-          <Text style={styles.userName}>{item.groupName}</Text>
-          <Text
-            style={styles.lastMessage}
-            numberOfLines={1}
-            ellipsizeMode='tail'>
-            {item?.lastMessage?.length > 20 ? `${item.displayName}: ${item.lastMessage.substring(0, 20)}...` : `${item.displayName}: ${item.lastMessage}`}
-          </Text>
-        </View>
-        <View style={styles.dateAndBadgeContainer}>
-          <Text style={styles.messageDate}>{formatTimestamp(item.date)}</Text>
-          {item.unreadCount > 0 && (
-            <View style={styles.messageCountContainer}>
-              <Text style={styles.messageCountText}>{item.unreadCount}</Text>
-            </View>
-          )}
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
-  ));
+      </TouchableWithoutFeedback>
+    )
+  });
   return (
     <View style={styles.container}>
       <FlatList

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { TouchableOpacity, View, ActivityIndicator, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
@@ -38,7 +38,7 @@ import HeaderWithIcons from '../ui/HeaderWithIcons';
 import auth from '@react-native-firebase/auth';
 import { getUser } from '../../actions/users/userActions';
 import PerfilContainer from '../../container/perfil';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -71,36 +71,55 @@ const CustomTabBarButton = ({ children, onPress, focused }) => {
   );
 };
 const MainTabNavigator = () => {
+  const currentUser = useSelector(state => state.userReducer.user);
   return (
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarStyle: {
-            flexDirection: 'row',
-          },
-          tabBarIcon: ({ color }) => {
-            let iconName;
-            if (route.name === 'Inicio') {
-              iconName = 'home';
-            } else if (route.name === 'MiPerfil') {
-              iconName = 'user';
-            } else if (route.name === 'Grupos') {
-              iconName = 'group';
-            }
-            return <Icon name={iconName} size={20} color={color} />;
-          },
-          tabBarButton: (props) => (
-            <CustomTabBarButton {...props} focused={props.accessibilityState.selected} />
-          )
-        })
-      }
-      >
-      {/* <Tab.Screen name="DetailGroup" component={DetailGroup} options={{ headerShown: false }}/> */}
-      <Tab.Screen name="Inicio" component={Home} options={() => ({
-        headerTitle: () => 
-        <HeaderWithIcons />,
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarStyle: {
+          flexDirection: 'row',
+        },
+        tabBarIcon: ({ focused, color }) => {
+          switch (route.name) {
+            case 'Inicio':
+              return <Icon name="home" size={20} color={color} />;
+            case 'MiPerfil':
+              // Usar la imagen del perfil del usuario si está disponible
+              return (
+                <Image
+                  source={{ uri: currentUser?.profilePicture || 'https://via.placeholder.com/20' }}  // URL de fallback
+                  style={{ width: 20, height: 20, borderRadius: 10, borderWidth: 1, borderColor: '#ccc' }}
+                />
+              );
+            case 'Grupos':
+              return <Icon name="group" size={20} color={color} />;
+            case 'nuevo':
+              return <Icon name="plus" size={20} color={color} />;
+            case 'destinos':
+              return <Icon name="plane" size={20} color={color} />;
+            default:
+              return null;
+          }
+        },
+        tabBarButton: (props) => (
+          <CustomTabBarButton {...props} focused={props.accessibilityState.selected} />
+        )
+      })}
+    >
+      <Tab.Screen name="Inicio" component={Home} options={{
+        headerTitle: () => <HeaderWithIcons />,
         headerStyle,
-      })} />
+      }} />
       <Tab.Screen name="Grupos" component={Grupos} options={{ headerTitleAlign: 'center' }} />
+      <Tab.Screen name="nuevo" component={GroupContainer} options={({navigation}) => ({
+          headerTitle: () => <GroupHeader navigation={navigation} step={1}/>,
+          headerLeft: () => (
+            <Header onPress={() => navigation.navigate('MiPerfil')} />
+          ),
+          drawerItemStyle: { height: 0 },
+          swipeEnabled: false,
+          headerStyle,
+        })}/>
+      <Tab.Screen name="destinos" component={Grupos} options={{ headerTitleAlign: 'center' }} />
       <Tab.Screen 
         name="MiPerfil" 
         component={PerfilContainer}
