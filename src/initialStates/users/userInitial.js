@@ -6,6 +6,11 @@ export const initialState = {
         bio: null,
         interests: null,
         profilePicture: null,
-        pais: null
+        pais: null,
+        superpower: null,
+        genre: null,
+        birthday: null,
+        followers: null,
+        following: null,
     }
 };

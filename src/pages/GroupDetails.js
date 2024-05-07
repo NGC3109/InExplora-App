@@ -8,13 +8,9 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 const DetailGroup = ({ navigation, route }) => {
   const { groupId } = route.params;
   const dispatch = useDispatch();
-  const currentUserId = useSelector(state => state.userReducer.user);
   const groupDetails = useSelector(state => state.groupReducer.groupDetails);
 
   const handleJoinGroup = () => {
-    // const message = "Me gustaría unirme a su grupo porque...";
-    // const superPower = "Organización de viajes";
-    // dispatch(requestToJoinGroup(currentUserId.id, groupId, message, superPower));
     navigation.navigate('join_step1', { groupId: groupId })
   };
 

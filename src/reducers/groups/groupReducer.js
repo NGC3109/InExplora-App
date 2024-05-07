@@ -30,7 +30,6 @@ import {
   LOAD_JOIN_REQUESTS_SUCCESS,
   LOAD_JOIN_REQUESTS_FAIL,
   SAVE_JOIN_MESSAGE,
-  SAVE_JOIN_SUPERPOWER,
   ACCEPT_JOIN_REQUEST_REQUEST,
   ACCEPT_JOIN_REQUEST_SUCCESS,
   ACCEPT_JOIN_REQUEST_FAIL,
@@ -42,7 +41,6 @@ const groupReducer = (state = initialState, action) => {
     case ACCEPT_JOIN_REQUEST_SUCCESS: return { ...state, joinRequestState: {loading: false, data: action.payload, error: null} };
     case ACCEPT_JOIN_REQUEST_FAIL: return { ...state, joinRequestState: {loading: false, error: action.payload} };
     case SAVE_JOIN_MESSAGE: return { ...state, sendRequestToJoin: { ...state.sendRequestToJoin, message: action.payload } };
-    case SAVE_JOIN_SUPERPOWER: return { ...state, sendRequestToJoin: { ...state.sendRequestToJoin, superpower: action.payload } };
     case LOAD_JOIN_REQUESTS_REQUEST: return { ...state, joinRequests: { loading: true,  error: null } };
     case LOAD_JOIN_REQUESTS_SUCCESS: return { ...state, joinRequests: { data: action.payload, loading: false, error: null } };
     case LOAD_JOIN_REQUESTS_FAIL: return {...state, joinRequests: { loading: false, error: action.payload } };

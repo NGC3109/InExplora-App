@@ -3,11 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import PerfilComponent from '../../components/perfil';
 import { loadGroupByUser } from '../../actions/groups/groupAction';
 import useAuth from '../../utils/hooks/useAuth';
+import { useNavigation } from '@react-navigation/native';
 
-export default function PerfilContainer({ navigation }) {
+export default function PerfilContainer() {
   const [activeTab, setActiveTab] = useState(0);
   const currentUser = useSelector(state => state.userReducer.user);
   const groupsByUser = useSelector(state => state.groupReducer.groupsByUser);
+  const navigation = useNavigation()
+
   const dispatch = useDispatch();
   const { logout } = useAuth();
   useEffect(() => {
@@ -19,8 +22,8 @@ export default function PerfilContainer({ navigation }) {
   const handleTabPress = (tabIndex) => {
     setActiveTab(tabIndex);
   };
-  const createGroup = () => {
-    navigation.navigate('crearGrupo');
+  const updateUser = () => {
+    navigation.navigate('update_user');
   };
 
   return (
@@ -28,9 +31,10 @@ export default function PerfilContainer({ navigation }) {
         activeTab={activeTab}
         groupsByUser={groupsByUser}
         handleTabPress={handleTabPress}
-        createGroup={createGroup}
+        updateUser={updateUser}
         currentUser={currentUser}
         logout={logout}
+        navigation={navigation}
     />
   );
 }

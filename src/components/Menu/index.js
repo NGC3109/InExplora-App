@@ -30,7 +30,6 @@ import { headerStyle } from '../../container/menu/constants';
 import P8_9_1_StartingTravel_Container from '../../container/groups/create/step8_9_1';
 import JoinRequestList_Template from '../groups/request';
 import Join_P1_Container from '../../container/groups/join/step1';
-import Join_P2_Container from '../../container/groups/join/step2';
 import CongratulationsRequestToJoin from '../../container/groups/join/congratulations';
 import SignUp_Container from '../Login/signup';
 import P1_SignUp_Container from '../../container/login/signup/step1';
@@ -39,6 +38,10 @@ import auth from '@react-native-firebase/auth';
 import { getUser } from '../../actions/users/userActions';
 import PerfilContainer from '../../container/perfil';
 import { useDispatch, useSelector } from 'react-redux';
+import UpdateUser from '../perfil/update';
+import UpdateGroups from '../groups/update';
+import P2_SignUp_Container from '../../container/login/signup/step2';
+import P3_SignUp_Container from '../../container/login/signup/step3';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -54,11 +57,12 @@ const styles = {
     elevation: 10,
   },
 };
+const PlaceholderComponent = () => (<View></View>)
 const CustomTabBarButton = ({ children, onPress, focused }) => {
   return (
     <TouchableOpacity
       style={{
-        flex: 1, // Esto asegura que el botón ocupe un espacio equitativo
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         ...styles.shadow,
@@ -83,10 +87,9 @@ const MainTabNavigator = () => {
             case 'Inicio':
               return <Icon name="home" size={20} color={color} />;
             case 'MiPerfil':
-              // Usar la imagen del perfil del usuario si está disponible
               return (
                 <Image
-                  source={{ uri: currentUser?.profilePicture || 'https://via.placeholder.com/20' }}  // URL de fallback
+                  source={{ uri: currentUser?.profilePicture || 'https://via.placeholder.com/20' }}
                   style={{ width: 20, height: 20, borderRadius: 10, borderWidth: 1, borderColor: '#ccc' }}
                 />
               );
@@ -102,7 +105,8 @@ const MainTabNavigator = () => {
         },
         tabBarButton: (props) => (
           <CustomTabBarButton {...props} focused={props.accessibilityState.selected} />
-        )
+        ),
+        tabBarLabel: () => null,
       })}
     >
       <Tab.Screen name="Inicio" component={Home} options={{
@@ -110,15 +114,23 @@ const MainTabNavigator = () => {
         headerStyle,
       }} />
       <Tab.Screen name="Grupos" component={Grupos} options={{ headerTitleAlign: 'center' }} />
-      <Tab.Screen name="nuevo" component={GroupContainer} options={({navigation}) => ({
-          headerTitle: () => <GroupHeader navigation={navigation} step={1}/>,
-          headerLeft: () => (
-            <Header onPress={() => navigation.navigate('MiPerfil')} />
-          ),
-          drawerItemStyle: { height: 0 },
-          swipeEnabled: false,
-          headerStyle,
-        })}/>
+      <Tab.Screen 
+          name="nuevo" 
+          component={PlaceholderComponent}
+          listeners={({ navigation }) => ({
+            tabPress: e => {
+              e.preventDefault();
+              navigation.navigate('crearGrupo');
+            }
+          })}
+          options={{
+            headerTitle: () => <GroupHeader navigation={navigation} step={1}/>,
+            headerLeft: () => (
+              <Header />
+            ),
+            headerStyle,
+          }}
+        />
       <Tab.Screen name="destinos" component={Grupos} options={{ headerTitleAlign: 'center' }} />
       <Tab.Screen 
         name="MiPerfil" 
@@ -169,7 +181,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="crearGrupo" component={GroupContainer} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} step={1}/>,
           headerLeft: () => (
-            <Header onPress={() => navigation.navigate('MiPerfil')} />
+            <Header onPress={() => navigation.goBack()} />
           ),
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
@@ -179,7 +191,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="detalleGrupo" component={DetailGroup} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} step={1}/>,
           headerLeft: () => (
-            <Header onPress={() => navigation.navigate('Grupos')} />
+            <Header onPress={() => navigation.goBack()} />
           ),
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
@@ -190,7 +202,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="step1" component={P1_GroupTravelWith_Women_Men_Container} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} step={2}/>,
           headerLeft: () => (
-            <Header onPress={() => navigation.navigate('crearGrupo')} />
+            <Header onPress={() => navigation.goBack()} />
           ),
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
@@ -200,7 +212,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="step2" component={P2_TravelMode_Container} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} step={3}/>,
           headerLeft: () => (
-            <Header onPress={() => navigation.navigate('step1')} />
+            <Header onPress={() => navigation.goBack()} />
           ),
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
@@ -210,7 +222,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="step3" component={P3_Accommodation_Container} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} step={4}/>,
           headerLeft: () => (
-            <Header onPress={() => navigation.navigate('step2')} />
+            <Header onPress={() => navigation.goBack()} />
           ),
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
@@ -220,7 +232,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="step4" component={P4_GroupSize_Container} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} step={5}/>,
           headerLeft: () => (
-            <Header onPress={() => navigation.navigate('step3')} />
+            <Header onPress={() => navigation.goBack()} />
           ),
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
@@ -230,7 +242,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="step5" component={P5_GroupMinMax_Container} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} step={6}/>,
           headerLeft: () => (
-            <Header onPress={() => navigation.navigate('step4')} />
+            <Header onPress={() => navigation.goBack()} />
           ),
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
@@ -240,7 +252,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="step6" component={P6_GroupTravelWithChildren_Container} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} step={7}/>,
           headerLeft: () => (
-            <Header onPress={() => navigation.navigate('step5')} />
+            <Header onPress={() => navigation.goBack()} />
           ),
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
@@ -250,7 +262,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="step7" component={P7_GroupTravelWithPets_Container} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} step={8}/>,
           headerLeft: () => (
-            <Header onPress={() => navigation.navigate('step6')} />
+            <Header onPress={() => navigation.goBack()} />
           ),
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
@@ -260,7 +272,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="step8" component={P8_GroupDescriptionContainer} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} step={9} />,
           headerLeft: () => (
-            <Header onPress={() => navigation.navigate('step7')} />
+            <Header onPress={() => navigation.goBack()} />
           ),
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
@@ -270,7 +282,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="step8_9" component={P8_9_Budget_Container} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} step={10}/>,
           headerLeft: () => (
-            <Header onPress={() => navigation.navigate('step8')} />
+            <Header onPress={() => navigation.goBack()} />
           ),
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
@@ -280,7 +292,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="step8_9_1" component={P8_9_1_StartingTravel_Container} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} step={10}/>,
           headerLeft: () => (
-            <Header onPress={() => navigation.navigate('step8_9')} />
+            <Header onPress={() => navigation.goBack()} />
           ),
           drawerItemStyle: { height: 0 },
           headerTitleAlign: 'center',
@@ -291,7 +303,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="step9" component={CreateGroupContainer} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} step={11}/>,
           headerLeft: () => (
-            <Header onPress={() => navigation.navigate('step8_9_1')} />
+            <Header onPress={() => navigation.goBack()} />
           ),
           
           drawerItemStyle: { height: 0 },
@@ -302,12 +314,14 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="congratulations" component={Congratuilations} options={{ title: 'Felicidades', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="joinRequest" component={JoinRequestList_Template} options={{ title: 'Solicitudes', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="join_step1" component={Join_P1_Container} options={{ title: 'Solicitud', headerTitleAlign: 'center' }}/>
-        <RootStack.Screen name="join_step2" component={Join_P2_Container} options={{ title: 'Solicitud', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="congratulations_request_to_join" component={CongratulationsRequestToJoin} options={{ title: 'Felicidades', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="signup" component={SignUp_Container} options={{ title: 'Únete a InExplora Hoy ✨', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="signUp_displayname" component={P1_SignUp_Container} options={{ title: 'Registra un nombre', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="messages" component={Chats} options={{ title: 'Mensajes', headerTitleAlign: 'center' }}/>
-        
+        <RootStack.Screen name="update_user" component={UpdateUser} options={{ title: 'Actualizar perfil', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="update_groups" component={UpdateGroups} options={{ title: 'Actualizar grupo', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="p2_signUp_genre" component={P2_SignUp_Container} options={{ title: 'Registra tu genero', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="p3_signUp_birthday" component={P3_SignUp_Container} options={{ title: 'Registra tu fecha de nacimiento', headerTitleAlign: 'center' }}/>
     </RootStack.Navigator>
   );
 };
@@ -319,7 +333,7 @@ const Menu = () => {
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
+    return subscriber;
   }, []);
 
   const onAuthStateChanged = (user) => {

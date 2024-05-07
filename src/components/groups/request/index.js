@@ -3,7 +3,6 @@ import { View, Text, FlatList, Image, TouchableWithoutFeedback, StyleSheet } fro
 import { NativeBaseProvider } from "native-base";
 import { useSelector, useDispatch } from 'react-redux';
 import { acceptJoinRequest, loadJoinRequestsByGroupId } from '../../../actions/groups/groupAction';
-import { SuperManIcon } from '../../../assets/vectores';
 
 const JoinRequestList_Template = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -28,7 +27,6 @@ const JoinRequestList_Template = ({ navigation }) => {
           <Text style={styles.cardTitle}>{item.displayName}</Text>
           <Text style={styles.cardSubTitle}>{item.message}</Text>
           <Text style={styles.cardDate}>{new Date(item.requestDate).toLocaleDateString()}</Text>
-          <Text><SuperManIcon /> Cocinero</Text>
           <TouchableWithoutFeedback onPress={() => handleChangeStatusRequest(item.id)}>
             <Text>Aceptar</Text>
           </TouchableWithoutFeedback>

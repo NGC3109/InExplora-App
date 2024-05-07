@@ -31,14 +31,12 @@ import {
     LOAD_JOIN_REQUESTS_SUCCESS,
     LOAD_JOIN_REQUESTS_FAIL,
     SAVE_JOIN_MESSAGE,
-    SAVE_JOIN_SUPERPOWER,
     ACCEPT_JOIN_REQUEST_REQUEST,
     ACCEPT_JOIN_REQUEST_SUCCESS,
     ACCEPT_JOIN_REQUEST_FAIL,
 } from "../../utils/constants";
 
 export const acceptJoinRequest = (requestId) => async (dispatch) => {
-  console.log('requestId: ', `${Config.API_ENDPOINT}groups/joinRequests/${requestId}/accept`)
   dispatch({ type: ACCEPT_JOIN_REQUEST_REQUEST });
   try {
     const response = await axios.patch(`${Config.API_ENDPOINT}groups/joinRequests/${requestId}/accept`);
@@ -46,22 +44,12 @@ export const acceptJoinRequest = (requestId) => async (dispatch) => {
       type: ACCEPT_JOIN_REQUEST_SUCCESS,
       payload: response.data
     });
-    // Puedes hacer algo adicional aquí después de aceptar la solicitud, como mostrar una notificación
   } catch (error) {
     dispatch({
       type: ACCEPT_JOIN_REQUEST_FAIL,
       payload: error.response ? error.response.data.error : 'Error desconocido'
     });
   }
-};
-
-export const saveJoinSuperPower = (superpower) => {
-  return (dispatch) => {
-    dispatch({
-      type: SAVE_JOIN_SUPERPOWER,
-      payload: superpower
-    });
-  };
 };
 
 export const saveJoinMessage = (message) => {
@@ -89,13 +77,12 @@ export const loadJoinRequestsByGroupId = (userId) => async (dispatch) => {
   }
 };
 
-export const requestToJoinGroup = (userId, groupId, message, superPower) => async (dispatch) => {
+export const requestToJoinGroup = (userId, groupId, message) => async (dispatch) => {
   dispatch({ type: REQUEST_TO_JOIN_GROUP_REQUEST });
   try {
     const requestBody = {
       user: userId,
-      message,
-      superPower
+      message
     };
     const response = await axios.post(`${Config.API_ENDPOINT}groups/users/${userId}/group/${groupId}/request-to-join`, requestBody);
     dispatch({

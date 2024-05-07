@@ -43,7 +43,7 @@ const Join_P1_Template = ({ message, setMessage, continueButton, limiteCaractere
       <View style={{ flex: 1 }} />
       <ButtonCustom 
         onPress={continueButton}
-        title="Siguiente paso"
+        title="Enviar solicitud"
       />
     </View>
   );

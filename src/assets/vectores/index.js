@@ -1,5 +1,5 @@
 import React from 'react';
-import Svg, { G, Polygon, Path} from 'react-native-svg';
+import Svg, { G, Polygon, Path, Ellipse} from 'react-native-svg';
 
 export const ArrowLeft = () => (
   <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -92,5 +92,15 @@ export const FiltrosIcon = () => (
     <Path fill="#FFF" d="M13,27a3,3,0,1,1,3-3A3,3,0,0,1,13,27Zm0-4a1,1,0,1,0,1,1A1,1,0,0,0,13,23Z"/>
     <Path fill="#FFF" d="M28,17H25a1,1,0,0,1,0-2h3a1,1,0,0,1,0,2Z"/>
     <Path fill="#FFF" d="M28,25H15a1,1,0,0,1,0-2H28a1,1,0,0,1,0,2Z"/>
+  </Svg>
+);
+
+export const GroupsIcon = () => (
+  <Svg width="34" height="34" viewBox="0 0 476 473" fill="none">
+    <Ellipse cx="238" cy="40" rx="41" ry="40" fill="black"/>
+    <Ellipse cx="435" cy="236" rx="41" ry="40" fill="black"/>
+    <Ellipse cx="238" cy="433" rx="41" ry="40" fill="black"/>
+    <Ellipse cx="41" cy="236" rx="41" ry="40" fill="black"/>
+    <Ellipse cx="238.5" cy="236" rx="75.5" ry="74" fill="black"/>
   </Svg>
 );

@@ -9,14 +9,24 @@ const HeaderWithIcons = () => {
   const currentUser = useSelector(state => state.userReducer.user);
   const requestCount = useSelector(state => state.socketReducer.joinRequestCount);
   const unreadMessageCount = useSelector(state => state.socketReducer.unreadMessageCount);
+  const generalRequestCount = useSelector(state => state.socketReducer.generalRequestCount);
+  
   const navigation = useNavigation()
   useSocket(currentUser.id)
   return(
   <View style={styles.headerContainer}>
     <Text style={styles.headerText}>InExplora</Text>
     <View style={styles.iconsContainer}>
+      <TouchableOpacity onPress={() => navigation.navigate("messages")} style={styles.iconButton}>
+        <Icon name="user-plus" size={24} />
+        {generalRequestCount > 0 && (
+            <View style={styles.badge}>
+                <Text style={styles.badgeText}>{generalRequestCount}</Text>
+            </View>
+        )}
+      </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("joinRequest")} style={styles.iconButton}>
-        <Icon name="heart-o" size={24} />
+        <Icon name="bell-o" size={24} />
         {requestCount > 0 && (
           <View style={styles.badge}>
             <Text style={styles.badgeText}>{requestCount}</Text>
@@ -24,7 +34,7 @@ const HeaderWithIcons = () => {
         )}
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("messages")} style={styles.iconButton}>
-        <Icon name="envelope-o" size={24} />
+        <Icon name="inbox" size={24} />
         {unreadMessageCount > 0 && (
             <View style={styles.badge}>
                 <Text style={styles.badgeText}>{unreadMessageCount}</Text>

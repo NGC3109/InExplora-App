@@ -35,9 +35,6 @@ const GroupContainer = ({ navigation }) => {
         // return  destino.description && destino.description?.trim().length > 0;
         return true;
     };
-    useEffect(() => {
-        console.log('currentUserId: ', currentUserId)
-    }, [currentUserId])
     return (
         <GroupTemplate 
             continueButton={continueButton}

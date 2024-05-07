@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Image, Text, TouchableOpacity, FlatList } from 'react-native';
 import ButtonCustom from '../../components/ui/Button';
-import { Alert } from '../ui/Alert';
+import Alert from '../ui/Alert';
 import GooglePlacesAutocomplete from '../ui/Testing';
 import { StarIcon } from '../../assets/vectores';
 
@@ -12,6 +12,8 @@ const GroupTemplate = ({
   destino,
   getPhotoUrl,
 }) => {
+  const [activeTab, setActiveTab] = useState('informacion');
+
   const Review = ({ author, rating, text, photo_profile }) => {
     return (
       <View style={styles.review}>
@@ -33,75 +35,67 @@ const GroupTemplate = ({
       </View>
     );
   };
-  const [activeTab, setActiveTab] = useState('informacion');
-  return (
-    <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+
+  const renderHeader = () => (
+    <>
       <GooglePlacesAutocomplete onSelect={onChangeText} />
-      {messageAlert && (
-        <Alert message="Ingrese un destino válido." type="danger" customStyle={styles.alert} />
-      )}
+      {messageAlert && <Alert message="Ingrese un destino válido." type="danger" customStyle={styles.alert} />}
       {destino.photos?.length > 0 && (
         <View style={styles.destinationCard}>
-          <View>
-            <Image
-              source={{ uri: destino.photos?.length > 0 ? getPhotoUrl(destino.photos[0].photo_reference) : 'https://via.placeholder.com/300x200' }}
-              style={styles.destinationImage}
-            />
-            <View style={styles.ratingOverlay}>
-              <Text style={styles.ratingText}>{destino.rating && destino.rating}</Text>
-              <StarIcon name="star" />
-            </View>
+          <Image
+            source={{ uri: getPhotoUrl(destino.photos[0].photo_reference) }}
+            style={styles.destinationImage}
+          />
+          <View style={styles.ratingOverlay}>
+            <Text style={styles.ratingText}>{destino.rating}</Text>
+            <StarIcon name="star" />
           </View>
           <Text style={styles.descriptionText}>
             {destino.description || 'No hay descripción disponible.'}
           </Text>
           <View style={styles.tabs}>
-              <TouchableOpacity
-                style={[styles.tab, activeTab === 'informacion' && styles.activeTab]}
-                onPress={() => setActiveTab('informacion')}
-              >
-                <Text style={styles.tabText}>Información</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.tab2, activeTab === 'comentarios' && styles.activeTab2]}
-                onPress={() => setActiveTab('comentarios')}
-              >
-                <Text style={styles.tabText}>Comentarios ({destino.reviews ? destino.reviews.length : 0})</Text>
-              </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.tab, activeTab === 'informacion' && styles.activeTab]}
+              onPress={() => setActiveTab('informacion')}
+            >
+              <Text style={styles.tabText}>Información</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.tab2, activeTab === 'comentarios' && styles.activeTab2]}
+              onPress={() => setActiveTab('comentarios')}
+            >
+              <Text style={styles.tabText}>Comentarios ({destino.reviews ? destino.reviews.length : 0})</Text>
+            </TouchableOpacity>
           </View>
           {activeTab === 'informacion' && (
-            <View style={{marginTop: 5}}>
-              <Text style={{color: 'black'}}>Pais: {destino.country || 'Sin información'}</Text>
-              <Text style={{color: 'black'}}>Region: {destino.region || 'Sin información'}</Text>
-              <View style={styles.weekday}>
-                <Text style={{color: 'black'}}>Horarios:</Text>
-                <View style={{alignContent: 'flex-start'}}>
-                  {destino.weekday ? destino.weekday.map((day, index) => (
-                    <Text style={{color: 'black'}} key={index}>{day}</Text>
-                  )) : <Text style={{color: 'black'}} key="sn">Sin información</Text>}
-                </View>
-              </View>
-              <Text style={{color: 'black'}}>Numero: </Text>
+            <View style={{ marginTop: 5 }}>
+              <Text style={{ color: 'black' }}>Pais: {destino.country || 'Sin información'}</Text>
+              <Text style={{ color: 'black' }}>Region: {destino.region || 'Sin información'}</Text>
             </View>
           )}
-          {activeTab === 'comentarios' && (
-            <View>
-              {destino.reviews ? destino.reviews.map((review, index) => (
-                <Review key={index} author={review.author_name} rating={4.5} text={review.text} photo_profile={review.profile_photo_url} />
-              ))
-                : <AlertInfo message="No tenemos comentarios para este destino." type="info" customStyle={styles.alert} />
-            }
-            </View>
-          )}
-          
         </View>
       )}
-    </ScrollView>
-      <View style={{flex: 1}} />
-      <View style={styles.buttonContainer}>
-        <ButtonCustom title="Continuar" onPress={continueButton} />
-      </View>
+    </>
+  );
+
+  const renderFooter = () => (
+    <View style={styles.buttonContainer}>
+      <ButtonCustom title="Continuar" onPress={continueButton} />
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={activeTab === 'comentarios' ? destino.reviews : []}
+        ListHeaderComponent={renderHeader}
+        renderItem={({ item }) => (
+          <Review key={item.id} author={item.author_name} rating={item.rating} text={item.text} photo_profile={item.profile_photo_url} />
+        )}
+        keyExtractor={(item, index) => index.toString()}
+        ListFooterComponent={renderFooter}
+        showsVerticalScrollIndicator={false}
+      />
     </View>
   );
 };

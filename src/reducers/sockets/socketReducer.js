@@ -1,7 +1,8 @@
-import { SET_JOIN_REQUEST_COUNT, SOCKET_CONNECTION_ERROR, SET_UNREAD_MESSAGE_COUNT  } from "../../utils/constants";
+import { SET_JOIN_REQUEST_COUNT, SOCKET_CONNECTION_ERROR, SET_UNREAD_MESSAGE_COUNT, SET_GENERAL_REQUEST_COUNT  } from "../../utils/constants";
 
 const initialState = {
     joinRequestCount: 0,
+    generalRequestCount: 0,
     socketError: null,
     unreadMessageCount: 0,
 };
@@ -12,6 +13,11 @@ const socketReducer = (state = initialState, action) => {
         return {
           ...state,
           joinRequestCount: action.payload,
+        };
+      case SET_GENERAL_REQUEST_COUNT:
+        return {
+          ...state,
+          generalRequestCount: action.payload,
         };
       case SOCKET_CONNECTION_ERROR:
         return {

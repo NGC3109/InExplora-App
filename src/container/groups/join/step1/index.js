@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { saveJoinMessage } from '../../../../actions/groups/groupAction';
+import { useDispatch, useSelector } from 'react-redux';
+import { requestToJoinGroup, saveJoinMessage } from '../../../../actions/groups/groupAction';
 import Join_P1_Template from '../../../../components/groups/join/step1';
 
 const Join_P1_Container = ({ navigation, route }) => {
     const { groupId } = route.params;
+    const currentUserId = useSelector(state => state.userReducer.user);
     const dispatch = useDispatch();
     const [message, setMessage] = useState('');
     const [messageAlert, setMessageAlert] = useState(false);
@@ -13,7 +14,7 @@ const Join_P1_Container = ({ navigation, route }) => {
     const continueButton = () => {
         dispatch(saveJoinMessage(message))
         if(isMessageValid()){
-            navigation.navigate('join_step2', { groupId: groupId });
+            requestToJoinGroup(currentUserId.id, groupId, message)
             setMessageAlert(false)
         }else{
             setMessageAlert(true)
