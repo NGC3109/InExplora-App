@@ -2,15 +2,15 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, FlatList, Image, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 import { NativeBaseProvider } from "native-base";
 import { useSelector, useDispatch } from 'react-redux';
-import { acceptJoinRequest, loadJoinRequestsByGroupId } from '../../../actions/groups/groupAction';
+import { acceptJoinRequest, loadGeneralRequestsByGroupId } from '../../../actions/groups/groupAction';
 
 const JoinRequestList_Template = ({ navigation }) => {
   const dispatch = useDispatch();
-  const joinRequest = useSelector(state => state.groupReducer.joinRequests);
+  const generalRequests = useSelector(state => state.groupReducer.generalRequests);
   const currentUserId = useSelector(state => state.userReducer.user);
 
   useEffect(() => {
-    dispatch(loadJoinRequestsByGroupId(currentUserId.id));
+    dispatch(loadGeneralRequestsByGroupId(currentUserId.id));
   }, [dispatch]);
 
   const goDetailsGroup = (item) => {
@@ -19,27 +19,31 @@ const JoinRequestList_Template = ({ navigation }) => {
   const handleChangeStatusRequest = (idRequest) => {
     dispatch(acceptJoinRequest(idRequest))
   }
-  const renderGridItem = useCallback(({ item }) => (
-    <TouchableWithoutFeedback onPress={() => goDetailsGroup(item)}>
-      <View style={styles.cardContainer}>
-        <Image source={{ uri: item.profilePicture || 'https://via.placeholder.com/150' }} style={styles.cardImage} />
-        <View style={styles.cardDetailsContainer}>
-          <Text style={styles.cardTitle}>{item.displayName}</Text>
-          <Text style={styles.cardSubTitle}>{item.message}</Text>
-          <Text style={styles.cardDate}>{new Date(item.requestDate).toLocaleDateString()}</Text>
-          <TouchableWithoutFeedback onPress={() => handleChangeStatusRequest(item.id)}>
-            <Text>Aceptar</Text>
-          </TouchableWithoutFeedback>
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
-  ), []);
+  const renderGridItem = useCallback(({ item }) => 
+  {
+    const backgroundColor = item.viewed ? 'white' : '#e0e0e0';
+    const coverImage = item.coverImage || 'https://via.placeholder.com/150';
+    return(
+      <TouchableWithoutFeedback onPress={() => navigation.navigate('detalleGrupo', { groupId: item.group?._id })}>
+          <View style={[styles.cardContainer, { backgroundColor }]}>
+            <Image source={{ uri: coverImage }} style={styles.cardImage} />
+            <View style={styles.cardDetailsContainer}>
+              {item.associatedName && (
+                <Text style={styles.cardTitle}>{item.associatedName}</Text>
+              )}
+              <Text style={styles.cardSubTitle}>{item.message}</Text>
+              <Text style={styles.cardDate}>{new Date(item.createdAt).toLocaleDateString()}</Text>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+    )
+  }, []);
   return (
     <NativeBaseProvider>
       <View style={styles.container}>
         <View style={styles.tabContent}>
           <FlatList
-            data={joinRequest?.data}
+            data={generalRequests?.data}
             renderItem={renderGridItem}
             keyExtractor={(item, index) => index.toString()}
             numColumns={1}

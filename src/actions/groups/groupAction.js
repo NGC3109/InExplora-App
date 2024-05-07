@@ -34,6 +34,9 @@ import {
     ACCEPT_JOIN_REQUEST_REQUEST,
     ACCEPT_JOIN_REQUEST_SUCCESS,
     ACCEPT_JOIN_REQUEST_FAIL,
+    LOAD_GENERAL_REQUESTS_REQUEST,
+    LOAD_GENERAL_REQUESTS_SUCCESS,
+    LOAD_GENERAL_REQUESTS_FAIL,
 } from "../../utils/constants";
 
 export const acceptJoinRequest = (requestId) => async (dispatch) => {
@@ -72,6 +75,24 @@ export const loadJoinRequestsByGroupId = (userId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: LOAD_JOIN_REQUESTS_FAIL,
+      payload: error.response ? error.response.data.error : 'Error desconocido'
+    });
+  }
+};
+
+
+
+export const loadGeneralRequestsByGroupId = (userId) => async (dispatch) => {
+  dispatch({ type: LOAD_GENERAL_REQUESTS_REQUEST });
+  try {
+    const response = await axios.get(`${Config.API_ENDPOINT}notifications/user/${userId}`);
+    dispatch({
+      type: LOAD_GENERAL_REQUESTS_SUCCESS,
+      payload: response.data.data
+    });
+  } catch (error) {
+    dispatch({
+      type: LOAD_GENERAL_REQUESTS_FAIL,
       payload: error.response ? error.response.data.error : 'Error desconocido'
     });
   }
