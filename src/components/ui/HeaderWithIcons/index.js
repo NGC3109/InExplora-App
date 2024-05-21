@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useSocket } from '../../../utils/hooks/useSocket';
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
+import { IconBubbleChat, IconHeartWithoutFill, IconJoinRequest, LogoInBlack } from '../../../assets/vectores';
 
 const HeaderWithIcons = () => {
   const currentUser = useSelector(state => state.userReducer.user);
@@ -15,10 +16,13 @@ const HeaderWithIcons = () => {
   useSocket(currentUser.id)
   return(
   <View style={styles.headerContainer}>
-    <Text style={styles.headerText}>InExplora</Text>
+    <>
+    <Text style={styles.headerText}>INEXPL<Text><LogoInBlack /></Text><Text>RA</Text></Text>
+    </>
+    
     <View style={styles.iconsContainer}>
       <TouchableOpacity onPress={() => navigation.navigate("messages")} style={styles.iconButton}>
-        <Icon name="user-plus" size={24} />
+        <IconJoinRequest />
         {generalRequestCount > 0 && (
             <View style={styles.badge}>
                 <Text style={styles.badgeText}>{generalRequestCount}</Text>
@@ -26,7 +30,7 @@ const HeaderWithIcons = () => {
         )}
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("joinRequest")} style={styles.iconButton}>
-        <Icon name="bell-o" size={24} />
+        <IconHeartWithoutFill />
         {requestCount > 0 && (
           <View style={styles.badge}>
             <Text style={styles.badgeText}>{requestCount}</Text>
@@ -34,7 +38,7 @@ const HeaderWithIcons = () => {
         )}
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("messages")} style={styles.iconButton}>
-        <Icon name="inbox" size={24} />
+        <IconBubbleChat />
         {unreadMessageCount > 0 && (
             <View style={styles.badge}>
                 <Text style={styles.badgeText}>{unreadMessageCount}</Text>
@@ -55,7 +59,9 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 24,
+    color: 'black',
+    fontFamily: 'Roboto-Black',
     // Asegúrate de que el texto no se estire para ocupar espacio innecesario.
     flexShrink: 1,
   },

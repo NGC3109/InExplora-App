@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import P1_signUp_Template from '../../../../components/Login/signup/step1';
 import { useNavigation } from '@react-navigation/native';
-import { displayNameToCreate, saveUser } from '../../../../actions/users/userActions';
+import { displayNameToCreate } from '../../../../actions/users/userActions';
 
 const P1_SignUp_Container = () => {
     const navigation = useNavigation();

@@ -25,7 +25,7 @@ export const socketConnectionError = (error) => ({
 // Inicializa la conexión del socket y establece los listeners
 export const initializeSocketConnection = (userId) => async (dispatch) => {
   try {
-    const socket = io('http://192.168.28.1:3001');
+    const socket = io(Config.SOCKET);
 
     socket.on('connect', () => {
       console.log('Socket connected');

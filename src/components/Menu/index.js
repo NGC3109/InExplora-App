@@ -5,7 +5,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from '../../pages/Home';
-import Grupos from '../../pages/Grupos';
 import MessageScreen from '../../container/messages';
 import ChatHeader from '../../pages/ChatHeader';
 import GroupHeader from '../../pages/steps/GroupHeader';
@@ -42,6 +41,8 @@ import UpdateUser from '../perfil/update';
 import UpdateGroups from '../groups/update';
 import P2_SignUp_Container from '../../container/login/signup/step2';
 import P3_SignUp_Container from '../../container/login/signup/step3';
+import { IconEarth, IconGroup, IconHome, IconPlusQuad } from '../../assets/vectores';
+import Grupos from '../../container/groups/list/Groups';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -85,7 +86,7 @@ const MainTabNavigator = () => {
         tabBarIcon: ({ focused, color }) => {
           switch (route.name) {
             case 'Inicio':
-              return <Icon name="home" size={20} color={color} />;
+              return <IconHome />;
             case 'MiPerfil':
               return (
                 <Image
@@ -94,11 +95,11 @@ const MainTabNavigator = () => {
                 />
               );
             case 'Grupos':
-              return <Icon name="group" size={20} color={color} />;
+              return <IconGroup />;
             case 'nuevo':
-              return <Icon name="plus" size={20} color={color} />;
+              return <IconPlusQuad />;
             case 'destinos':
-              return <Icon name="plane" size={20} color={color} />;
+              return <IconEarth />;
             default:
               return null;
           }

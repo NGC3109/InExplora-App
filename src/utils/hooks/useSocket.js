@@ -2,12 +2,13 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setJoinRequestCount, socketConnectionError, setUnreadMessageCount, setGeneralRequestCount } from "../../actions/sockets/socketAction";
 import { io } from "socket.io-client";
+import Config from "react-native-config";
 
 export const useSocket = (userId) => {
     const dispatch = useDispatch();
   
     useEffect(() => {
-        const socket = io('http://192.168.28.1:3001');
+        const socket = io(Config.SOCKET);
   
         socket.on('connect', () => {
             console.log('Socket connected');

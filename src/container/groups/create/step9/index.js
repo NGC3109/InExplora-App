@@ -55,7 +55,7 @@ const CreateGroupContainer = ({ navigation }) => {
     const config = {
       headers: { 'Content-Type': 'multipart/form-data' },
     };
-
+    console.log('formData: ', formData)
     try {
       const response = await axios.post(`${Config.API_ENDPOINT}groups/create`, formData, config);
       console.log('Upload successful', response.data);

@@ -36,6 +36,7 @@ export const getUser = (email) => {
   return async (dispatch) => {
     try {
       const apiUrl = `${Config.API_ENDPOINT}users/${email}`;
+      console.log(apiUrl)
       const response = await axios.get(apiUrl);
       const data = response.data;
       if (data) {

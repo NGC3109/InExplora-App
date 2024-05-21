@@ -11,7 +11,9 @@ const Congratulations = ({ navigation }) => {
   }, []);
 
   const handlePress = () => {
-    navigation.navigate('Login'); // Asegúrate de que 'Login' sea el nombre correcto de la ruta
+    navigation.navigate('MainTabs', {
+      screen: 'group'
+  });
   };
 
   return (

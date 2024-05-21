@@ -7,15 +7,16 @@ import { loadGroups } from '../actions/groups/groupAction';
 import { useSelector, useDispatch } from 'react-redux';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import FiltrosComponent from '../components/ui/Filtros';
+import { IconHeartFill } from '../assets/vectores';
 
-const Grupos = ({ navigation }) => {
+const Grupos2 = ({ navigation }) => {
   const dispatch = useDispatch();
   const [service, setService] = useState("");
   const [destination, setDestination] = useState("");
   const [selectedFilters, setSelectedFilters] = useState({});
   const [showFilters, setShowFilters] = useState(false);
   const groupsData = useSelector(state => state.groupReducer.allGroups); // Acceder al estado de los grupos
-
+console.log('groupsData: ', groupsData)
   useEffect(() => {
     dispatch(loadGroups()); // Despachar la acción para cargar grupos cuando el componente se monta
   }, [dispatch]);
@@ -29,16 +30,20 @@ const Grupos = ({ navigation }) => {
       <View style={styles.cardContainer}>
         <Image source={{ uri: item.profilePicture || 'https://via.placeholder.com/150' }} style={styles.cardImage} />
         <View style={styles.cardDetailsContainer}>
-          <Text style={styles.cardTitle}>{item.title || "Bali"}</Text>
-          <Text style={styles.cardSubTitle}>{item.subtitle || "Indonesia"}</Text>
-          {/* Agregar más detalles aquí como se muestra en la imagen */}
+          <Text style={styles.cardTitle}>{item.title || "No Especificada"}</Text>
+          <Text style={styles.cardSubTitle}>Salida: {item.startingPlace.startingTravel || "No Especificada"}</Text>
+          <Text style={styles.cardSubTitle}>Presupuesto: ${item.budget || "0"}</Text>
+          <Text style={styles.cardSubTitle}>Max personas: {item.numberOfPeople || "0"}</Text>
+          <Text style={styles.cardSubTitle}>Duracion: 7 días</Text>
+          <Text style={styles.cardSubTitle}>{'de ' + item.ageRange.min + ' años a ' + item.ageRange.max + ' años' || "0"}</Text>
+          
           <View style={styles.cardInteractions}>
             <View style={styles.userAvatars}>
               {/* Renderizar los avatares aquí */}
             </View>
             <View style={styles.likesContainer}>
-              {/* Renderizar el ícono de corazón y el número de 'likes' aquí */}
-              <Text style={styles.likesText}>+12k</Text>
+              <IconHeartFill />
+              <Text style={styles.likesText}> 178</Text>
             </View>
           </View>
         </View>
@@ -155,4 +160,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Grupos;
+export default Grupos2;

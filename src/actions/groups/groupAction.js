@@ -134,14 +134,18 @@ export const loadGroupById = (groupId) => async (dispatch) => {
   }
 };
 
-export const loadGroups = () => async (dispatch) => {
+export const loadGroups = (userId) => async (dispatch) => {
   dispatch({ type: LOAD_GROUPS_REQUEST });
   try {
-    const response = await axios.get(`${Config.API_ENDPOINT}groups/`);
+    const requestBody = {
+      userId: userId
+    };
+    const response = await axios.post(`${Config.API_ENDPOINT}groups/`, requestBody);
     dispatch({
       type: LOAD_GROUPS_SUCCESS,
       payload: response.data.data
     });
+    console.log('requestBody: ', requestBody)
   } catch (error) {
     dispatch({
       type: LOAD_GROUPS_FAIL,

@@ -14,7 +14,8 @@ const Join_P1_Container = ({ navigation, route }) => {
     const continueButton = () => {
         dispatch(saveJoinMessage(message))
         if(isMessageValid()){
-            requestToJoinGroup(currentUserId.id, groupId, message)
+            console.log('currentUserId.id, groupId, message: ', currentUserId.id, groupId, message)
+            dispatch(requestToJoinGroup(currentUserId.id, groupId, message))
             setMessageAlert(false)
         }else{
             setMessageAlert(true)

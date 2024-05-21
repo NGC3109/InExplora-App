@@ -78,7 +78,7 @@ const Chats = ({ navigation }) => {
               style={styles.lastMessage}
               numberOfLines={1}
               ellipsizeMode='tail'>
-              {item?.lastMessage?.message.length > 20 ? `${item.displayName}: ${item.lastMessage.message.substring(0, 20)}...` : `${item.displayName}: ${item.lastMessage.message}`}
+              {item?.lastMessage?.message?.length > 20 ? `${item.displayName}: ${item.lastMessage.message.substring(0, 20)}...` : `${item.displayName}: ${item.lastMessage.message}`}
             </Text>
           </View>
           <View style={styles.dateAndBadgeContainer}>

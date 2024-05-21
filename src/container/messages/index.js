@@ -7,6 +7,7 @@ import { useRoute } from '@react-navigation/native';
 import MessageTemplate from '../../components/messages';
 import { ObjectId } from 'bson';
 import 'react-native-get-random-values';
+import Config from 'react-native-config';
 
 const MessageScreen = () => {
     const route = useRoute();
@@ -19,7 +20,7 @@ const MessageScreen = () => {
     const currentUserId = useSelector(state => state.userReducer.user);
 
     useEffect(() => {
-        const newSocket = io("http://192.168.28.1:3001");
+        const newSocket = io(Config.SOCKET);
         setSocket(newSocket);
 
         newSocket.on("connect", () => {
