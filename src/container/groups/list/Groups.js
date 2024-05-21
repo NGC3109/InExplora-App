@@ -9,6 +9,7 @@ import { loadGroups } from '../../../actions/groups/groupAction';
 import Config from 'react-native-config';
 import io from 'socket.io-client';
 import CommentSection from './CommentSection';
+import { bookmark, removeBookmark } from '../../../actions/bookmark/bookmarkAction';
 
 const socket = io(Config.SOCKET);
 
@@ -20,6 +21,7 @@ const Grupos = () => {
     const [currentGroupId, setCurrentGroupId] = useState(null);
     const groupsData = useSelector(state => state.groupReducer.allGroups);
     const currentUserId = useSelector(state => state.userReducer.user);
+    const currentBookmarks = useSelector(state => state.bookmarkReducer.bookmarks);
     const viewableItems = useRef(new Set());
 
     useEffect(() => {
@@ -65,6 +67,19 @@ const Grupos = () => {
         setCurrentGroupId(null);
     };
 
+    const handleBookmark = (userId, bookmarkableId, onModel, setBookmarkedByUser) => {
+        dispatch(bookmark(userId, bookmarkableId, onModel))
+        setBookmarkedByUser(true)
+        console.log('craete bookmarks: ', currentBookmarks)
+    }
+
+    const handleDeleteBookmark = (bookmarkId, setBookmarkedByUser, setBookmarkId) => {
+        dispatch(removeBookmark(bookmarkId))
+        setBookmarkedByUser(false)
+        setBookmarkId(currentBookmarks._id)
+        console.log('delete bookmark: ', currentBookmarks)
+    }
+    
     return (
         <>
             <FiltrosComponent />
@@ -85,6 +100,8 @@ const Grupos = () => {
                             userId={currentUserId.id}
                             socket={socket}
                             onShowComments={handleShowComments}
+                            handleBookmark={handleBookmark}
+                            handleDeleteBookmark={handleDeleteBookmark}
                         />
                     )}
                     ListFooterComponent={<View style={styles.footer} />}

@@ -2,12 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const GroupItem = ({ item, userId, socket, onShowComments }) => {
+const GroupItem = ({ 
+  item, 
+  userId, 
+  socket, 
+  onShowComments, 
+  handleBookmark,
+  handleDeleteBookmark,
+}) => {
   const [likes, setLikes] = useState(item.totalLikes);
+  const [bookmarkedByUser, setBookmarkedByUser] = useState(item.bookmarkedByUser)
+  const [bookmarkId, setBookmarkId] = useState(item.bookmarkId)
   const [likedByUser, setLikedByUser] = useState(item.likedByUser);
   const [likeId, setLikeId] = useState(item.likeId);
   const [comments, setComments] = useState(item.totalComments || 0);
-
   useEffect(() => {
     const handleNewLike = ({ groupId, like, totalLikes }) => {
       if (groupId === item._id) {
@@ -59,9 +67,8 @@ const GroupItem = ({ item, userId, socket, onShowComments }) => {
   };
 
   const handleDislike = () => {
-    socket.emit('dislikeGroup', { likeId, groupId: item._id });
+      socket.emit('dislikeGroup', { likeId, groupId: item._id });
   };
-
   const formatAmount = (amount) => {
     const numericAmount = parseInt(amount.replace(/\./g, ''), 10);
     if (numericAmount >= 1000000) {
@@ -81,7 +88,16 @@ const GroupItem = ({ item, userId, socket, onShowComments }) => {
           <Text style={styles.userName}>{item.creatorName}</Text>
           <Text style={styles.userArticles}>21 días</Text>
         </View>
-        <Icon name="bookmark-outline" size={24} color="#3d444d" style={styles.moreIcon} />
+        {bookmarkedByUser ? 
+          <TouchableOpacity onPress={() => handleDeleteBookmark(bookmarkId, setBookmarkedByUser, setBookmarkId)}>
+            <Icon name="bookmark-sharp" size={24} color="#3d444d" style={styles.moreIcon} />
+          </TouchableOpacity>
+        :
+            <TouchableOpacity onPress={() => handleBookmark(userId, item._id, 'Group', setBookmarkedByUser)}>
+              <Icon name="bookmark-outline" size={24} color="#3d444d" style={styles.moreIcon} />
+            </TouchableOpacity>
+        }
+          
       </View>
       
       <Image 
