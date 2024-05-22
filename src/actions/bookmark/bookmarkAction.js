@@ -12,8 +12,6 @@ import {
 export const bookmark = (userId, bookmarkableId, onModel) => async (dispatch) => {
     dispatch({ type: BOOKMARK_REQUEST });
     try {
-        console.log('userId, bookmarkableId, onModel: ', userId, bookmarkableId, onModel)
-        console.log(`${Config.API_ENDPOINT}bookmarks`)
         const response = await axios.post(`${Config.API_ENDPOINT}bookmarks`, {
             userId,
             bookmarkableId,
@@ -34,8 +32,6 @@ export const bookmark = (userId, bookmarkableId, onModel) => async (dispatch) =>
 export const removeBookmark = (bookmarkId) => async (dispatch) => {
     dispatch({ type: REMOVE_BOOKMARK_REQUEST });
     try {
-        console.log('book: ', bookmarkId)
-        console.log(`${Config.API_ENDPOINT}bookmarks/${bookmarkId}`)
         const response = await axios.delete(`${Config.API_ENDPOINT}bookmarks/${bookmarkId}`);
         dispatch({
             type: REMOVE_BOOKMARK_SUCCESS,
