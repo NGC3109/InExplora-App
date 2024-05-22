@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Asegúra
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import Config from 'react-native-config';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getUser } from '../actions/users/userActions';
 import { Alert } from '../components/ui/Alert';
 import { styles } from '../styles/login/signIn';
@@ -17,7 +17,6 @@ const Login = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(false);
-  const currentUserId = useSelector(state => state.userReducer.user);
 
   GoogleSignin.configure({
       webClientId: Config.WEB_CLIENT_ID,

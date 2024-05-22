@@ -10,11 +10,13 @@ import Config from 'react-native-config';
 import io from 'socket.io-client';
 import CommentSection from './CommentSection';
 import { bookmark, removeBookmark } from '../../../actions/bookmark/bookmarkAction';
+import { useNavigation } from '@react-navigation/native';
 
 const socket = io(Config.SOCKET);
 
 const Grupos = () => {
     const dispatch = useDispatch();
+    const navigation = useNavigation();
     const [selectedFilters, setSelectedFilters] = useState({});
     const [showFilters, setShowFilters] = useState(false);
     const [showComments, setShowComments] = useState(false);
@@ -70,14 +72,12 @@ const Grupos = () => {
     const handleBookmark = (userId, bookmarkableId, onModel, setBookmarkedByUser) => {
         dispatch(bookmark(userId, bookmarkableId, onModel))
         setBookmarkedByUser(true)
-        console.log('craete bookmarks: ', currentBookmarks)
     }
 
     const handleDeleteBookmark = (bookmarkId, setBookmarkedByUser, setBookmarkId) => {
         dispatch(removeBookmark(bookmarkId))
         setBookmarkedByUser(false)
         setBookmarkId(currentBookmarks._id)
-        console.log('delete bookmark: ', currentBookmarks)
     }
     
     return (
@@ -102,6 +102,7 @@ const Grupos = () => {
                             onShowComments={handleShowComments}
                             handleBookmark={handleBookmark}
                             handleDeleteBookmark={handleDeleteBookmark}
+                            navigation={navigation}
                         />
                     )}
                     ListFooterComponent={<View style={styles.footer} />}

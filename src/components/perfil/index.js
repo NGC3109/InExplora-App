@@ -1,5 +1,5 @@
 import React from 'react';
-import { Share, View, Text, TouchableOpacity, FlatList, Image } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Image } from 'react-native';
 import { styles } from '../../styles/perfil';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -8,29 +8,9 @@ export default function PerfilComponent({
     updateUser,
     currentUser,
     logout,
-    navigation
+    navigation,
+    onShare,
 }) {
-    const onShare = async () => {
-        try {
-            const result = await Share.share({
-                message: `Hola, échale un vistazo a mi perfil en InExplora!`,
-                url: 'https://tuapp.com/perfil',
-                title: 'Mira mi perfil en InExplora'
-            });
-            if (result.action === Share.sharedAction) {
-                if (result.activityType) {
-                    console.log('Shared with activity type: ' + result.activityType);
-                } else {
-                    console.log('Shared');
-                }
-            } else if (result.action === Share.dismissedAction) {
-                console.log('Dismissed');
-            }
-        } catch (error) {
-            console.error('Error while sharing: ', error);
-        }
-    };
-
     const renderGridItem = ({ item, index }) => {
         const totalItems = groupsByUser?.data.length;
         let isLastItemSingleInRow = false;
@@ -68,11 +48,11 @@ export default function PerfilComponent({
                             <Text>grupos</Text>
                         </View>
                         <View style={styles.infoStat}>
-                            <Text style={styles.profileStatText}>{currentUser.followers || 0}</Text>
+                            <Text style={styles.profileStatText}>{currentUser.followersCount || 0}</Text>
                             <Text>seguidores</Text>
                         </View>
                         <View style={styles.infoStat}>
-                            <Text style={styles.profileStatText}>{currentUser.following || 0}</Text>
+                            <Text style={styles.profileStatText}>{currentUser.followingCount || 0}</Text>
                             <Text>seguidos</Text>
                         </View>
                     </View>

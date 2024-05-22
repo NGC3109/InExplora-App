@@ -1,40 +1,99 @@
-import React, { useEffect } from 'react';
+import React, {useState} from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { useDispatch, useSelector } from 'react-redux';
-import { loadGroupById, requestToJoinGroup } from '../actions/groups/groupAction';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import Config from 'react-native-config';
+import io from 'socket.io-client';
+import { useDispatch, useSelector } from 'react-redux';
+import { bookmark, removeBookmark } from '../actions/bookmark/bookmarkAction';
+
+const socket = io(Config.SOCKET);
 
 const DetailGroup = ({ navigation, route }) => {
-  const { groupId } = route.params;
+  const { 
+    groupItem, 
+    likedByUser, 
+    userId, 
+    likeId, 
+    bookmarked,
+    bookmark_id
+  } = route.params;
   const dispatch = useDispatch();
-  const groupDetails = useSelector(state => state.groupReducer.groupDetails);
+  const [likes, setLikes] = useState(likedByUser);
+  const [bookmarkId, setBookmarkId] = useState(bookmark_id)
+  const [bookmarkedByUser, setBookmarkedByUser] = useState(bookmarked)
+  const currentBookmarks = useSelector(state => state.bookmarkReducer.bookmarks);
 
   const handleJoinGroup = () => {
-    navigation.navigate('join_step1', { groupId: groupId })
+    navigation.navigate('join_step1', { groupId: groupItem._id })
   };
 
-  useEffect(() => {
-    if (groupId) {
-      dispatch(loadGroupById(groupId));
-    }
-  }, [dispatch, groupId]);
+  const handleClose = () => {
+    navigation.goBack();
+  };
+
+  const handleLike = () => {
+    socket.emit('likeGroup', { userId, groupId: groupItem._id });
+    setLikes(true)
+  };
+
+  const handleDislike = () => {
+      socket.emit('dislikeGroup', { likeId, groupId: groupItem._id });
+      setLikes(false)
+  };
+  
+
+  const handleBookmark = (userId, bookmarkableId, onModel, setBookmarkedByUser) => {
+      dispatch(bookmark(userId, bookmarkableId, onModel))
+      setBookmarkedByUser(true)
+  }
+
+  const handleDeleteBookmark = (bookmarkId, setBookmarkedByUser, setBookmarkId) => {
+      dispatch(removeBookmark(bookmarkId))
+      setBookmarkedByUser(false)
+      setBookmarkId(currentBookmarks._id)
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.imageContainer}>
           <Image
-            source={{ uri: groupDetails?.data?.profilePicture || 'https://ecosistemas.ovacen.com/wp-content/uploads/2018/01/bosque.jpg' }}
+            source={{ uri: groupItem?.profilePicture || 'https://ecosistemas.ovacen.com/wp-content/uploads/2018/01/bosque.jpg' }}
             style={styles.image}
           />
+          <TouchableOpacity style={styles.closeIcon} onPress={handleClose}>
+            <IonIcon name="close-circle-outline" size={30} color="#fff" />
+          </TouchableOpacity>
+          {
+            likes ? 
+              <TouchableOpacity style={styles.disLikedIcon} onPress={handleDislike}>
+                <IonIcon name="heart-sharp" size={20} color="#EF312E" />
+              </TouchableOpacity> 
+            : 
+              <TouchableOpacity style={styles.likedIcon} onPress={handleLike}>
+                <IonIcon name="heart-outline" size={20} color="#000" />
+              </TouchableOpacity>
+          }
+          
+        </View>
+        <View style={styles.content}>
           <View style={styles.overlay}>
             <TouchableWithoutFeedback onPress={() => handleJoinGroup()}>
                 <Text style={styles.bannerText}>Solicitar unirme al grupo</Text>
             </TouchableWithoutFeedback>
+            {bookmarkedByUser ? 
+              <TouchableOpacity onPress={() => handleDeleteBookmark(bookmarkId, setBookmarkedByUser, setBookmarkId)}>
+                <IonIcon name="bookmark" size={24} color="#3d444d" style={styles.moreIcon} />
+              </TouchableOpacity>
+            :
+              <TouchableOpacity onPress={() => handleBookmark(userId, groupItem._id, 'Group', setBookmarkedByUser)}>
+                <IonIcon name="bookmark-outline" size={24} color="#3d444d" style={styles.moreIcon} />
+              </TouchableOpacity>
+            }
           </View>
-        </View>
-        <View style={styles.content}>
-          <Text style={styles.title}>{groupDetails?.data?.title}</Text>
+          <Text style={styles.title}>{groupItem?.title}</Text>
           <View style={styles.tagContainer}>
             <Text style={styles.tag}>Indoor</Text>
             <Text style={styles.tag}>Pet friendly</Text>
@@ -42,7 +101,7 @@ const DetailGroup = ({ navigation, route }) => {
           </View>
           <Text style={styles.subtitle}>Description</Text>
           <Text style={styles.description}>
-            {groupDetails?.data?.description}
+            {groupItem?.description}
           </Text>
           {/* Aquí agregarías el resto de los elementos como 'Height', 'Water', etc. */}
           <View style={styles.infoContainer}>
@@ -101,16 +160,37 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 300,
+    height: 330,
   },
   overlay: {
+    backgroundColor: 'white'
+  },
+  closeIcon: {
     position: 'absolute',
-    top: 250, // Debe coincidir aproximadamente con el punto donde termina la imagen
-    width: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderTopRightRadius: 25,
-    borderTopLeftRadius: 25,
-    paddingTop: 20, // Añade padding para separar el texto del borde
+    top: 20,
+    left: 20,
+    zIndex: 1,
+  },
+  likedIcon: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    zIndex: 1,
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 25,
+    padding: 5,
+    backgroundColor: 'white'
+  },
+  disLikedIcon: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    zIndex: 1,
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 25,
+    padding: 5,
     backgroundColor: 'white'
   },
   bannerText: {

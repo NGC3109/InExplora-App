@@ -1,12 +1,17 @@
 import axios from 'axios';
 import Config from 'react-native-config';
-import { PREPARE_TO_CREATE, SAVE_USER, DISPLAYNAME_TO_CREATE, GET_USER, CLEAR_USER } from '../../utils/constants';
+import { PREPARE_TO_CREATE, SAVE_USER, DISPLAYNAME_TO_CREATE, GET_USER, CLEAR_USER, UPDATE_FOLLOWERS_COUNT } from '../../utils/constants';
 
 export const clearUserData = () => {
   return {
     type: CLEAR_USER
   };
 };
+
+export const updateFollowersCount = (newCount) => ({
+  type: UPDATE_FOLLOWERS_COUNT,
+  payload: newCount,
+});
 
 export const saveUser = (userData) => {
   return async (dispatch) => {
@@ -36,7 +41,6 @@ export const getUser = (email) => {
   return async (dispatch) => {
     try {
       const apiUrl = `${Config.API_ENDPOINT}users/${email}`;
-      console.log(apiUrl)
       const response = await axios.get(apiUrl);
       const data = response.data;
       if (data) {

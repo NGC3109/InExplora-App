@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const GroupItem = ({ 
@@ -9,6 +9,7 @@ const GroupItem = ({
   onShowComments, 
   handleBookmark,
   handleDeleteBookmark,
+  navigation,
 }) => {
   const [likes, setLikes] = useState(item.totalLikes);
   const [bookmarkedByUser, setBookmarkedByUser] = useState(item.bookmarkedByUser)
@@ -77,76 +78,84 @@ const GroupItem = ({
     return amount;
   };
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Image 
-          source={{ uri: item.creatorProfilePicture }} 
-          style={styles.profileImage} 
-        />
-        <View style={styles.headerTextContainer}>
-          <Text style={styles.userName}>{item.creatorName}</Text>
-          <Text style={styles.userArticles}>21 días</Text>
-        </View>
-        {bookmarkedByUser ? 
-          <TouchableOpacity onPress={() => handleDeleteBookmark(bookmarkId, setBookmarkedByUser, setBookmarkId)}>
-            <Icon name="bookmark-sharp" size={24} color="#3d444d" style={styles.moreIcon} />
-          </TouchableOpacity>
-        :
-            <TouchableOpacity onPress={() => handleBookmark(userId, item._id, 'Group', setBookmarkedByUser)}>
-              <Icon name="bookmark-outline" size={24} color="#3d444d" style={styles.moreIcon} />
-            </TouchableOpacity>
-        }
-          
-      </View>
-      
-      <Image 
-        source={{ uri: item.profilePicture }} 
-        style={styles.articleImage} 
-      />
-      
-      <Text style={styles.articleTitle}>
-        {item.title}
-      </Text>
-      
-      <Text>
-        Saliendo desde {item.startingPlace.startingTravel}
-      </Text>
+  const goDetailsGroup = (item) => {
+    navigation.navigate('detalleGrupo', { 
+      groupItem: item, 
+      likedByUser: likedByUser, 
+      userId: userId, 
+      likeId: likeId,
+      bookmarked: bookmarkedByUser,
+      bookmark_id: bookmarkId
+    })
+  }
 
-      <View style={styles.footer}>
-        <View style={styles.footerIcon}>
-          {likedByUser ? (
-            <TouchableOpacity onPress={handleDislike}>
-              <Icon name="heart-sharp" size={24} color="#EF312E" />
+  return (
+    <TouchableWithoutFeedback onPress={() => goDetailsGroup(item)}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Image 
+            source={{ uri: item.creatorProfilePicture }} 
+            style={styles.profileImage} 
+          />
+          <View style={styles.headerTextContainer}>
+            <Text style={styles.userName}>{item.creatorName}</Text>
+            <Text style={styles.userArticles}>21 días</Text>
+          </View>
+          {bookmarkedByUser ? 
+            <TouchableOpacity onPress={() => handleDeleteBookmark(bookmarkId, setBookmarkedByUser, setBookmarkId)}>
+              <Icon name="bookmark" size={24} color="#3d444d" style={styles.moreIcon} />
             </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={handleLike}>
-              <Icon name="heart-outline" size={24} color="#3d444d" />
+          :
+              <TouchableOpacity onPress={() => handleBookmark(userId, item._id, 'Group', setBookmarkedByUser)}>
+                <Icon name="bookmark-outline" size={24} color="#3d444d" style={styles.moreIcon} />
+              </TouchableOpacity>
+          }
+        </View>
+        <Image 
+          source={{ uri: item.profilePicture }} 
+          style={styles.articleImage} 
+        />
+        <Text style={styles.articleTitle}>
+          {item.title}
+        </Text>
+        <Text>
+          Saliendo desde {item.startingPlace.startingTravel}
+        </Text>
+        <View style={styles.footer}>
+          <View style={styles.footerIcon}>
+            {likedByUser ? (
+              <TouchableOpacity onPress={handleDislike}>
+                <Icon name="heart-sharp" size={24} color="#EF312E" />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={handleLike}>
+                <Icon name="heart-outline" size={24} color="#3d444d" />
+              </TouchableOpacity>
+            )}
+            <Text style={styles.footerText}>{likes}</Text>
+          </View>
+          <View style={styles.footerIcon}>
+            <TouchableOpacity onPress={() => onShowComments(item._id)}>
+              <Icon name="chatbox-outline" size={24} color="#3d444d" />
             </TouchableOpacity>
-          )}
-          <Text style={styles.footerText}>{likes}</Text>
-        </View>
-        <View style={styles.footerIcon}>
-          <TouchableOpacity onPress={() => onShowComments(item._id)}>
-            <Icon name="chatbox-outline" size={24} color="#3d444d" />
-          </TouchableOpacity>
-          <Text style={styles.footerText}>{comments}</Text>
-        </View>
-        <View style={styles.footerIcon}>
-          <Icon name="people-outline" size={24} color="#3d444d" />
-          <Text style={styles.footerText}>{item.numberOfPeople}</Text>
-        </View>
-        <View style={styles.footerIcon}>
-          <Icon name="cash-outline" size={24} color="#3d444d" />
-          <Text style={styles.footerText}>{formatAmount(item.budget)}</Text>
-        </View>
-        <View style={styles.footerIcon}>
-          {item.genre == "Solo mujeres" && <Icon name="woman-outline" size={24} color="#3d444d" />}
-          {item.genre == "Solo hombres" && <Icon name="man-outline" size={24} color="#3d444d" />}
-          {item.genre == "Mixto" && <><Icon name="woman-outline" size={24} color="#3d444d" style={{marginRight: -10}} /><Icon name="man-outline" size={24} color="#3d444d" /></>}
+            <Text style={styles.footerText}>{comments}</Text>
+          </View>
+          <View style={styles.footerIcon}>
+            <Icon name="people-outline" size={24} color="#3d444d" />
+            <Text style={styles.footerText}>{item.numberOfPeople}</Text>
+          </View>
+          <View style={styles.footerIcon}>
+            <Icon name="cash-outline" size={24} color="#3d444d" />
+            <Text style={styles.footerText}>{formatAmount(item.budget)}</Text>
+          </View>
+          <View style={styles.footerIcon}>
+            {item.genre == "Solo mujeres" && <Icon name="female-sharp" size={24} color="#3d444d" />}
+            {item.genre == "Solo hombres" && <Icon name="male-sharp" size={24} color="#3d444d" />}
+            {item.genre == "Mixto" && <Icon name="male-female-sharp" size={24} color="#3d444d" />}
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

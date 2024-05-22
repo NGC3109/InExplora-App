@@ -10,7 +10,7 @@ export const initialState = {
         superpower: null,
         genre: null,
         birthday: null,
-        followers: null,
-        following: null,
+        followersCount: null,
+        followingCount: null,
     }
 };
