@@ -27,7 +27,7 @@ import CreateGroupContainer from '../../container/groups/create/groupUpload';
 import { Header } from '../ui/Header';
 import { headerStyle } from '../../container/menu/constants';
 import P8_9_1_StartingTravel_Container from '../../container/groups/create/groupStartingTravel';
-import JoinRequestList_Template from '../groups/request';
+import JoinRequestList_Template from '../dashboard/request';
 import Join_P1_Container from '../../container/groups/join/step1';
 import CongratulationsRequestToJoin from '../../container/groups/join/congratulations';
 import SignUp_Container from '../Login/signup';
@@ -43,6 +43,9 @@ import P2_SignUp_Container from '../../container/login/signup/step2';
 import P3_SignUp_Container from '../../container/login/signup/step3';
 import { IconEarth, IconGroup, IconHome, IconPlusQuad } from '../../assets/vectores';
 import Grupos from '../../container/groups/list/Groups';
+import RequestDetail from '../dashboard/request/requestDetail';
+import NotificationsList_Template from '../dashboard/notifications';
+
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -303,7 +306,7 @@ const RootStackNavigator = ({ user }) => {
           headerStyle,
         })}/>
         <RootStack.Screen name="congratulations" component={Congratuilations} options={{ title: 'Felicidades', headerTitleAlign: 'center' }}/>
-        <RootStack.Screen name="joinRequest" component={JoinRequestList_Template} options={{ title: 'Notificaciones', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="joinRequest" component={JoinRequestList_Template} options={{ title: 'Solicitudes', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="join_step1" component={Join_P1_Container} options={{ title: 'Solicitud', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="congratulations_request_to_join" component={CongratulationsRequestToJoin} options={{ title: 'Felicidades', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="signup" component={SignUp_Container} options={{ title: 'Únete a InExplora Hoy ✨', headerTitleAlign: 'center' }}/>
@@ -313,6 +316,9 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="update_groups" component={UpdateGroups} options={{ title: 'Actualizar grupo', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="p2_signUp_genre" component={P2_SignUp_Container} options={{ title: 'Registra tu genero', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="p3_signUp_birthday" component={P3_SignUp_Container} options={{ title: 'Registra tu fecha de nacimiento', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="request_detail" component={RequestDetail} options={{ title: 'Solicitud', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="notifications_detail" component={NotificationsList_Template} options={{ title: 'Notificaciones', headerTitleAlign: 'center' }}/>
+        
     </RootStack.Navigator>
   );
 };

@@ -1,16 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { useSocket } from '../../../utils/hooks/useSocket';
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import { IconBubbleChat, IconHeartWithoutFill, IconJoinRequest, LogoInBlack } from '../../../assets/vectores';
+import { IconBubbleChat, IconHeartWithoutFill, LogoInBlack } from '../../../assets/vectores';
 
 const HeaderWithIcons = () => {
   const currentUser = useSelector(state => state.userReducer.user);
-  const requestCount = useSelector(state => state.socketReducer.joinRequestCount);
-  const unreadMessageCount = useSelector(state => state.socketReducer.unreadMessageCount);
-  const generalRequestCount = useSelector(state => state.socketReducer.generalRequestCount);
+  const requestCount = useSelector(state => state.socketReducer.joinRequestCount); //contador de solicitudes de union a grupo pendientes
+  const unreadMessageCount = useSelector(state => state.socketReducer.unreadMessageCount); //contador mensajes no leidos
+  const generalNotificationsCount = useSelector(state => state.socketReducer.generalNotificationsCount); //contador de notificaciones
   
   const navigation = useNavigation()
   useSocket(currentUser.id)
@@ -21,19 +21,21 @@ const HeaderWithIcons = () => {
     </>
     
     <View style={styles.iconsContainer}>
-      <TouchableOpacity onPress={() => navigation.navigate("messages")} style={styles.iconButton}>
-        <IconJoinRequest />
-        {generalRequestCount > 0 && (
+      <TouchableOpacity onPress={() => navigation.navigate("joinRequest")} style={styles.iconButton}>
+        <Icon name="person-add-outline" size={20} color="black" />
+        {requestCount > 0 && (
             <View style={styles.badge}>
-                <Text style={styles.badgeText}>{generalRequestCount}</Text>
+                <Text style={styles.badgeText}>{requestCount}</Text>
             </View>
         )}
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("joinRequest")} style={styles.iconButton}>
+      <TouchableOpacity onPress={() => 
+        navigation.navigate("notifications_detail")
+      } style={styles.iconButton}>
         <IconHeartWithoutFill />
-        {requestCount > 0 && (
+        {generalNotificationsCount > 0 && (
           <View style={styles.badge}>
-            <Text style={styles.badgeText}>{requestCount}</Text>
+            <Text style={styles.badgeText}>{generalNotificationsCount}</Text>
           </View>
         )}
       </TouchableOpacity>

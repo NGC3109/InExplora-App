@@ -58,9 +58,4 @@ export const initialState = {
         loading: false,
         error: null,
     },
-    generalRequests: {
-        data: [],
-        loading: false,
-        error: null,
-    }
 };

@@ -4,9 +4,10 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const DetailGroup = ({ navigation, route }) => {
   const { groupItem } = route.params;
-
   const handleJoinGroup = () => {
-    // Lógica para unirse al grupo
+      navigation.navigate('join_step1', {
+        groupId: groupItem._id
+      })
   };
 
   return (

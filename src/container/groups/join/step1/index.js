@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { requestToJoinGroup, saveJoinMessage } from '../../../../actions/groups/groupAction';
+import { requestToJoinGroup } from '../../../../actions/request/requestAction';
 import Join_P1_Template from '../../../../components/groups/join/step1';
 
 const Join_P1_Container = ({ navigation, route }) => {
@@ -12,7 +12,6 @@ const Join_P1_Container = ({ navigation, route }) => {
     const limiteCaracteres = 300;
 
     const continueButton = () => {
-        dispatch(saveJoinMessage(message))
         if(isMessageValid()){
             console.log('currentUserId.id, groupId, message: ', currentUserId.id, groupId, message)
             dispatch(requestToJoinGroup(currentUserId.id, groupId, message))

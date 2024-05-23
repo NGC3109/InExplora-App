@@ -2,7 +2,7 @@ import { SET_JOIN_REQUEST_COUNT, SOCKET_CONNECTION_ERROR, SET_UNREAD_MESSAGE_COU
 
 const initialState = {
     joinRequestCount: 0,
-    generalRequestCount: 0,
+    generalNotificationsCount: 0,
     socketError: null,
     unreadMessageCount: 0,
 };
@@ -17,7 +17,7 @@ const socketReducer = (state = initialState, action) => {
       case SET_GENERAL_REQUEST_COUNT:
         return {
           ...state,
-          generalRequestCount: action.payload,
+          generalNotificationsCount: action.payload,
         };
       case SOCKET_CONNECTION_ERROR:
         return {

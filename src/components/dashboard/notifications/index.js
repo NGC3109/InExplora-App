@@ -1,16 +1,16 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { View, Text, FlatList, Image, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 import { NativeBaseProvider } from "native-base";
 import { useSelector, useDispatch } from 'react-redux';
-import { acceptJoinRequest, loadGeneralRequestsByGroupId } from '../../../actions/groups/groupAction';
+import { acceptJoinRequest } from '../../../actions/groups/groupAction';
+import { loadGeneralNotificationsByGroupId } from '../../../actions/notifications/notificationsAction';
 
-const JoinRequestList_Template = ({ navigation }) => {
+const NotificationsList_Template = ({ navigation }) => {
   const dispatch = useDispatch();
-  const generalRequests = useSelector(state => state.groupReducer.generalRequests);
+  const notifications = useSelector(state => state.notificationsReducer.notifications);
   const currentUserId = useSelector(state => state.userReducer.user);
-
   useEffect(() => {
-    dispatch(loadGeneralRequestsByGroupId(currentUserId.id));
+    dispatch(loadGeneralNotificationsByGroupId(currentUserId.id));
   }, [dispatch]);
 
   const goDetailsGroup = (item) => {
@@ -24,7 +24,7 @@ const JoinRequestList_Template = ({ navigation }) => {
     const backgroundColor = item.viewed ? 'white' : '#e0e0e0';
     const coverImage = item.coverImage || 'https://via.placeholder.com/150';
     return(
-      <TouchableWithoutFeedback onPress={() => navigation.navigate('detalleGrupo', { groupId: item.group?._id })}>
+    //   <TouchableWithoutFeedback onPress={() => navigation.navigate('detalleGrupo', { groupId: item.group?._id })}>
           <View style={[styles.cardContainer, { backgroundColor }]}>
             <Image source={{ uri: coverImage }} style={styles.cardImage} />
             <View style={styles.cardDetailsContainer}>
@@ -35,7 +35,7 @@ const JoinRequestList_Template = ({ navigation }) => {
               <Text style={styles.cardDate}>{new Date(item.createdAt).toLocaleDateString()}</Text>
             </View>
           </View>
-        </TouchableWithoutFeedback>
+       //</TouchableWithoutFeedback>
     )
   }, []);
   return (
@@ -43,7 +43,7 @@ const JoinRequestList_Template = ({ navigation }) => {
       <View style={styles.container}>
         <View style={styles.tabContent}>
           <FlatList
-            data={generalRequests?.data}
+            data={notifications?.data}
             renderItem={renderGridItem}
             keyExtractor={(item, index) => index.toString()}
             numColumns={1}
@@ -95,4 +95,4 @@ const styles = StyleSheet.create({
     color: 'grey',
   },
 });
-export default JoinRequestList_Template;
+export default NotificationsList_Template;

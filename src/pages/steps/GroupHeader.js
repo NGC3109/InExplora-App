@@ -4,7 +4,7 @@ import Config from 'react-native-config';
 
 const GroupHeader = ({ step }) => (
     <View style={styles.header}>
-      <Text style={styles.headerText}>Preparando el viaje {step}/12</Text>
+      <Text style={styles.headerText}>Preparando el viaje</Text>
     </View>
   );
 
