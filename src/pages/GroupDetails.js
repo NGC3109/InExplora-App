@@ -1,22 +1,48 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, SafeAreaView, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadGroupById } from '../actions/groups/groupAction';
 
 const DetailGroup = ({ navigation, route }) => {
-  const { groupItem } = route.params;
+  const { groupId } = route.params;
+  const dispatch = useDispatch();
+  const groupDetails = useSelector(state => state.groupReducer.groupDetails?.data);
+  const userId = useSelector(state => state.userReducer.userId);
+
+  useEffect(() => {
+    if (groupId) {
+      dispatch(loadGroupById(groupId));
+    }
+  }, [dispatch, groupId]);
+
   const handleJoinGroup = () => {
-      navigation.navigate('join_step1', {
-        groupId: groupItem._id
-      })
+    navigation.navigate('join_step1', {
+      groupId: groupId
+    });
   };
+
+  if (!groupDetails) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text>Loading...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  const { profilePicture, title, startingPlace, description, creatorDetails, ageRange, destination, numberOfPeople, budget, genre, accommodation, travelWithPets, travelMode, startingTravel, members = [] } = groupDetails;
+
+  const userIsMember = members.some(member => member._id === userId);
+  const emptySpots = numberOfPeople - members.length;
+
+  const startingTravelText = startingPlace?.startingTravel.split('-')[0];
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.headerContainer}>
           <Image
-            source={{ uri: groupItem.profilePicture || 'https://via.placeholder.com/150' }}
+            source={{ uri: profilePicture || 'https://via.placeholder.com/150' }}
             style={styles.headerImage}
           />
           <View style={styles.header}>
@@ -28,57 +54,55 @@ const DetailGroup = ({ navigation, route }) => {
         </View>
         <View style={styles.curvedContainer}>
           <View style={styles.titleContainer}>
-            <View>
-              <Text style={styles.title}>Viaje a Paris, Francia</Text>
-              <Text style={styles.subtitle}>Saliendo desde Melipilla</Text>
+            <View style={styles.titleTextContainer}>
+              <Text style={styles.title}>{title}</Text>
+              <Text style={styles.subtitle}>Saliendo desde {startingTravelText}</Text>
             </View>
             <Image
-              source={{ uri: groupItem.creatorProfilePicture || 'https://via.placeholder.com/50' }}
+              source={{ uri: creatorDetails?.profilePicture || 'https://via.placeholder.com/50' }}
               style={styles.profileImage}
             />
           </View>
-          <Text style={styles.description}>
-            Es un hecho establecido hace demasiado tiempo que un lector se distraerá con el contenido del texto de un sitio mientras que mira su diseño...
-          </Text>
+          <Text style={styles.description}>{description}</Text>
           <View style={styles.infoContainer}>
             <View style={styles.infoColumn}>
               <View style={styles.infoRow}>
                 <Icon name="hourglass-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>de 25 a 35 años</Text>
+                <Text style={styles.infoText}>de {ageRange?.min} a {ageRange?.max} años</Text>
               </View>
               <View style={styles.infoRow}>
                 <Icon name="location-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>Paris</Text>
+                <Text style={styles.infoText}>{destination?.description}</Text>
               </View>
               <View style={styles.infoRow}>
                 <Icon name="people-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>4 maximo</Text>
+                <Text style={styles.infoText}>{numberOfPeople} maximo</Text>
               </View>
               <View style={styles.infoRow}>
                 <Icon name="cash-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>Presupuesto</Text>
+                <Text style={styles.infoText}>{budget}</Text>
               </View>
               <View style={styles.infoRow}>
                 <Icon name="female-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>Solo mujeres</Text>
+                <Text style={styles.infoText}>{genre}</Text>
               </View>
             </View>
             <View style={styles.infoColumn}>
               <View style={styles.infoRow}>
                 <Icon name="bed-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>Hostal</Text>
+                <Text style={styles.infoText}>{accommodation}</Text>
               </View>
               <View style={styles.infoRow}>
                 <Icon name="paw-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>Sin mascotas</Text>
+                <Text style={styles.infoText}>{travelWithPets?.incluyeMascotas ? 'Se permiten mascotas' : 'Sin Mascotas'}</Text>
               </View>
               <View style={styles.infoRow}>
                 <Icon name="airplane-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>Modo de viaje: Avion</Text>
+                <Text style={styles.infoText}>{travelMode?.travelMode}</Text>
               </View>
               <View style={styles.infoRow}>
                 <Icon name="navigate-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>Desde Melipilla</Text>
+                <Text style={styles.infoText}>Desde {startingTravelText}</Text>
               </View>
               <View style={styles.infoRow}>
                 <Icon name="calendar-outline" size={24} color="#000" />
@@ -88,14 +112,20 @@ const DetailGroup = ({ navigation, route }) => {
           </View>
           <Text style={styles.subtitle}>Integrantes</Text>
           <View style={styles.membersContainer}>
-            <Image source={{ uri: 'https://via.placeholder.com/50' }} style={styles.memberImage} />
-            <Image source={{ uri: 'https://via.placeholder.com/50' }} style={styles.memberImage} />
-            <Image source={{ uri: 'https://via.placeholder.com/50' }} style={styles.memberImage} />
-            <Image source={{ uri: 'https://via.placeholder.com/50' }} style={styles.memberImage} />
+            {members.map((member, index) => (
+              <Image key={index} source={{ uri: member.profilePicture }} style={styles.memberImage} />
+            ))}
+            {Array.from({ length: emptySpots }).map((_, index) => (
+              <View key={`empty-${index}`} style={styles.memberImagePlaceholder}>
+                <Text>Vacio</Text>
+              </View>
+            ))}
           </View>
-          <TouchableOpacity style={styles.joinButton} onPress={handleJoinGroup}>
-            <Text style={styles.joinButtonText}>Quiero unirme!</Text>
-          </TouchableOpacity>
+          {!userIsMember && (
+            <TouchableOpacity style={styles.joinButton} onPress={handleJoinGroup}>
+              <Text style={styles.joinButtonText}>Quiero unirme!</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -106,6 +136,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  scrollViewContent: {
+    flexGrow: 1,
   },
   headerContainer: {
     position: 'relative',
@@ -136,11 +169,16 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     marginTop: -20,
     padding: 16,
+    flex: 1,
   },
   titleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  titleTextContainer: {
+    flex: 1,
+    marginRight: 8,
   },
   title: {
     fontSize: 24,
@@ -181,13 +219,26 @@ const styles = StyleSheet.create({
   },
   membersContainer: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     marginVertical: 16,
   },
   memberImage: {
-    width: 50,
-    height: 50,
+    width: 65,
+    height: 65,
     borderRadius: 25,
     marginRight: 8,
+    marginBottom: 8,
+  },
+  memberImagePlaceholder: {
+    width: 65,
+    height: 65,
+    borderRadius: 25,
+    marginRight: 8,
+    marginBottom: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
   joinButton: {
     backgroundColor: '#5CAD40',

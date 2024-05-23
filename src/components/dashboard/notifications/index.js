@@ -1,30 +1,34 @@
-import React, { useCallback, useEffect } from 'react';
-import { View, Text, FlatList, Image, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, Text, FlatList, Image, TouchableWithoutFeedback, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 import { NativeBaseProvider } from "native-base";
 import { useSelector, useDispatch } from 'react-redux';
-import { acceptJoinRequest } from '../../../actions/groups/groupAction';
 import { loadGeneralNotificationsByGroupId } from '../../../actions/notifications/notificationsAction';
+import io from 'socket.io-client';
+import Config from 'react-native-config';
+
+const socket = io(Config.SOCKET);
 
 const NotificationsList_Template = ({ navigation }) => {
   const dispatch = useDispatch();
   const notifications = useSelector(state => state.notificationsReducer.notifications);
   const currentUserId = useSelector(state => state.userReducer.user);
+
   useEffect(() => {
     dispatch(loadGeneralNotificationsByGroupId(currentUserId.id));
   }, [dispatch]);
 
-  const goDetailsGroup = (item) => {
-    navigation.navigate('detalleGrupo', { groupId: item._id })
-  }
-  const handleChangeStatusRequest = (idRequest) => {
-    dispatch(acceptJoinRequest(idRequest))
-  }
-  const renderGridItem = useCallback(({ item }) => 
-  {
+  const handleNotificationPress = useCallback((notificationId, groupId, viewed) => {
+    if(!viewed){
+      socket.emit('notificationViewed', { userId: currentUserId.id, notificationId });
+    }
+    navigation.navigate('detalleGrupo', { groupId });
+  }, [currentUserId.id, navigation]);
+
+  const renderGridItem = useCallback(({ item }) =>  {
     const backgroundColor = item.viewed ? 'white' : '#e0e0e0';
     const coverImage = item.coverImage || 'https://via.placeholder.com/150';
     return(
-    //   <TouchableWithoutFeedback onPress={() => navigation.navigate('detalleGrupo', { groupId: item.group?._id })}>
+       <TouchableWithoutFeedback onPress={() => handleNotificationPress(item._id, item.group._id, item.viewed)}>
           <View style={[styles.cardContainer, { backgroundColor }]}>
             <Image source={{ uri: coverImage }} style={styles.cardImage} />
             <View style={styles.cardDetailsContainer}>
@@ -35,22 +39,31 @@ const NotificationsList_Template = ({ navigation }) => {
               <Text style={styles.cardDate}>{new Date(item.createdAt).toLocaleDateString()}</Text>
             </View>
           </View>
-       //</TouchableWithoutFeedback>
+       </TouchableWithoutFeedback>
     )
   }, []);
+
+  const renderEmptyComponent = () => (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.emptyText}>No hay solicitudes para mostrar.</Text>
+    </View>
+  );
   return (
     <NativeBaseProvider>
-      <View style={styles.container}>
-        <View style={styles.tabContent}>
-          <FlatList
-            data={notifications?.data}
-            renderItem={renderGridItem}
-            keyExtractor={(item, index) => index.toString()}
-            numColumns={1}
-            showsVerticalScrollIndicator={false}
-          />
-        </View>
-      </View>
+       <SafeAreaView style={styles.container}>
+          <View>
+            <View style={styles.tabContent}>
+              <FlatList
+                data={notifications?.data}
+                renderItem={renderGridItem}
+                keyExtractor={(item, index) => index.toString()}
+                numColumns={1}
+                showsVerticalScrollIndicator={false}
+                ListEmptyComponent={renderEmptyComponent}
+              />
+            </View>
+          </View>
+      </SafeAreaView>
     </NativeBaseProvider>
   );
 }

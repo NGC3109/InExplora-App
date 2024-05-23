@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { View, Text, FlatList, Image, TouchableWithoutFeedback, StyleSheet } from 'react-native';
-import { NativeBaseProvider } from "native-base";
+import { NativeBaseProvider } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadGeneralRequestsByGroupId } from '../../../actions/request/requestAction';
 
@@ -11,27 +11,33 @@ const JoinRequestList_Template = ({ navigation }) => {
 
   useEffect(() => {
     dispatch(loadGeneralRequestsByGroupId(currentUserId.id));
-  }, [dispatch]);
+  }, [dispatch, currentUserId.id]);
 
-  const renderGridItem = useCallback(({ item }) => 
-  {
+  const renderGridItem = useCallback(({ item }) => {
     const backgroundColor = item.viewed ? 'white' : '#e0e0e0';
     const coverImage = item.user.profilePicture || 'https://via.placeholder.com/150';
-    return(
+    return (
       <TouchableWithoutFeedback onPress={() => navigation.navigate('request_detail', { group: item })}>
-          <View style={[styles.cardContainer, { backgroundColor }]}>
-            <Image source={{ uri: coverImage }} style={styles.cardImage} />
-            <View style={styles.cardDetailsContainer}>
-              {item.user.displayName && (
-                <Text style={styles.cardTitle}>{item.user.displayName}</Text>
-              )}
-              <Text style={styles.cardSubTitle}>Quiere unirse a tu grupo <Text style={styles.groupTitle}>{item.group.title}</Text></Text>
-              <Text style={styles.cardDate}>{new Date(item.requestDate).toLocaleDateString()}</Text>
-            </View>
+        <View style={[styles.cardContainer, { backgroundColor }]}>
+          <Image source={{ uri: coverImage }} style={styles.cardImage} />
+          <View style={styles.cardDetailsContainer}>
+            {item.user.displayName && (
+              <Text style={styles.cardTitle}>{item.user.displayName}</Text>
+            )}
+            <Text style={styles.cardSubTitle}>Quiere unirse a tu grupo <Text style={styles.groupTitle}>{item.group.title}</Text></Text>
+            <Text style={styles.cardDate}>{new Date(item.requestDate).toLocaleDateString()}</Text>
           </View>
-       </TouchableWithoutFeedback>
-    )
-  }, []);
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  }, [navigation]);
+
+  const renderEmptyComponent = () => (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.emptyText}>No hay solicitudes para mostrar.</Text>
+    </View>
+  );
+
   return (
     <NativeBaseProvider>
       <View style={styles.container}>
@@ -42,12 +48,13 @@ const JoinRequestList_Template = ({ navigation }) => {
             keyExtractor={(item, index) => index.toString()}
             numColumns={1}
             showsVerticalScrollIndicator={false}
+            ListEmptyComponent={renderEmptyComponent}
           />
         </View>
       </View>
     </NativeBaseProvider>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -55,6 +62,9 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 20,
     backgroundColor: 'white'
+  },
+  tabContent: {
+    flex: 1,
   },
   groupTitle: {
     fontWeight: 'bold'
@@ -91,5 +101,16 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: 'grey',
   },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  emptyText: {
+    fontSize: 18,
+    color: 'grey',
+  },
 });
+
 export default JoinRequestList_Template;
