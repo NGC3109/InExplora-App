@@ -23,7 +23,6 @@ export const useSocket = (userId) => {
         });
 
         socket.on('pendingJoinRequestCount', (data) => {
-            console.log('getJoinRequestCount: ', data)
             if (data && data.count !== undefined) {
                 dispatch(setJoinRequestCount(data.count));
             } else {
@@ -32,7 +31,6 @@ export const useSocket = (userId) => {
         });
 
         socket.on('pendingRequestCount', (data) => {
-            console.log('pendingRequestCount: ', data)
             if (data && data.count !== undefined) {
                 dispatch(setGeneralRequestCount(data.count));
             } else {
