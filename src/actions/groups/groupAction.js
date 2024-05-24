@@ -72,7 +72,6 @@ export const loadGroups = (userId) => async (dispatch) => {
       type: LOAD_GROUPS_SUCCESS,
       payload: response.data.data
     });
-    console.log('requestBody: ', requestBody)
   } catch (error) {
     dispatch({
       type: LOAD_GROUPS_FAIL,

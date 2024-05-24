@@ -19,6 +19,8 @@ const MessageTemplate = ({
     setMessageText,
     messageText,
     handleViewableItemsChanged,
+    handleScroll,
+    handleEndReached,
 }) => {
   const renderMessageItem = ({ item, index }) => (
     <View
@@ -48,44 +50,45 @@ const MessageTemplate = ({
       </View>
     </View>
   );
+
   return (
-    <View style={styles.container} >
-        <ImageBackground 
-          source={require('../../assets/pattern2.png')}
-          style={styles.container}
-          resizeMode="cover"
-        >
-              <FlatList
-                data={messages}
-                renderItem={renderMessageItem}
-                keyExtractor={item => item._id}
-                onEndReached={() => {}}
-                inverted
-                onEndReachedThreshold={0.1}
-                keyboardShouldPersistTaps='handled'
-                contentContainerStyle={{ flexGrow: 1 }}
-                onViewableItemsChanged={handleViewableItemsChanged}
-                viewabilityConfig={{
-                  itemVisiblePercentThreshold: 50 // Considerar un mensaje como "visto" si el 50% es visible
-                }}
-              />
-        </ImageBackground>
-        <View style={styles.inputContainer}>
-          <TouchableOpacity onPress={handleAttachment} style={styles.iconButton}>
-            <Icon name="paperclip" size={24} color="#999" />
-          </TouchableOpacity>
-            <TextInput
-              style={styles.input}
-              placeholder="Type your message"
-              placeholderTextColor="#999"
-              value={messageText}
-              onChangeText={setMessageText}
-              onSubmitEditing={handleSend}
-            />
-          <TouchableOpacity onPress={handleSend} style={styles.iconButton}>
-            <Icon name="send" size={24} color="#999" />
-          </TouchableOpacity>
-        </View>
+    <View style={styles.container}>
+      <ImageBackground 
+        source={require('../../assets/pattern2.png')}
+        style={styles.container}
+        resizeMode="cover"
+      >
+        <FlatList
+          data={messages}
+          renderItem={renderMessageItem}
+          keyExtractor={item => item._id}
+          onEndReached={handleEndReached}
+          inverted
+          onEndReachedThreshold={0.1}
+          keyboardShouldPersistTaps='handled'
+          contentContainerStyle={{ flexGrow: 1 }}
+          onViewableItemsChanged={handleViewableItemsChanged}
+          viewabilityConfig={{
+            itemVisiblePercentThreshold: 50 // Considerar un mensaje como "visto" si el 50% es visible
+          }}
+        />
+      </ImageBackground>
+      <View style={styles.inputContainer}>
+        <TouchableOpacity onPress={handleAttachment} style={styles.iconButton}>
+          <Icon name="paperclip" size={24} color="#999" />
+        </TouchableOpacity>
+        <TextInput
+          style={styles.input}
+          placeholder="Type your message"
+          placeholderTextColor="#999"
+          value={messageText}
+          onChangeText={setMessageText}
+          onSubmitEditing={handleSend}
+        />
+        <TouchableOpacity onPress={handleSend} style={styles.iconButton}>
+          <Icon name="send" size={24} color="#999" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

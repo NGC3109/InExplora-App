@@ -89,16 +89,27 @@ const GroupItem = ({
     })
   }
 
+  const goProfileUser = (userPublic) => {
+    if(userPublic === userId){
+      navigation.navigate('MainTabs', {
+        screen: 'MiPerfil'
+      });
+    }else{
+      navigation.navigate('profile_public', { userId: userPublic })
+    }
+  }
   return (
     <TouchableWithoutFeedback onPress={() => goDetailsGroup(item)}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Image 
+          <Image
             source={{ uri: item.creatorProfilePicture }} 
             style={styles.profileImage} 
           />
           <View style={styles.headerTextContainer}>
-            <Text style={styles.userName}>{item.creatorName}</Text>
+            <TouchableOpacity onPress={() => goProfileUser(item.userCreator)}>
+              <Text style={styles.userName}>{item.creatorName}</Text>
+            </TouchableOpacity>
             <Text style={styles.userArticles}>21 días</Text>
           </View>
           {bookmarkedByUser ? 

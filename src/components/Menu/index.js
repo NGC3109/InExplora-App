@@ -45,6 +45,7 @@ import { IconEarth, IconGroup, IconHome, IconPlusQuad } from '../../assets/vecto
 import Grupos from '../../container/groups/list/Groups';
 import RequestDetail from '../dashboard/request/requestDetail';
 import NotificationsList_Template from '../dashboard/notifications';
+import PerfilPublicoContainer from '../../container/publico/perfil';
 
 
 const Tab = createBottomTabNavigator();
@@ -318,7 +319,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="p3_signUp_birthday" component={P3_SignUp_Container} options={{ title: 'Registra tu fecha de nacimiento', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="request_detail" component={RequestDetail} options={{ title: 'Solicitud', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="notifications_detail" component={NotificationsList_Template} options={{ title: 'Notificaciones', headerTitleAlign: 'center' }}/>
-        
+        <RootStack.Screen name="profile_public" component={PerfilPublicoContainer} options={{ title: 'Perfil', headerTitleAlign: 'center' }}/>
     </RootStack.Navigator>
   );
 };

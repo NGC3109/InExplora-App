@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback  } from 'react';
-
-import { format, isToday  } from 'date-fns';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { format, isToday } from 'date-fns';
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
@@ -10,56 +9,61 @@ import 'react-native-get-random-values';
 import Config from 'react-native-config';
 
 const MessageScreen = () => {
-    const route = useRoute();
-    const { chattingWith } = route.params;
-    const { chatId } = chattingWith;
-    const [messages, setMessages] = useState([]);
-    const [messageText, setMessageText] = useState('');
-    const [socket, setSocket] = useState(null);
-    const scrollViewRef = useRef(null);
-    const currentUserId = useSelector(state => state.userReducer.user);
+  const route = useRoute();
+  const { chattingWith } = route.params;
+  const { chatId } = chattingWith;
+  const [messages, setMessages] = useState([]);
+  const [messageText, setMessageText] = useState('');
+  const [socket, setSocket] = useState(null);
+  const [page, setPage] = useState(1);
+  const [loadingOldMessages, setLoadingOldMessages] = useState(false);
+  const scrollViewRef = useRef(null);
+  const currentUserId = useSelector(state => state.userReducer.user);
 
-    useEffect(() => {
-        const newSocket = io(Config.SOCKET);
-        setSocket(newSocket);
+  useEffect(() => {
+    const newSocket = io(Config.SOCKET);
+    setSocket(newSocket);
 
-        newSocket.on("connect", () => {
-            newSocket.emit("joinChat", { chatId });
-            newSocket.emit("getOldMessages", { _id: chatId });
-        });
-        newSocket.on("oldMessages", (response) => {
-          const formattedNewMessages = formatMessages(response.data.map(msg => ({
-            ...msg,
-            isSentByCurrentUser: msg.sender === currentUserId.id,
-            isReceived: msg.receivedBy.includes(currentUserId.id),
-            isRead: msg.readBy.includes(currentUserId.id)
-          })));
-          setMessages(prevMessages => [...formattedNewMessages, ...prevMessages]);
-        });
-        newSocket.on("newMessage", (newMessage) => {
-        setMessages((prevMessages) => {
-            const messageExists = prevMessages.some(msg => msg._id === newMessage._id);
-            if (!messageExists) {
-            const updatedMessages = [{
-                ...newMessage,
-                isSentByCurrentUser: newMessage.sender === currentUserId.id,
-                isReceived: newMessage.receivedBy && newMessage.receivedBy.includes(currentUserId.id),
-                isRead: newMessage.readBy && newMessage.readBy.includes(currentUserId.id)
-            }, ...prevMessages];
-            return formatMessages(updatedMessages);
-            }
-            return prevMessages;
-        });
-        });
-        return () => {
-        newSocket.off("connect");
-        newSocket.off("oldMessages");
-        newSocket.off("newMessage");
-        newSocket.off("messageConfirmation");
-        newSocket.disconnect();
-        };
-  }, [chatId, currentUserId]);
-  
+    newSocket.on("connect", () => {
+      newSocket.emit("joinChat", { chatId });
+      loadOldMessages(newSocket, chatId, page);
+    });
+
+    newSocket.on("oldMessages", (response) => {
+      const formattedNewMessages = formatMessages(response.data.map(msg => ({
+        ...msg,
+        isSentByCurrentUser: msg.sender === currentUserId.id,
+        isReceived: msg.receivedBy.includes(currentUserId.id),
+        isRead: msg.readBy.includes(currentUserId.id)
+      })));
+      setMessages(prevMessages => [...prevMessages, ...formattedNewMessages]);
+      setLoadingOldMessages(false);
+    });
+
+    newSocket.on("newMessage", (newMessage) => {
+      setMessages((prevMessages) => {
+        const messageExists = prevMessages.some(msg => msg._id === newMessage._id);
+        if (!messageExists) {
+          const updatedMessages = [newMessage, ...prevMessages];
+          return formatMessages(updatedMessages);
+        }
+        return prevMessages;
+      });
+    });
+
+    return () => {
+      newSocket.off("connect");
+      newSocket.off("oldMessages");
+      newSocket.off("newMessage");
+      newSocket.disconnect();
+    };
+  }, [chatId, currentUserId, page]);
+
+  const loadOldMessages = (socket, chatId, page) => {
+    setLoadingOldMessages(true);
+    socket.emit("getOldMessages", { chatId, page, limit: 20 });
+  };
+
   const formatMessages = (messages) => {
     return messages.map((msg, index, array) => {
       const isSentByCurrentUser = msg.sender === currentUserId.id;
@@ -72,11 +76,10 @@ const MessageScreen = () => {
         ...msg,
         showAvatar,
         isSentByCurrentUser,
-        pendingStatus, // Agrega estado pendiente al mensaje
+        pendingStatus,
         isReceived: msg.receivedBy && msg.receivedBy.includes(currentUserId.id),
         isRead: msg.readBy && msg.readBy.includes(currentUserId.id)
       };
-      
     });
   };
 
@@ -110,6 +113,7 @@ const MessageScreen = () => {
       return format(date, 'MMM d, p');
     }
   };
+
   const handleAttachment = () => {
     console.log('Attachment');
   };
@@ -121,20 +125,33 @@ const MessageScreen = () => {
     } else {
       console.log('Socket no está conectado o es null:', socket);
     }
-  }, [socket, currentUserId.id, chatId]); 
-  
+  }, [socket, currentUserId.id, chatId]);
+
+  const handleScroll = (event) => {
+    const { nativeEvent } = event;
+    if (nativeEvent.contentOffset.y < 10 && !loadingOldMessages) {
+      setPage(prevPage => prevPage + 1);
+    }
+  };
+
+  const handleEndReached = () => {
+    if (!loadingOldMessages) {
+      setPage(prevPage => prevPage + 1);
+    }
+  };
 
   return (
     <MessageTemplate 
-        handleAttachment={handleAttachment}
-        formatTimestamp={formatTimestamp}
-        handleSend={handleSend}
-        scrollViewRef={scrollViewRef}
-        messages={messages}
-        messageText={messageText}
-        setMessageText={setMessageText}
-        handleViewableItemsChanged={handleViewableItemsChanged}
-        // handleScroll={handleScroll}
+      handleAttachment={handleAttachment}
+      formatTimestamp={formatTimestamp}
+      handleSend={handleSend}
+      scrollViewRef={scrollViewRef}
+      messages={messages}
+      messageText={messageText}
+      setMessageText={setMessageText}
+      handleViewableItemsChanged={handleViewableItemsChanged}
+      handleScroll={handleScroll}
+      handleEndReached={handleEndReached}
     />
   );
 };
