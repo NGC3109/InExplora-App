@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PerfilComponent from '../../components/perfil';
-import { loadGroupByUser } from '../../actions/groups/groupAction';
 import { updateFollowersCount } from '../../actions/users/userActions';
 import useAuth from '../../utils/hooks/useAuth';
 import { useNavigation } from '@react-navigation/native';
@@ -13,14 +12,12 @@ export default function PerfilContainer() {
   const socket = io(Config.SOCKET);
   const [activeTab, setActiveTab] = useState(0);
   const currentUser = useSelector(state => state.userReducer.user);
-  const groupsByUser = useSelector(state => state.groupReducer.groupsByUser);
   const navigation = useNavigation()
-
+  
   const dispatch = useDispatch();
   const { logout } = useAuth();
   useEffect(() => {
     if (currentUser && currentUser.id) {
-      dispatch(loadGroupByUser(currentUser.id));
       socket.emit('joinRoom', { userId: currentUser.id });
     }
     socket.on('newFollower', () => {
@@ -66,7 +63,7 @@ export default function PerfilContainer() {
   return (
     <PerfilComponent
         activeTab={activeTab}
-        groupsByUser={groupsByUser}
+        groupsByUser={currentUser?.groups}
         handleTabPress={handleTabPress}
         updateUser={updateUser}
         currentUser={currentUser}

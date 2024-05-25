@@ -12,6 +12,7 @@ export const initialState = {
         birthday: null,
         followersCount: null,
         followingCount: null,
+        groups: null
     },
     userPublic: {
         displayName: null,

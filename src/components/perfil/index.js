@@ -12,7 +12,7 @@ export default function PerfilComponent({
     onShare,
 }) {
     const renderGridItem = ({ item, index }) => {
-        const totalItems = groupsByUser?.data.length;
+        const totalItems = groupsByUser.length;
         let isLastItemSingleInRow = false;
         if (totalItems % 3 === 1 && index === totalItems - 1) {
             isLastItemSingleInRow = true;
@@ -88,7 +88,7 @@ export default function PerfilComponent({
     return (
         <FlatList
             ListHeaderComponent={renderHeader}
-            data={groupsByUser?.data || []}
+            data={groupsByUser || []}
             renderItem={renderGridItem}
             keyExtractor={(item, index) => index.toString()}
             numColumns={3}
