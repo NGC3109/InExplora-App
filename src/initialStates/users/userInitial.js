@@ -14,13 +14,4 @@ export const initialState = {
         followingCount: null,
         groups: null
     },
-    userPublic: {
-        displayName: null,
-        bio: null,
-        interests: [],
-        profilePicture: null,
-        superpower: [],
-        followersCount: null,
-        followingCount: null,
-    }
 };

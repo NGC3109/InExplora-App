@@ -18,7 +18,6 @@ const Chats = ({ navigation }) => {
 
     newSocket.on("connect", () => {
       newSocket.emit("getChatsByUserId", { userId: currentUser.id });
-      fetchChats();
     });
     newSocket.on("chatsByUserId", ({success, data}) => {
       if (success) {
@@ -28,16 +27,32 @@ const Chats = ({ navigation }) => {
       }
     });
     newSocket.on("chatUpdated", (update) => {
+      console.log('update: ', update);
       setChats(currentChats => {
         const updatedChats = currentChats.map(chat => {
           if (chat._id === update.chatId) {
-            return { ...chat, lastMessage: update.lastMessage.message, date: update.lastMessage.timestamp, displayName: update.lastMessage.displayName };
+            return { 
+              ...chat, 
+              lastMessage: {
+                message: update.lastMessage.message,
+                timestamp: update.lastMessage.timestamp,
+                displayName: update.lastMessage.displayName,
+                profilePicture: update.lastMessage.profilePicture,
+                sender: update.lastMessage.sender,
+                readBy: update.lastMessage.readBy,
+                receivedBy: update.lastMessage.receivedBy,
+                unreadCounts: update.lastMessage.unreadCounts
+              }, 
+              date: update.lastMessage.timestamp,
+              unreadCount: update.lastMessage.unreadCounts[currentUser.id] // Accede a unreadCounts para el currentUser.id
+            };
           }
           return chat;
         });
         return updatedChats;
       });
     });
+    
     const unsubscribe = navigation.addListener('focus', () => {
       fetchChats();
     });
@@ -78,7 +93,7 @@ const Chats = ({ navigation }) => {
               style={styles.lastMessage}
               numberOfLines={1}
               ellipsizeMode='tail'>
-              {item?.lastMessage?.message?.length > 20 ? `${item.displayName}: ${item.lastMessage.message.substring(0, 20)}...` : `${item.displayName}: ${item.lastMessage.message}`}
+              {item?.lastMessage?.message?.length > 20 ? `${item.displayName}: ${item.lastMessage?.message.substring(0, 20)}...` : `${item.displayName}: ${item.lastMessage?.message}`}
             </Text>
           </View>
           <View style={styles.dateAndBadgeContainer}>

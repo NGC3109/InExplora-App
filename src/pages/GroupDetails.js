@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, SafeAreaView, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadGroupById } from '../actions/groups/groupAction';
@@ -64,63 +64,75 @@ const DetailGroup = ({ navigation, route }) => {
             />
           </View>
           <Text style={styles.description}>{description}</Text>
-          <View style={styles.infoContainer}>
-            <View style={styles.infoColumn}>
-              <View style={styles.infoRow}>
-                <Icon name="hourglass-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>de {ageRange?.min} a {ageRange?.max} años</Text>
-              </View>
-              <View style={styles.infoRow}>
-                <Icon name="location-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>{destination?.description}</Text>
-              </View>
-              <View style={styles.infoRow}>
-                <Icon name="people-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>{numberOfPeople} maximo</Text>
-              </View>
-              <View style={styles.infoRow}>
-                <Icon name="cash-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>{budget}</Text>
-              </View>
-              <View style={styles.infoRow}>
-                <Icon name="female-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>{genre}</Text>
-              </View>
+          
+          {/* Sección de Detalles del Viaje */}
+          <Text style={styles.sectionTitle}>Detalles del Viaje</Text>
+          <View style={styles.sectionContent}>
+            <View style={styles.sectionItem}>
+              <Icon name="hourglass-outline" size={18} color="white" />
+              <Text style={styles.sectionItemText}>De {ageRange?.min} a {ageRange?.max} años</Text>
             </View>
-            <View style={styles.infoColumn}>
-              <View style={styles.infoRow}>
-                <Icon name="bed-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>{accommodation}</Text>
-              </View>
-              <View style={styles.infoRow}>
-                <Icon name="paw-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>{travelWithPets?.incluyeMascotas ? 'Se permiten mascotas' : 'Sin Mascotas'}</Text>
-              </View>
-              <View style={styles.infoRow}>
-                <Icon name="airplane-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>{travelMode?.travelMode}</Text>
-              </View>
-              <View style={styles.infoRow}>
-                <Icon name="navigate-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>Desde {startingTravelText}</Text>
-              </View>
-              <View style={styles.infoRow}>
-                <Icon name="calendar-outline" size={24} color="#000" />
-                <Text style={styles.infoText}>Desde el 7/7/2024 hasta el 20/7/2024</Text>
-              </View>
+            <View style={styles.sectionItem}>
+              <Icon name="location-outline" size={18} color="white" />
+              <Text style={styles.sectionItemText}>{destination?.description}</Text>
+            </View>
+            <View style={styles.sectionItem}>
+              <Icon name="people-outline" size={18} color="white" />
+              <Text style={styles.sectionItemText}>{numberOfPeople} máximo</Text>
+            </View>
+            <View style={styles.sectionItem}>
+              <Icon name="cash-outline" size={18} color="white" />
+              <Text style={styles.sectionItemText}>{budget}</Text>
+            </View>
+            <View style={styles.sectionItem}>
+              <Icon name="female-outline" size={18} color="white" />
+              <Text style={styles.sectionItemText}>{genre}</Text>
             </View>
           </View>
-          <Text style={styles.subtitle}>Integrantes</Text>
+
+          {/* Sección de Alojamiento y Transporte */}
+          <Text style={styles.sectionTitle}>Alojamiento y Transporte</Text>
+          <View style={styles.sectionContent}>
+            <View style={styles.sectionItem}>
+              <Icon name="bed-outline" size={18} color="white" />
+              <Text style={styles.sectionItemText}>{accommodation}</Text>
+            </View>
+            <View style={styles.sectionItem}>
+              <Icon name="paw-outline" size={18} color="white" />
+              <Text style={styles.sectionItemText}>{travelWithPets?.incluyeMascotas ? 'Se permiten mascotas' : 'Sin Mascotas'}</Text>
+            </View>
+            <View style={styles.sectionItem}>
+              <Icon name="airplane-outline" size={18} color="white" />
+              <Text style={styles.sectionItemText}>{travelMode?.travelMode}</Text>
+            </View>
+            <View style={styles.sectionItem}>
+              <Icon name="navigate-outline" size={18} color="white" />
+              <Text style={styles.sectionItemText}>Desde {startingTravelText}</Text>
+            </View>
+          </View>
+
+          {/* Sección de Fechas */}
+          <Text style={styles.sectionTitle}>Fechas</Text>
+          <View style={styles.sectionContent}>
+            <View style={styles.sectionItem}>
+              <Icon name="calendar-outline" size={18} color="white" />
+              <Text style={styles.sectionItemText}>Desde el 7/7/2024 hasta el 20/7/2024</Text>
+            </View>
+          </View>
+
+          {/* Sección de Integrantes */}
+          <Text style={styles.sectionTitle}>Integrantes</Text>
           <View style={styles.membersContainer}>
             {members.map((member, index) => (
               <Image key={index} source={{ uri: member.profilePicture }} style={styles.memberImage} />
             ))}
             {Array.from({ length: emptySpots }).map((_, index) => (
               <View key={`empty-${index}`} style={styles.memberImagePlaceholder}>
-                <Text>Vacio</Text>
+                <Text style={{color: '#021121'}}>Vacío</Text>
               </View>
             ))}
           </View>
+          
           {!userIsMember && (
             <TouchableOpacity style={styles.joinButton} onPress={handleJoinGroup}>
               <Text style={styles.joinButtonText}>Quiero unirme!</Text>
@@ -183,6 +195,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#021121',
   },
   subtitle: {
     fontSize: 16,
@@ -190,7 +203,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
-    color: '#666',
+    color: '#414141',
     marginVertical: 16,
   },
   profileImage: {
@@ -198,24 +211,30 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
   },
-  infoContainer: {
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#021121',
+    marginVertical: 10,
+  },
+  sectionContent: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexWrap: 'wrap',
     marginBottom: 16,
   },
-  infoColumn: {
-    flexDirection: 'column',
-    flex: 1,
-  },
-  infoRow: {
+  sectionItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
-    paddingHorizontal: 5,
+    backgroundColor: '#021121',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 15,
+    marginRight: 10,
+    marginBottom: 10,
   },
-  infoText: {
-    marginLeft: 8,
-    fontSize: 16,
+  sectionItemText: {
+    color: 'white',
+    marginLeft: 5,
   },
   membersContainer: {
     flexDirection: 'row',
@@ -238,7 +257,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#021121',
   },
   joinButton: {
     backgroundColor: '#5CAD40',

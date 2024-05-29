@@ -13,7 +13,7 @@ const HeaderWithIcons = () => {
   const generalNotificationsCount = useSelector(state => state.socketReducer.generalNotificationsCount); //contador de notificaciones
   
   const navigation = useNavigation()
-  useSocket(currentUser.id)
+  useSocket(currentUser?.id)
   return(
   <View style={styles.headerContainer}>
     <>

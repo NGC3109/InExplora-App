@@ -1,6 +1,13 @@
 import axios from 'axios';
 import Config from 'react-native-config';
-import { PREPARE_TO_CREATE, SAVE_USER, DISPLAYNAME_TO_CREATE, GET_USER, CLEAR_USER, UPDATE_FOLLOWERS_COUNT, GET_USER_BY_ID } from '../../utils/constants';
+import { 
+  PREPARE_TO_CREATE, 
+  SAVE_USER, 
+  DISPLAYNAME_TO_CREATE, 
+  GET_USER, 
+  CLEAR_USER, 
+  UPDATE_FOLLOWERS_COUNT,
+} from '../../utils/constants';
 
 export const clearUserData = () => {
   return {
@@ -46,25 +53,6 @@ export const getUser = (email) => {
       if (data) {
         dispatch({
           type: GET_USER,
-          payload: data,
-        });
-      } else {
-        console.error('Usuario no encontrado en el backend');
-      }
-    } catch (error) {
-      console.error('Error al obtener datos del usuario del backend:', error);
-    }
-  };
-};
-
-export const getUserById = (userId) => {
-  return async (dispatch) => {
-    try {
-      const response = await axios.get(`${Config.API_ENDPOINT}users/userId/${userId}`);
-      const data = response.data;
-      if (data) {
-        dispatch({
-          type: GET_USER_BY_ID,
           payload: data,
         });
       } else {

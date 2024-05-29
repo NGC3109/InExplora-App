@@ -6,6 +6,8 @@ export default function PerfilPublico({
     groupsByUser,
     navigation,
     userPublic,
+    onFollow,
+    onUnfollow,
 }) {
     const {
         profilePicture = 'https://via.placeholder.com/100',
@@ -15,7 +17,8 @@ export default function PerfilPublico({
         displayName = 'Astronauta🌍🚀',
         bio = '',
         interests = [],
-        superpower = []
+        superpower = [],
+        isFollowing = null
     } = userPublic || {};
 
     const renderGridItem = ({ item, index }) => {
@@ -73,8 +76,11 @@ export default function PerfilPublico({
                 </View>
                 <View style={styles.buttonsContainer}>
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.button} onPress={() => {}}>
-                            <Text style={styles.buttonText}>Seguir</Text>
+                        <TouchableOpacity 
+                            style={styles.button} 
+                            onPress={isFollowing ? onUnfollow : onFollow}
+                        >
+                            <Text style={styles.buttonText}>{isFollowing ? 'Dejar de seguir' : 'Seguir'}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.buttonContainer}>
