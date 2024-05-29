@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { saveGroupStartingTravel } from '../../../../actions/groups/groupAction';
+import { useDispatch,useSelector } from 'react-redux';
+import { saveGroupStartingTravelAndUpdateDraft } from '../../../../actions/groups/groupAction';
 import P8_9_1_StartingTravel_Template from '../../../../components/groups/create/groupStartingTravel';
 import Config from 'react-native-config';
 
 
 const P8_9_1_StartingTravel_Container = ({ navigation }) => {
     const dispatch = useDispatch();
+    const draftState = useSelector(state => state.groupReducer.draft);
     const [startingTravel, setStartingTravel] = useState({
         startingTravel: null,
         latitude: null,
@@ -21,8 +22,8 @@ const P8_9_1_StartingTravel_Container = ({ navigation }) => {
     });
 
     const continueButton = () => {
-        dispatch(saveGroupStartingTravel(startingTravel))
         if(isStartingTravelValid()){
+            dispatch(saveGroupStartingTravelAndUpdateDraft(draftState.id, startingTravel))
             navigation.navigate('step9');
             setMessageAlert(false)
         }else{

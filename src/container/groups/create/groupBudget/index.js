@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { saveGroupBudget } from '../../../../actions/groups/groupAction';
+import { useDispatch, useSelector } from 'react-redux';
+import { saveGroupBudgetAndUpdateDraft } from '../../../../actions/groups/groupAction';
 import P8_9_Budget_Template from '../../../../components/groups/create/groupBudget';
 
 const P8_9_Budget_Container = ({ navigation }) => {
   const dispatch = useDispatch();
   const [budget, setBudget] = useState('');
   const [messageAlert, setMessageAlert] = useState(false);
+  const draftState = useSelector(state => state.groupReducer.draft);
 
   const handleBudgetsChange = (itemValue) => {
     setBudget(itemValue);
     setMessageAlert(false)
   };
   const continueButton = () => {
-    dispatch(saveGroupBudget(budget))
+    dispatch(saveGroupBudgetAndUpdateDraft(draftState.id, budget))
     if(isBudgetValid()){
         navigation.navigate('step8_9_1');
         setMessageAlert(false)

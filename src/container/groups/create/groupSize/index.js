@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { saveGroupNumberOfPeople } from '../../../../actions/groups/groupAction';
+import { useDispatch, useSelector } from 'react-redux';
+import { saveGroupNumberOfPeopleAndUpdateDraft } from '../../../../actions/groups/groupAction';
 import P4_GroupSize_Template from '../../../../components/groups/create/groupSize';
 
 const P4_GroupSize_Container = ({ navigation }) => {
     const dispatch = useDispatch();
+    const draftState = useSelector(state => state.groupReducer.draft);
     const [groupSize, setGroupSize] = useState(1);
     const [messageAlert, setMessageAlert] = useState(false);
 
@@ -14,7 +15,7 @@ const P4_GroupSize_Container = ({ navigation }) => {
     }
     const continueButton = () => {
         if(isGroupSizeValid()){
-            dispatch(saveGroupNumberOfPeople(groupSize))
+            dispatch(saveGroupNumberOfPeopleAndUpdateDraft(draftState.id, groupSize))
             navigation.navigate('step5');
             setMessageAlert(false)
         }else{

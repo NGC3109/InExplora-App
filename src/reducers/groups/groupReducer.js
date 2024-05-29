@@ -1,4 +1,4 @@
-import { initialState } from "../../initialStates/users/userInitial";
+import { initialState } from "../../initialStates/groups";
 import { 
   SAVE_GROUP_DESTINATION, 
   SAVE_GROUP_TRAVELMODE, 
@@ -33,6 +33,12 @@ import {
   ACCEPT_JOIN_REQUEST_REQUEST,
   ACCEPT_JOIN_REQUEST_SUCCESS,
   ACCEPT_JOIN_REQUEST_FAIL,
+  SAVE_DRAFT,
+  SAVE_DRAFT_SUCCESS,
+  SAVE_DRAFT_FAIL,
+  UPDATE_DRAFT,
+  UPDATE_DRAFT_SUCCESS,
+  UPDATE_DRAFT_FAIL
 } from "../../utils/constants";
 
 const groupReducer = (state = initialState, action) => {
@@ -56,9 +62,11 @@ const groupReducer = (state = initialState, action) => {
     case LOAD_GROUPS_REQUEST: return { ...state, allGroups: { loading: true } };
     case LOAD_GROUPS_SUCCESS: return { ...state, allGroups: { data: action.payload, loading: false } };
     case LOAD_GROUPS_FAIL: return { ...state, allGroups: { error: action.payload, loading: false } };
+
     case LOAD_GROUP_BY_USER_REQUEST: return { ...state, groupsByUser: { loading: true, data: null, error: null } };
     case LOAD_GROUP_BY_USER_SUCCESS: return {...state, groupsByUser: { loading: false, data: action.payload, error: null } };
     case LOAD_GROUP_BY_USER_FAIL: return {...state, groupsByUser: { loading: false, data: null, error: action.payload } };
+
     case SAVE_GROUP_GENRE: return {...state, groups: { ...state.groups, genre: action.payload } };
     case SAVE_GROUP_DESTINATION: return { ...state, groups: { ...state.groups, destination: action.payload }};
     case SAVE_GROUP_TRAVELMODE: return { ...state, groups: { ...state.groups, travelMode: action.payload }};
@@ -73,6 +81,20 @@ const groupReducer = (state = initialState, action) => {
     case SAVE_GROUP_GALLERY: return { ...state, groups: { ...state.groups, gallery: action.payload }};
     case SAVE_GROUP_BUDGET: return { ...state, groups: { ...state.groups, budget: action.payload }};
     case SAVE_GROUP_STARTING_TRAVEL: return { ...state, groups: { ...state.groups, startingTravel: action.payload }};
+
+    case SAVE_DRAFT: 
+      return { ...state, draft: { ...state.draft, loading: true, error: null } };
+    case SAVE_DRAFT_SUCCESS: 
+      return { ...state, draft: { data: action.payload.data, id: action.payload.id, loading: false, error: null } };
+    case SAVE_DRAFT_FAIL: 
+      return { ...state, draft: { ...state.draft, loading: false, error: action.payload } };
+
+    case UPDATE_DRAFT: 
+      return { ...state, draft: { ...state.draft, loading: true, error: null } };
+    case UPDATE_DRAFT_SUCCESS: 
+      return { ...state, draft: { ...state.draft, data: action.payload, loading: false, error: null } };
+    case UPDATE_DRAFT_FAIL: 
+      return { ...state, draft: { ...state.draft, loading: false, error: action.payload } };
     default: return state;
   }  
 };

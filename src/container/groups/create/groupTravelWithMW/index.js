@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { saveGroupGenre } from '../../../../actions/groups/groupAction';
+import { useDispatch, useSelector } from 'react-redux';
+import { saveGroupGenreAndUpdateDraft } from '../../../../actions/groups/groupAction';
 import P1_GroupTravelWith_Women_Men_Template from '../../../../components/groups/create/groupTravelWithMW';
 
 const P1_GroupTravelWith_Women_Men_Container = ({ navigation }) => {
     const dispatch = useDispatch();
     const [generoViaje, setGeneroViaje] = useState('');
     const [messageAlert, setMessageAlert] = useState(false);
+    const draftState = useSelector(state => state.groupReducer.draft);
+
+    console.log('draftState: ', draftState)
 
     const handleGeneroChange = (itemValue) => {
         setGeneroViaje(itemValue);
@@ -14,7 +17,7 @@ const P1_GroupTravelWith_Women_Men_Container = ({ navigation }) => {
     };
     const continueButton = () => {
         if(isGenreValid()){
-            dispatch(saveGroupGenre(generoViaje))
+            dispatch(saveGroupGenreAndUpdateDraft(draftState.id, generoViaje))
             navigation.navigate('step2');
             setMessageAlert(false)
         }else{

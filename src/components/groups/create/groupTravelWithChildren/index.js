@@ -10,6 +10,8 @@ const P6_GroupTravelWithChildren_Template = ({
     edadMayorMenor,
     setEdadMayorMenor,
     handleIncluyeMenoresChange,
+    incluyeNinosConNecesidadesEspeciales,
+    setIncluyeNinosConNecesidadesEspeciales,
     continueButton,
     messageAlert,
  }) => {
@@ -18,7 +20,8 @@ const P6_GroupTravelWithChildren_Template = ({
     <View style={styles.container}>
       <Text style={styles.subtitle}>¿Prefieres viajar con o sin niños?</Text>
       <Text style={styles.description}>
-      Decidan si incluirán niños en su grupo de viaje para conectar con otras familias. Viajar juntos ofrece una experiencia más segura y enriquecedora para los pequeños      </Text>
+        Decidan si incluirán niños en su grupo de viaje para conectar con otras familias. Viajar juntos ofrece una experiencia más segura y enriquecedora para los pequeños.
+      </Text>
       <View>
         <Select
             selectedValue={incluyeMenores}
@@ -38,16 +41,35 @@ const P6_GroupTravelWithChildren_Template = ({
         <Text style={styles.helperText}>
           Seleccionen si viajarán con niñas/niños/adolescentes.
         </Text>
-        {
-            messageAlert &&
-                <>
-                    <Alert
-                        message="Ingresa una respuesta."
-                        type="danger"
-                        Customstyle={{marginTop: 5}}
-                    />
-                </>
-        }
+        {messageAlert && (
+          <Alert
+            message="Ingresa una respuesta."
+            type="danger"
+            Customstyle={{marginTop: 5}}
+          />
+        )}
+        {incluyeMenores === 'si' && (
+          <View>
+            <Text style={styles.label}>¿Necesidades de atención especial?</Text>
+            <Select
+                selectedValue={incluyeNinosConNecesidadesEspeciales}
+                minWidth={200}
+                accessibilityLabel="Seleccione una respuesta"
+                placeholder="Seleccione una respuesta"
+                _selectedItem={{
+                    bg: 'rgba(57, 103, 176, 0.4)',
+                }}
+                mt={1}
+                onValueChange={itemValue => setIncluyeNinosConNecesidadesEspeciales(itemValue)}
+            >
+                <Select.Item label="No" value="no" />
+                <Select.Item label="Sí" value="si" />
+            </Select>
+            <Text style={styles.helperText}>
+              Indiquen si algunos de los niños tienen necesidades de atención especial.
+            </Text>
+          </View>
+        )}
         {/* {incluyeMenores === 'si' && (
           <View>
             <Text style={styles.label}>¿Que edad tiene?</Text>            
@@ -81,6 +103,5 @@ const P6_GroupTravelWithChildren_Template = ({
     </NativeBaseProvider>
   );
 };
-
 
 export default P6_GroupTravelWithChildren_Template;

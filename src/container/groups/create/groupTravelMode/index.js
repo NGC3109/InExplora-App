@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { saveGroupTravelMode } from '../../../../actions/groups/groupAction';
+import { saveGroupTravelModeAndUpdateDraft } from '../../../../actions/groups/groupAction';
 import { getTransports } from '../../../../actions/transports/transportsAction';
 import P2_TravelMode_Template from '../../../../components/groups/create/groupTravelMode';
 
@@ -11,6 +11,7 @@ const P2_TravelMode_Container = ({ navigation }) => {
   const [compartirConduccion, setCompartirConduccion] = useState(false);
   const [messageAlert, setMessageAlert] = useState(false);
   const transports = useSelector(state => state.transportsReducer.transports);
+  const draftState = useSelector(state => state.groupReducer.draft);
 
   useEffect(() => {
     dispatch(getTransports());
@@ -26,7 +27,7 @@ const P2_TravelMode_Container = ({ navigation }) => {
   };
 
   const continueButton = () => {
-    dispatch(saveGroupTravelMode(transporte));
+    dispatch(saveGroupTravelModeAndUpdateDraft(draftState.id, transporte));
     if (isTransporteValid()) {
       navigation.navigate('step3');
       setMessageAlert(false);

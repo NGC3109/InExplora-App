@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { saveGroupMaximumAge, saveGroupMinimumAge } from '../../../../actions/groups/groupAction';
+import { useDispatch, useSelector } from 'react-redux';
+import { saveGroupAgeRangeAndUpdateDraft } from '../../../../actions/groups/groupAction';
 import P5_GroupMinMax_Template from '../../../../components/groups/create/groupMinMax';
 
 const P5_GroupMinMax_Container = ({ navigation }) => {
     const dispatch = useDispatch();
+    const draftState = useSelector(state => state.groupReducer.draft);
     const [minGroupSize, setMinGroupSize] = useState(0);
     const [maxGroupSize, setMaxGroupSize] = useState(60);
     const [messageAlert, setMessageAlert] = useState(false);
@@ -23,8 +24,7 @@ const P5_GroupMinMax_Container = ({ navigation }) => {
     }
     const continueButton = () => {
         if(isGroupSizeValid()){
-            dispatch(saveGroupMinimumAge(minGroupSize))
-            dispatch(saveGroupMaximumAge(maxGroupSize))
+            dispatch(saveGroupAgeRangeAndUpdateDraft(draftState.id, minGroupSize, maxGroupSize))
             navigation.navigate('step6');
             setMessageAlert(false)
         }else{

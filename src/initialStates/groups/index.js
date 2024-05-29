@@ -1,29 +1,35 @@
 export const initialState = {
     groups: {
-        destination: null, //destino
+        destination: null, // destino
         travelMode: {
             travelMode: null,
             compartirConduccion: false,
-        }, //transporte
-        accommodation: null, //hospedaje
-        numberOfPeople: null, //maximo personas
-        minimumAge: null, //edad minima
-        maximumAge: null, //edad maxima
-        budget: null, //presupuesto p/p
-        travelWithChildren: false, //niños?
+        }, // transporte
+        accommodation: null, // hospedaje
+        numberOfPeople: null, // máximo personas
+        minimumAge: null, // edad mínima
+        maximumAge: null, // edad máxima
+        budget: null, // presupuesto p/p
+        travelWithChildren: false, // niños?
         travelWithPets: {
             incluyeMascotas: null,
             petSize: null,
-        }, //mascotas?
-        description: null, //descripcion
-        coverPhoto: null, //portada
-        gallery: [], //galeria
+        }, // mascotas?
+        description: null, // descripción
+        coverPhoto: null, // portada
+        gallery: [], // galería
         genre: null,
         startingTravel: {
             startingTravel: null,
             latitude: null,
             longitude: null,
         }, // fecha de partida
+    },
+    draft: {
+        data: null,
+        id: null,
+        loading: false, 
+        error: null
     },
     groupsByUser: {
         loading: false,
@@ -40,7 +46,7 @@ export const initialState = {
         loading: false,
         error: null,
     },
-    requestToJoin:{
+    requestToJoin: {
         data: [],
         loading: false,
         error: null,

@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import GroupTemplate from '../../components/groups';
-import { saveGroupDestination } from '../../actions/groups/groupAction';
-import Config from 'react-native-config';
+import { saveDraft, saveGroupDestinationAndCreateDraft } from '../../actions/groups/groupAction';
 
 const GroupContainer = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -24,7 +23,7 @@ const GroupContainer = ({ navigation }) => {
                 description: destino.description,
                 region: destino.region
             }
-            dispatch(saveGroupDestination(destinosObj))
+            dispatch(saveGroupDestinationAndCreateDraft(currentUserId.id, destinosObj))
             navigation.navigate('step1');
             setMessageAlert(false)
         }else{

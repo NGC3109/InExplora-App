@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import P3_Accommodation_Template from '../../../../components/groups/create/groupAccommodation';
-import { saveGroupAccommodation } from '../../../../actions/groups/groupAction';
+import { saveGroupAccommodationAndUpdateDraft } from '../../../../actions/groups/groupAction';
 import { getAccommodations } from '../../../../actions/accomodations/accomodationsAction';
 
 const P3_Accommodation_Container = ({ navigation }) => {
@@ -9,6 +9,7 @@ const P3_Accommodation_Container = ({ navigation }) => {
   const [hotels, setHotels] = useState('');
   const [messageAlert, setMessageAlert] = useState(false);
   const accommodations = useSelector(state => state.accomodationsReducer.accommodations);
+  const draftState = useSelector(state => state.groupReducer.draft);
 
   useEffect(() => {
     dispatch(getAccommodations());
@@ -18,10 +19,9 @@ const P3_Accommodation_Container = ({ navigation }) => {
     setHotels(itemValue);
     setMessageAlert(false)
   };
-
   const continueButton = () => {
-    dispatch(saveGroupAccommodation(hotels))
     if (isAccommodationValid()) {
+        dispatch(saveGroupAccommodationAndUpdateDraft(draftState.id, hotels))
         navigation.navigate('step4');
         setMessageAlert(false)
     } else {

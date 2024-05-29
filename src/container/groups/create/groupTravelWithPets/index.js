@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { saveGroupTravelWithPets } from '../../../../actions/groups/groupAction';
+import { useDispatch, useSelector } from 'react-redux';
+import { saveGroupTravelWithPetsAndUpdateDraft } from '../../../../actions/groups/groupAction';
 import P7_GroupTravelWithPets_Template from '../../../../components/groups/create/groupTravelWithPets';
 
 const P7_GroupTravelWithPets_Container = ({ navigation }) => {
   const dispatch = useDispatch();
+  const draftState = useSelector(state => state.groupReducer.draft);
   const [incluyeMascotas, setIncluyeMascotas] = useState({
     incluyeMascotas: 'no',
     petSize: null
@@ -21,7 +22,7 @@ const P7_GroupTravelWithPets_Container = ({ navigation }) => {
   };
   const continueButton = () => {
     if(isIncluyePetsValid()){
-        dispatch(saveGroupTravelWithPets(incluyeMascotas))
+        dispatch(saveGroupTravelWithPetsAndUpdateDraft(draftState.id, incluyeMascotas))
         navigation.navigate('step8');
         setMessageAlert(false)
     }else{
