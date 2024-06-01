@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Image, Text, TouchableOpacity, FlatList } from 'react-native';
 import ButtonCustom from '../../components/ui/Button';
 import Alert from '../ui/Alert';
-import GooglePlacesAutocomplete from '../ui/Testing';
+import GooglePlacesAutocomplete from '../ui/GooglePlacesAutocomplete';
 import { StarIcon } from '../../assets/vectores';
 import DraftItem from './create/draft';
 

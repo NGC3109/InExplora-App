@@ -1,6 +1,10 @@
 export const initialState = {
     groups: {
-        destination: null, // destino
+        destination: {
+            description: null,
+            country: null,
+            region: null
+        }, // destino
         travelMode: {
             travelMode: null,
             compartirConduccion: false,

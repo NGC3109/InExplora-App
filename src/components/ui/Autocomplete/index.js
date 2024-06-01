@@ -12,42 +12,58 @@ const debounce = (func, wait) => {
         }, wait);
     };
 };
-const Autocomplete = ({ onSelect }) => {
+
+const Autocomplete = ({ onSelect, onFocus, onBlur }) => {
     const [query, setQuery] = useState('');
     const [predictions, setPredictions] = useState([]);
 
     useEffect(() => {
-        if(!predictions.length > 0){
-            setPredictions('')
+        if (!predictions.length > 0) {
+            setPredictions('');
         }
-    }, [predictions])
+    }, [predictions]);
+
     const debouncedSearch = useCallback(
         debounce((text) => {
-          const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${Config.API_KEY_MAPS}&language=es&input=${encodeURIComponent(text)}`;
-          fetch(apiUrl)
-              .then((response) => response.json())
-              .then((json) => {
-                  setPredictions(json.predictions);
-              })
-              .catch((error) => {
-                  console.error(error);
-              });
+            const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${Config.API_KEY_MAPS}&language=es&input=${encodeURIComponent(text)}`;
+            fetch(apiUrl)
+                .then((response) => response.json())
+                .then((json) => {
+                    setPredictions(json.predictions);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
         }, 500),
         []
-      );
+    );
 
     const handleSearch = (text) => {
         setQuery(text);
         if (text.length > 3) {
             debouncedSearch(text);
         } else {
-            setPredictions([]); 
+            setPredictions([]);
         }
     };
-    const handleKeyPress = () => {
-          setQuery('');
-          setPredictions([]);
+
+    const handleSelect = async (description, placeId) => {
+        setQuery(description);
+        setPredictions([]);
+        onBlur();
+        const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&language=es&key=${Config.API_KEY_MAPS}`;
+        try {
+            const result = await fetch(apiUrl);
+            const json = await result.json();
+            console.log('json: ', json);
+
+            const location = json.result.geometry.location;
+            onSelect({ description, location });
+        } catch (error) {
+            console.error(error);
+        }
     };
+
     return (
         <View style={styles.container}>
             <View style={styles.searchSection}>
@@ -56,7 +72,7 @@ const Autocomplete = ({ onSelect }) => {
                     value={query}
                     onChangeText={handleSearch}
                     style={styles.textInput}
-                    onFocus={handleKeyPress}
+                    onFocus={onFocus}
                 />
             </View>
             <Text style={styles.infoText}>¿Desde donde inicia la aventura?</Text>
@@ -64,7 +80,7 @@ const Autocomplete = ({ onSelect }) => {
                 data={predictions}
                 keyExtractor={(item) => item.place_id}
                 renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => onSelect(item.description, item.place_id)} style={styles.predictionItem}>
+                    <TouchableOpacity onPress={() => handleSelect(item.description, item.place_id)} style={styles.predictionItem}>
                         <Text style={styles.predictionText}>{item.description}</Text>
                     </TouchableOpacity>
                 )}
@@ -80,7 +96,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         flex: 1,
-        height: 50, // Altura del TextInput
+        height: 50,
         fontSize: 16,
     },
     searchSection: {
@@ -92,29 +108,29 @@ const styles = StyleSheet.create({
         borderColor: Config.COLOR_LABEL,
         borderRadius: 5,
         paddingLeft: 10,
-        marginTop: 20, // Ajusta para posicionar el texto correctamente
+        marginTop: 20,
     },
     infoText: {
         position: 'absolute',
         top: 10,
-        left: 20, // Ajusta según necesidades
+        left: 20,
         backgroundColor: '#fff',
         paddingHorizontal: 10,
         fontSize: 12,
         color: Config.COLOR_LABEL,
     },
     predictionsList: {
-        // Aplica estilos según tu diseño, si es necesario
+        width: '100%',
     },
     predictionItem: {
-        backgroundColor: '#FFFFFF', // Fondo de las predicciones
-        padding: 15, // Padding del contenedor
-        borderBottomWidth: 1, // Grosor del borde inferior
-        borderBottomColor: '#E5E5E5', // Color del borde inferior
+        backgroundColor: '#FFFFFF',
+        padding: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: '#E5E5E5',
     },
     predictionText: {
-        fontSize: 18, // Tamaño del texto de las predicciones
-        color: '#000', // Color del texto de las predicciones
+        fontSize: 18,
+        color: '#000',
     },
 });
 

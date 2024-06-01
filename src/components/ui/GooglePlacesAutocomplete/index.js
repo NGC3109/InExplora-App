@@ -12,6 +12,7 @@ const debounce = (func, wait) => {
         }, wait);
     };
 };
+
 const GooglePlacesAutocomplete = ({ onSelect }) => {
     const [query, setQuery] = useState('');
     const [predictions, setPredictions] = useState([]);
@@ -20,7 +21,8 @@ const GooglePlacesAutocomplete = ({ onSelect }) => {
         if(!predictions.length > 0){
             setPredictions('')
         }
-    }, [predictions])
+    }, [predictions]);
+
     const debouncedSearch = useCallback(
         debounce((text) => {
           const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${Config.API_KEY_MAPS}&language=es&input=${encodeURIComponent(text)}`;
@@ -34,7 +36,7 @@ const GooglePlacesAutocomplete = ({ onSelect }) => {
               });
         }, 500),
         []
-      );
+    );
 
     const handleSearch = (text) => {
         setQuery(text);
@@ -53,38 +55,55 @@ const GooglePlacesAutocomplete = ({ onSelect }) => {
         try {
             const result = await fetch(apiUrl);
             const json = await result.json();
-            console.log('json: ', json)
+
+            const addressComponents = json.result.address_components || [];
+            const getAddressComponent = (type) => {
+                const component = addressComponents.find(component => component.types.includes(type));
+                return component ? component.long_name : '';
+            };
+
+            let country = getAddressComponent("country");
+            let region = getAddressComponent("administrative_area_level_1");
+
+            if (!country || !region) {
+                country = country || 'Sin información';
+                region = region || 'Sin información';
+            }
+
             const details = {
                 photos: json.result.photos && json.result.photos.length > 0 ? [{
                     photo_reference: json.result.photos[0].photo_reference,
                     height: json.result.photos[0].height,
                     width: json.result.photos[0].width
                 }] : [],
-                rating: json.result.rating && json.result.rating,
-                description: json.result.name,
-                reviews: json.result.reviews && json.result.reviews.map(review => ({
+                rating: json.result.rating || '',
+                description: json.result.name || '',
+                reviews: json.result.reviews ? json.result.reviews.map(review => ({
                     author_name: review.author_name,
                     profile_photo_url: review.profile_photo_url,
                     rating: review.rating,
                     text: review.text,
                     relative_time_description: review.relative_time_description,
                     time: review.time,
-                })),
-                country: json.result.address_components && json.result.address_components.find(component => component.types.includes("country")).long_name,
-                region: json.result.address_components && json.result.address_components.find(component => component.types.includes("administrative_area_level_1")).long_name,
-                weekday: json.result.opening_hours && json.result.opening_hours.weekday_text,
-                international_phone_number: json.result.international_phone_number && json.result.international_phone_number
-            }
+                })) : [],
+                country: country,
+                region: region,
+                weekday: json.result.opening_hours ? json.result.opening_hours.weekday_text : '',
+                international_phone_number: json.result.international_phone_number || ''
+            };
+
             onSelect(details);
         } catch (error) {
             console.error(error);
-            console.log('description: ', description)
+            console.log('description: ', description);
         }
     };
+
     const handleKeyPress = () => {
-          setQuery('');
-          setPredictions([]);
+        setQuery('');
+        setPredictions([]);
     };
+
     return (
         <View style={styles.container}>
             <View style={styles.searchSection}>

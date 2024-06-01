@@ -11,7 +11,6 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center', // Asegúrate de que el botón se centre en la pantalla.
         width: '100%', // Puedes ajustar el ancho del botón si es necesario.
-        marginBottom: 30, // Ajusta esto para aumentar el espacio en el fondo.
         shadowColor: 'black', // Color de la sombra
         shadowOffset: { width: 0, height: 2 }, // Desplazamiento de la sombra (horizontal, vertical)
         shadowRadius: 3, // Radio de la sombra

@@ -17,6 +17,9 @@ const GroupItem = ({
   const [likedByUser, setLikedByUser] = useState(item.likedByUser);
   const [likeId, setLikeId] = useState(item.likeId);
   const [comments, setComments] = useState(item.totalComments || 0);
+
+  const startingTravelText = item?.startingPlace?.startingTravel.split('-')[0];
+
   useEffect(() => {
     const handleNewLike = ({ groupId, like, totalLikes }) => {
       if (groupId === item._id) {
@@ -131,7 +134,7 @@ const GroupItem = ({
           {item.title}
         </Text>
         <Text>
-          Saliendo desde {item.startingPlace.startingTravel}
+          Saliendo desde {startingTravelText}
         </Text>
         <View style={styles.footer}>
           <View style={styles.footerIcon}>
@@ -163,7 +166,7 @@ const GroupItem = ({
           <View style={styles.footerIcon}>
             {item.genre == "Solo mujeres" && <Icon name="female-sharp" size={24} color="#3d444d" />}
             {item.genre == "Solo hombres" && <Icon name="male-sharp" size={24} color="#3d444d" />}
-            {item.genre == "Mixto" && <Icon name="male-female-sharp" size={24} color="#3d444d" />}
+            {item.genre == "Hombres y mujeres" && <Icon name="male-female-sharp" size={24} color="#3d444d" />}
           </View>
         </View>
       </View>
