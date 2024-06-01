@@ -38,7 +38,14 @@ import {
   SAVE_DRAFT_FAIL,
   UPDATE_DRAFT,
   UPDATE_DRAFT_SUCCESS,
-  UPDATE_DRAFT_FAIL
+  UPDATE_DRAFT_FAIL,
+  LOAD_DRAFT_BY_USER,
+  LOAD_DRAFT_BY_USER_SUCCESS, 
+  LOAD_DRAFT_BY_USER_FAIL,
+  LOAD_DRAFT_BY_USER_SUCCESS_GROUP,
+  DELETE_DRAFT,
+  DELETE_DRAFT_SUCCESS,
+  DELETE_DRAFT_FAIL,
 } from "../../utils/constants";
 
 const groupReducer = (state = initialState, action) => {
@@ -95,6 +102,52 @@ const groupReducer = (state = initialState, action) => {
       return { ...state, draft: { ...state.draft, data: action.payload, loading: false, error: null } };
     case UPDATE_DRAFT_FAIL: 
       return { ...state, draft: { ...state.draft, loading: false, error: action.payload } };
+
+    case LOAD_DRAFT_BY_USER:
+      return {
+        ...state,
+        draft: { loading: true, error: null, data: null, id: null, currentStep: null }
+      };
+    case LOAD_DRAFT_BY_USER_SUCCESS:
+      return {
+        ...state,
+        draft: {
+          data: action.payload.data,
+          loading: false,
+          error: null,
+          id: action.payload._id,
+          currentStep: action.payload.currentStep
+        }
+      };
+    case LOAD_DRAFT_BY_USER_FAIL:
+      return {
+        ...state,
+        draft: { loading: false, error: action.payload, data: null, id: null, currentStep: null }
+      };
+    case LOAD_DRAFT_BY_USER_SUCCESS_GROUP:
+      return {
+        ...state,
+        groups: {
+          ...state.groups,
+          ...action.payload
+        }
+      };
+    case DELETE_DRAFT:
+      return {
+        ...state,
+        draft: { ...state.draft, loading: true, error: null }
+      };
+    case DELETE_DRAFT_SUCCESS:
+      return {
+        ...state,
+        draft: { data: null, id: null, loading: false, error: null, currentStep: null },
+        groups: initialState.groups // Resetear grupos a su estado inicial
+      };
+    case DELETE_DRAFT_FAIL:
+      return {
+        ...state,
+        draft: { ...state.draft, loading: false, error: action.payload }
+      };
     default: return state;
   }  
 };

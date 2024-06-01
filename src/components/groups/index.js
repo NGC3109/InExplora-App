@@ -4,6 +4,7 @@ import ButtonCustom from '../../components/ui/Button';
 import Alert from '../ui/Alert';
 import GooglePlacesAutocomplete from '../ui/Testing';
 import { StarIcon } from '../../assets/vectores';
+import DraftItem from './create/draft';
 
 const GroupTemplate = ({
   continueButton,
@@ -11,6 +12,9 @@ const GroupTemplate = ({
   messageAlert,
   destino,
   getPhotoUrl,
+  draftState,
+  onContinue,
+  onDiscard
 }) => {
   const [activeTab, setActiveTab] = useState('informacion');
 
@@ -85,18 +89,30 @@ const GroupTemplate = ({
   );
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={activeTab === 'comentarios' ? destino.reviews : []}
-        ListHeaderComponent={renderHeader}
-        renderItem={({ item }) => (
-          <Review key={item.id} author={item.author_name} rating={item.rating} text={item.text} photo_profile={item.profile_photo_url} />
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        ListFooterComponent={renderFooter}
-        showsVerticalScrollIndicator={false}
-      />
-    </View>
+    <>
+    {
+      draftState?.data ? 
+          <DraftItem 
+            item={draftState?.data}
+            onContinue={onContinue}
+            onDiscard={onDiscard}
+          /> 
+      : 
+        <View style={styles.container}>
+          <FlatList
+            data={activeTab === 'comentarios' ? destino.reviews : []}
+            ListHeaderComponent={renderHeader}
+            renderItem={({ item }) => (
+              <Review key={item.id} author={item.author_name} rating={item.rating} text={item.text} photo_profile={item.profile_photo_url} />
+            )}
+            keyExtractor={(item, index) => index.toString()}
+            ListFooterComponent={renderFooter}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
+    }
+    </>
+    
   );
 };
 

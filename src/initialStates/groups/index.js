@@ -29,7 +29,8 @@ export const initialState = {
         data: null,
         id: null,
         loading: false, 
-        error: null
+        error: null,
+        currentStep: null
     },
     groupsByUser: {
         loading: false,

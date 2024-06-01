@@ -10,7 +10,6 @@ import {
     SAVE_GROUP_TRAVELWITHCHILDREN,
     SAVE_GROUP_TRAVELWITHPETS,
     SAVE_GROUP_DESCRIPTION,
-    SAVE_GROUP_COVERPHOTO,
     SAVE_GROUP_GALLERY,
     SAVE_GROUP_BUDGET,
     SAVE_GROUP_GENRE,
@@ -33,6 +32,13 @@ import {
     UPDATE_DRAFT,
     UPDATE_DRAFT_SUCCESS,
     UPDATE_DRAFT_FAIL,
+    LOAD_DRAFT_BY_USER,
+    LOAD_DRAFT_BY_USER_SUCCESS, 
+    LOAD_DRAFT_BY_USER_FAIL,
+    LOAD_DRAFT_BY_USER_SUCCESS_GROUP,
+    DELETE_DRAFT,
+    DELETE_DRAFT_SUCCESS,
+    DELETE_DRAFT_FAIL,
 } from "../../utils/constants";
 
 export const saveGroupDestinationAndCreateDraft = (userId, destination) => {
@@ -49,7 +55,7 @@ export const saveGroupDestinationAndCreateDraft = (userId, destination) => {
     // Creamos el borrador con los datos actuales
     dispatch({ type: SAVE_DRAFT });
     try {
-      const response = await axios.post(`${Config.API_ENDPOINT}drafts/create`, { userId, draftData: { ...groups, destination } });
+      const response = await axios.post(`${Config.API_ENDPOINT}drafts/create`, { userId, draftData: { ...groups, destination }, currentStep: 'step1' });
       dispatch({
         type: SAVE_DRAFT_SUCCESS,
         payload: { data: response.data.draft, id: response.data.id }
@@ -77,7 +83,7 @@ export const saveGroupGenreAndUpdateDraft = (draftId, genre) => {
     // Actualizamos el borrador con los datos actuales
     dispatch({ type: UPDATE_DRAFT });
     try {
-      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, genre } });
+      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, genre }, currentStep: 'step2' });
       dispatch({
         type: UPDATE_DRAFT_SUCCESS,
         payload: response.data.draft
@@ -133,7 +139,7 @@ export const saveGroupTravelModeAndUpdateDraft = (draftId, travelMode) => {
     // Actualizamos el borrador con los datos actuales
     dispatch({ type: UPDATE_DRAFT });
     try {
-      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, travelMode } });
+      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, travelMode }, currentStep: 'step3' });
       dispatch({
         type: UPDATE_DRAFT_SUCCESS,
         payload: response.data.draft
@@ -161,7 +167,7 @@ export const saveGroupStartingTravelAndUpdateDraft = (draftId, startingTravel) =
     // Actualizamos el borrador con los datos actuales
     dispatch({ type: UPDATE_DRAFT });
     try {
-      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, startingTravel } });
+      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, startingTravel }, currentStep: 'step9' });
       dispatch({
         type: UPDATE_DRAFT_SUCCESS,
         payload: response.data.draft
@@ -189,7 +195,7 @@ export const saveGroupBudgetAndUpdateDraft = (draftId, budget) => {
     // Actualizamos el borrador con los datos actuales
     dispatch({ type: UPDATE_DRAFT });
     try {
-      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, budget } });
+      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, budget }, currentStep: 'step8_9_1' });
       dispatch({
         type: UPDATE_DRAFT_SUCCESS,
         payload: response.data.draft
@@ -245,7 +251,7 @@ export const saveGroupDescriptionAndUpdateDraft = (draftId, description) => {
     // Actualizamos el borrador con los datos actuales
     dispatch({ type: UPDATE_DRAFT });
     try {
-      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, description } });
+      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, description }, currentStep: 'step8_9' });
       dispatch({
         type: UPDATE_DRAFT_SUCCESS,
         payload: response.data.draft
@@ -273,7 +279,7 @@ export const saveGroupTravelWithPetsAndUpdateDraft = (draftId, travelWithPets) =
     // Actualizamos el borrador con los datos actuales
     dispatch({ type: UPDATE_DRAFT });
     try {
-      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, travelWithPets } });
+      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, travelWithPets }, currentStep: 'step8' });
       dispatch({
         type: UPDATE_DRAFT_SUCCESS,
         payload: response.data.draft
@@ -301,7 +307,7 @@ export const saveGroupTravelWithChildrenAndUpdateDraft = (draftId, travelWithChi
     // Actualizamos el borrador con los datos actuales
     dispatch({ type: UPDATE_DRAFT });
     try {
-      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, travelWithChildren } });
+      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, travelWithChildren }, currentStep: 'step7' });
       dispatch({
         type: UPDATE_DRAFT_SUCCESS,
         payload: response.data.draft
@@ -333,7 +339,7 @@ export const saveGroupAgeRangeAndUpdateDraft = (draftId, minimumAge, maximumAge)
     // Actualizamos el borrador con los datos actuales
     dispatch({ type: UPDATE_DRAFT });
     try {
-      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, minimumAge, maximumAge } });
+      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, minimumAge, maximumAge }, currentStep: 'step6' });
       dispatch({
         type: UPDATE_DRAFT_SUCCESS,
         payload: response.data.draft
@@ -361,7 +367,7 @@ export const saveGroupNumberOfPeopleAndUpdateDraft = (draftId, numberOfPeople) =
     // Actualizamos el borrador con los datos actuales
     dispatch({ type: UPDATE_DRAFT });
     try {
-      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, numberOfPeople } });
+      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, numberOfPeople }, currentStep: 'step5' });
       dispatch({
         type: UPDATE_DRAFT_SUCCESS,
         payload: response.data.draft
@@ -388,8 +394,9 @@ export const saveGroupAccommodationAndUpdateDraft = (draftId, accommodation) => 
 
     // Actualizamos el borrador con los datos actuales
     dispatch({ type: UPDATE_DRAFT });
+    console.log('draftId: ', draftId)
     try {
-      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, accommodation } });
+      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, accommodation }, currentStep: 'step4' });
       dispatch({
         type: UPDATE_DRAFT_SUCCESS,
         payload: response.data.draft
@@ -466,6 +473,43 @@ export const loadGroupByUser = (userId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: LOAD_GROUP_BY_USER_FAIL,
+      payload: error.response ? error.response.data.error : 'Error desconocido'
+    });
+  }
+};
+
+export const loadDraftByUser = (userId) => async (dispatch) => {
+  dispatch({ type: LOAD_DRAFT_BY_USER });
+  try {
+    const response = await axios.get(`${Config.API_ENDPOINT}drafts/${userId}`);
+    const draft = response.data[0];
+    dispatch({
+      type: LOAD_DRAFT_BY_USER_SUCCESS, 
+      payload: draft
+    });
+    dispatch({
+      type: LOAD_DRAFT_BY_USER_SUCCESS_GROUP, 
+      payload: draft.data
+    });
+  } catch (error) {
+    dispatch({
+      type: LOAD_DRAFT_BY_USER_FAIL, 
+      payload: error.response ? error.response.data.error : 'Error desconocido'
+    });
+  }
+};
+
+export const deleteDraft = (draftId) => async (dispatch) => {
+  dispatch({ type: DELETE_DRAFT });
+  try {
+    await axios.delete(`${Config.API_ENDPOINT}drafts/${draftId}`);
+    dispatch({
+      type: DELETE_DRAFT_SUCCESS,
+      payload: draftId
+    });
+  } catch (error) {
+    dispatch({
+      type: DELETE_DRAFT_FAIL,
       payload: error.response ? error.response.data.error : 'Error desconocido'
     });
   }

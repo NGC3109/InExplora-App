@@ -1,74 +1,38 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons'; // Asegúrate de haber instalado react-native-vector-icons
-import DiscardModal from '../../components/ui/DiscardModal';
 
-const GroupHeader = ({ step }) => {
-  const navigation = useNavigation();
-
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const handleClose = () => {
-    setModalVisible(true);
-  };
-
-  const handleConfirmClose = () => {
-    setModalVisible(false);
-    navigation.navigate('MainTabs', {
-      screen: 'Inicio'
-    });
-  };
-
-  const handleCancelClose = () => {
-    setModalVisible(false);
-  };
-
+const DiscardModal = ({ visible, onConfirm, onCancel, title }) => {
   return (
-    <View>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Preparando el viaje</Text>
-        <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-          <Icon name="close" size={24} color="black" />
-        </TouchableOpacity>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onCancel}
+    >
+      <View style={styles.modalContainer}>
+        <View style={styles.modalView}>
+          <View style={styles.iconContainer}>
+            <Icon name="close-circle" size={80} color="#ff5c5c" style={styles.icon} />
+          </View>
+          <Text style={styles.modalTitle}>Salir</Text>
+          <Text style={styles.modalText}>{title}</Text>
+          <View style={styles.divider} />
+          <View style={styles.modalButtonContainer}>
+            <TouchableOpacity onPress={onConfirm} style={[styles.modalButton, styles.exitButton]}>
+              <Text style={styles.modalButtonText}>Salir</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onCancel} style={[styles.modalButton, styles.cancelButton]}>
+              <Text style={[styles.modalButtonText, styles.cancelButtonText]}>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
-      <DiscardModal
-          title="¿Seguro que quieres salir?"
-          visible={modalVisible}
-          onConfirm={handleConfirmClose}
-          onCancel={handleCancelClose}
-      />
-    </View>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: 'transparent',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  headerText: {
-    fontWeight: 'bold',
-    fontSize: 22,
-    color: 'black',
-    textAlign: 'center',
-    flex: 1,
-  },
-  closeButton: {
-    borderWidth: 0.8,
-    borderColor: 'black',
-    borderRadius: 5,
-    paddingVertical: 2,
-    paddingHorizontal: 5,
-  },
-  closeButtonText: {
-    color: 'black',
-    fontSize: 16,
-  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -143,9 +107,6 @@ const styles = StyleSheet.create({
     color: '#9ca8b8',
     fontWeight: 'bold'
   },
-  saveExitButton: {
-    backgroundColor: '#00c0a0',
-  },
   modalButtonText: {
     color: 'white',
     fontSize: 16,
@@ -154,4 +115,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GroupHeader;
+export default DiscardModal;
