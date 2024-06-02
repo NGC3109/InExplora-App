@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, Image, TouchableWithoutFeedback } from 'react-native';
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
-import { format, isToday } from 'date-fns';
 import { styles } from '../styles/ListMessages';
 import Config from 'react-native-config';
+
 const Chats = ({ navigation }) => {
   const currentUser = useSelector(state => state.userReducer.user);
-  const [chats, setChats] = useState()
+  const [chats, setChats] = useState([]);
 
   useEffect(() => {
     const newSocket = io(Config.SOCKET);
@@ -16,10 +16,8 @@ const Chats = ({ navigation }) => {
       newSocket.emit("getChatsByUserId", { userId: currentUser.id });
     };
 
-    newSocket.on("connect", () => {
-      newSocket.emit("getChatsByUserId", { userId: currentUser.id });
-    });
-    newSocket.on("chatsByUserId", ({success, data}) => {
+    newSocket.on("connect", fetchChats);
+    newSocket.on("chatsByUserId", ({ success, data }) => {
       if (success) {
         setChats(data);
       } else {
@@ -27,43 +25,31 @@ const Chats = ({ navigation }) => {
       }
     });
     newSocket.on("chatUpdated", (update) => {
-      console.log('update: ', update);
-      setChats(currentChats => {
-        const updatedChats = currentChats.map(chat => {
-          if (chat._id === update.chatId) {
-            return { 
-              ...chat, 
-              lastMessage: {
-                message: update.lastMessage.message,
-                timestamp: update.lastMessage.timestamp,
-                displayName: update.lastMessage.displayName,
-                profilePicture: update.lastMessage.profilePicture,
-                sender: update.lastMessage.sender,
-                readBy: update.lastMessage.readBy,
-                receivedBy: update.lastMessage.receivedBy,
-                unreadCounts: update.lastMessage.unreadCounts
-              }, 
-              date: update.lastMessage.timestamp,
-              unreadCount: update.lastMessage.unreadCounts[currentUser.id] // Accede a unreadCounts para el currentUser.id
-            };
-          }
-          return chat;
-        });
-        return updatedChats;
-      });
+      setChats(currentChats => currentChats.map(chat => {
+        if (chat._id === update.chatId) {
+          return {
+            ...chat,
+            lastMessage: update.lastMessage.lastMessage,
+            date: update.lastMessage.timestamp,
+            unreadCount: update.lastMessage.unreadCounts[currentUser.id]
+          };
+        }
+        return chat;
+      }));
     });
-    
-    const unsubscribe = navigation.addListener('focus', () => {
-      fetchChats();
-    });
+
+    const unsubscribe = navigation.addListener('focus', fetchChats);
+
     return () => {
+      newSocket.off("connect", fetchChats);
       newSocket.off("chatsByUserId");
       newSocket.off("chatUpdated");
       newSocket.disconnect();
       unsubscribe();
     };
-  }, []);
-  const goDetails = (chatId, name, avatar) => {
+  }, [currentUser.id, navigation]);
+
+  const goDetails = useCallback((chatId, name, avatar) => {
     navigation.navigate('Detalle', {
       chattingWith: {
         name: name,
@@ -71,43 +57,35 @@ const Chats = ({ navigation }) => {
         chatId: chatId
       },
     });
-  }
-  const formatTimestamp = (timestamp) => {
-    const date = new Date(timestamp);
-    if (isToday(date)) {
-      return format(date, 'p');
-    } else {
-      return format(date, 'MMM d, p');
-    }
-  };
-  const UserItem = React.memo(({ item }) => {
-    return(
-      <TouchableWithoutFeedback onPress={() => goDetails(item._id, item.groupName, item.avatar)} style={styles.userContainer}>
-        <View style={styles.userContainer}>
-          <View style={styles.avatarContainer}>
-            <Image source={{ uri: item.avatar }} style={styles.avatar} />
-          </View>
-          <View style={styles.messageDetails}>
-            <Text style={styles.userName}>{item.groupName}</Text>
-            <Text
-              style={styles.lastMessage}
-              numberOfLines={1}
-              ellipsizeMode='tail'>
-              {item?.lastMessage?.message?.length > 20 ? `${item.displayName}: ${item.lastMessage?.message.substring(0, 20)}...` : `${item.displayName}: ${item.lastMessage?.message}`}
-            </Text>
-          </View>
-          <View style={styles.dateAndBadgeContainer}>
-            <Text style={styles.messageDate}>{formatTimestamp(item.date)}</Text>
-            {item.unreadCount > 0 && (
-              <View style={styles.messageCountContainer}>
-                <Text style={styles.messageCountText}>{item.unreadCount}</Text>
-              </View>
-            )}
-          </View>
+  }, [navigation]);
+
+  const UserItem = React.memo(({ item }) => (
+    <TouchableWithoutFeedback onPress={() => goDetails(item._id, item.groupName, item.avatar)}>
+      <View style={styles.userContainer}>
+        <View style={styles.avatarContainer}>
+          <Image source={{ uri: item.avatar }} style={styles.avatar} />
         </View>
-      </TouchableWithoutFeedback>
-    )
-  });
+        <View style={styles.messageDetails}>
+          <Text style={styles.userName}>{item.groupName}</Text>
+          <Text
+            style={styles.lastMessage}
+            numberOfLines={1}
+            ellipsizeMode='tail'>
+            {item.lastMessage}
+          </Text>
+        </View>
+        <View style={styles.dateAndBadgeContainer}>
+          <Text style={styles.messageDate}>{item.dateFormatted}</Text>
+          {item.unreadCount > 0 && (
+            <View style={styles.messageCountContainer}>
+              <Text style={styles.messageCountText}>{item.unreadCount}</Text>
+            </View>
+          )}
+        </View>
+      </View>
+    </TouchableWithoutFeedback>
+  ));
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -118,4 +96,5 @@ const Chats = ({ navigation }) => {
     </View>
   );
 };
+
 export default Chats;

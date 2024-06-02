@@ -426,11 +426,11 @@ export const loadJoinRequestsByGroupId = (userId) => async (dispatch) => {
   }
 };
 
-export const loadGroupById = (groupId) => async (dispatch) => {
+export const loadGroupById = (groupId, userId) => async (dispatch) => {
   dispatch({ type: LOAD_GROUP_BY_ID_REQUEST });
   try {
     console.log(`${Config.API_ENDPOINT}groups/${groupId}`)
-    const response = await axios.get(`${Config.API_ENDPOINT}groups/${groupId}`);
+    const response = await axios.get(`${Config.API_ENDPOINT}groups/${groupId}/userId/${userId}`);
     dispatch({
       type: LOAD_GROUP_BY_ID_SUCCESS,
       payload: response.data.data

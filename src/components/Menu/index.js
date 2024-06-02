@@ -193,7 +193,7 @@ const RootStackNavigator = ({ user }) => {
           swipeEnabled: false,
           headerStyle,
         })}/>
-        <RootStack.Screen name="detalleGrupo" component={DetailGroup} options={{ headerShown: false }} />
+        <RootStack.Screen name="detalleGrupo" component={DetailGroup} options={{ headerShown: false, gestureEnabled: false, }} />
         <RootStack.Screen name="step1" component={P1_GroupTravelWith_Women_Men_Container} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} step={2}/>,
           headerLeft: () => (

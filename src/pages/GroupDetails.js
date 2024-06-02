@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, SafeAreaVi
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadGroupById } from '../actions/groups/groupAction';
+import ImageGallery from '../components/ui/ImageGallery';
 
 const DetailGroup = ({ navigation, route }) => {
   const { groupId } = route.params;
@@ -12,7 +13,7 @@ const DetailGroup = ({ navigation, route }) => {
 
   useEffect(() => {
     if (groupId) {
-      dispatch(loadGroupById(groupId));
+      dispatch(loadGroupById(groupId, currentUserId.id));
     }
   }, [dispatch, groupId]);
 
@@ -31,21 +32,41 @@ const DetailGroup = ({ navigation, route }) => {
     );
   }
 
-  const { profilePicture, title, startingPlace, description, creatorDetails, ageRange, destination, numberOfPeople, budget, genre, accommodation, travelWithPets, travelMode, startingTravel, members = [] } = groupDetails;
+  const { 
+    profilePicture,
+    title, 
+    description, 
+    emptySpots, 
+    startingTravelText, 
+    creatorDetails, 
+    userIsMember, 
+    ageRange, 
+    destination, 
+    numberOfPeople, 
+    budget, 
+    genre, 
+    accommodation, 
+    travelWithPets, 
+    travelMode, 
+    members = [],
+    gallery = [],
+  } = groupDetails;
 
-  const userIsMember = members.some(member => member._id === currentUserId.id);
-  const emptySpots = numberOfPeople - members.length;
-
-  const startingTravelText = startingPlace?.startingTravel.split('-')[0];
+  // Verificación de la galería
+  if (!Array.isArray(gallery)) {
+    console.error('La galería no es un array:', gallery);
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text>Error: la galería no es un array</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.headerContainer}>
-          <Image
-            source={{ uri: profilePicture || 'https://via.placeholder.com/150' }}
-            style={styles.headerImage}
-          />
+          <ImageGallery images={gallery} />
           <View style={styles.header}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Icon name="chevron-back-outline" size={30} color="#fff" />
