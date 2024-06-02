@@ -10,22 +10,35 @@ const JoinRequestList_Template = ({ navigation }) => {
   const currentUserId = useSelector(state => state.userReducer.user);
 
   useEffect(() => {
-    dispatch(loadGeneralRequestsByGroupId(currentUserId.id));
-  }, [dispatch, currentUserId.id]);
+    if (currentUserId?.id) {
+      dispatch(loadGeneralRequestsByGroupId(currentUserId.id));
+    }
+  }, [dispatch, currentUserId?.id]);
 
   const renderGridItem = useCallback(({ item }) => {
-    const backgroundColor = item.viewed ? 'white' : '#e0e0e0';
-    const coverImage = item.user.profilePicture || 'https://via.placeholder.com/150';
+    if (!item) return null;
+    
+    const { user, group, viewed, requestDate } = item;
+    const { profilePicture, displayName } = user || {};
+    const { title } = group || {};
+
+    const backgroundColor = viewed ? 'white' : '#e0e0e0';
+    const coverImage = profilePicture || 'https://via.placeholder.com/150';
+
     return (
       <TouchableWithoutFeedback onPress={() => navigation.navigate('request_detail', { group: item })}>
         <View style={[styles.cardContainer, { backgroundColor }]}>
           <Image source={{ uri: coverImage }} style={styles.cardImage} />
           <View style={styles.cardDetailsContainer}>
-            {item.user.displayName && (
-              <Text style={styles.cardTitle}>{item.user.displayName}</Text>
+            {displayName && (
+              <Text style={styles.cardTitle}>{displayName}</Text>
             )}
-            <Text style={styles.cardSubTitle}>Quiere unirse a tu grupo <Text style={styles.groupTitle}>{item.group.title}</Text></Text>
-            <Text style={styles.cardDate}>{new Date(item.requestDate).toLocaleDateString()}</Text>
+            {title && (
+              <Text style={styles.cardSubTitle}>Quiere unirse a tu grupo <Text style={styles.groupTitle}>{title}</Text></Text>
+            )}
+            {requestDate && (
+              <Text style={styles.cardDate}>{new Date(requestDate).toLocaleDateString()}</Text>
+            )}
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -43,7 +56,7 @@ const JoinRequestList_Template = ({ navigation }) => {
       <View style={styles.container}>
         <View style={styles.tabContent}>
           <FlatList
-            data={generalRequests?.data}
+            data={generalRequests?.data || []}
             renderItem={renderGridItem}
             keyExtractor={(item, index) => index.toString()}
             numColumns={1}

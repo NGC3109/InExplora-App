@@ -12,11 +12,11 @@ import {
     LOAD_GENERAL_REQUESTS_FAIL,
 } from "../../utils/constants";
 
-export const requestToJoinGroup = (userId, groupId, message) => async (dispatch) => {
+export const requestToJoinGroup = (userId, groupId, message, userCreator) => async (dispatch) => {
     dispatch({ type: REQUEST_TO_JOIN_GROUP_REQUEST });
     try {
       const requestBody = { message };
-      const response = await axios.post(`${Config.API_ENDPOINT}request/groups/${groupId}/join/${userId}`, requestBody);
+      const response = await axios.post(`${Config.API_ENDPOINT}request/groups/${groupId}/join/${userId}/userCreator/${userCreator}`, requestBody);
       dispatch({
         type: REQUEST_TO_JOIN_GROUP_SUCCESS,
         payload: response.data

@@ -14,18 +14,18 @@ const RequestDetail = () => {
       }
     return (
         <View style={styles.container}>
-            <Text style={styles.subtitle}>{group.user.displayName} <Text style={styles.titleGroup}>a solicitado unirse a tu grupo</Text> {group.group.title}</Text>
+            <Text style={styles.subtitle}>{group?.user?.displayName} <Text style={styles.titleGroup}>a solicitado unirse a tu grupo</Text> {group?.group?.title}</Text>
             <View style={styles.userInfo}>
-                <Image source={{ uri: group.user.profilePicture || 'https://via.placeholder.com/150' }} style={styles.profileImage} />
+                <Image source={{ uri: group?.user?.profilePicture || 'https://via.placeholder.com/150' }} style={styles.profileImage} />
                 <View style={styles.userDetails}>
-                    <Text style={styles.userName}>{group.user.displayName}</Text>
+                    <Text style={styles.userName}>{group?.user?.displayName}</Text>
                     <Text style={styles.requestDate}>{new Date().toLocaleDateString()}</Text>
                 </View>
                 <TouchableOpacity style={styles.profileButton}>
                     <Text style={styles.profileButtonText}>Ver perfil</Text>
                 </TouchableOpacity>
             </View>
-            <Text style={styles.messageText}>{group.message}</Text>
+            <Text style={styles.messageText}>{group?.message}</Text>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     onPress={() => {}}

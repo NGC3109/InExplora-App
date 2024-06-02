@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, Text, Image, Dimensions, StyleSheet, FlatList, ScrollView, SafeAreaView, StatusBar } from 'react-native';
+import { View, Text, Image, Dimensions, StyleSheet, FlatList, ScrollView, SafeAreaView, StatusBar, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import IconIconIcon from 'react-native-vector-icons/FontAwesome6';
 import Animated, { useSharedValue, useAnimatedStyle, interpolate } from 'react-native-reanimated';
-
+import useAuth from '../../utils/hooks/useAuth';
+import { useSelector } from 'react-redux';
 const { width } = Dimensions.get('window');
 
 const images = [
@@ -13,8 +15,8 @@ const images = [
 ];
 
 export default function PerfilContainer() {
+  const { logout } = useAuth();
   const scrollX = useSharedValue(0);
-
   const handleScroll = (event) => {
     scrollX.value = event.nativeEvent.contentOffset.x;
   };
@@ -22,45 +24,49 @@ export default function PerfilContainer() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
-        <ScrollView style={styles.container}>
-          <View>
-            <FlatList
-              data={images}
-              keyExtractor={(item, index) => index.toString()}
-              horizontal
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-              onScroll={handleScroll}
-              scrollEventThrottle={16}
-              renderItem={({ item }) => (
-                <Image source={{ uri: item }} style={styles.image} />
-              )}
-            />
-            <View style={styles.progressBar}>
-              {images.map((_, index) => {
-                const animatedStyle = useAnimatedStyle(() => {
-                  const widthInterpolation = interpolate(
-                    scrollX.value,
-                    [(index - 1) * width, index * width, (index + 1) * width],
-                    [10, 30, 10]
-                  );
-                  const opacityInterpolation = interpolate(
-                    scrollX.value,
-                    [(index - 1) * width, index * width, (index + 1) * width],
-                    [0.5, 1, 0.5]
-                  );
+      <ScrollView style={styles.container}>
+        <View>
+          <FlatList
+            data={images}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+            renderItem={({ item }) => (
+              <Image source={{ uri: item }} style={styles.image} />
+            )}
+          />
+          <View style={styles.progressBar}>
+            {images.map((_, index) => {
+              const animatedStyle = useAnimatedStyle(() => {
+                const widthInterpolation = interpolate(
+                  scrollX.value,
+                  [(index - 1) * width, index * width, (index + 1) * width],
+                  [10, 30, 10]
+                );
+                const opacityInterpolation = interpolate(
+                  scrollX.value,
+                  [(index - 1) * width, index * width, (index + 1) * width],
+                  [0.5, 1, 0.5]
+                );
 
-                  return {
-                    width: widthInterpolation,
-                    opacity: opacityInterpolation,
-                  };
-                });
+                return {
+                  width: widthInterpolation,
+                  opacity: opacityInterpolation,
+                };
+              });
 
-                return <Animated.View key={index} style={[styles.progressIndicator, animatedStyle]} />;
-              })}
-            </View>
+              return <Animated.View key={index} style={[styles.progressIndicator, animatedStyle]} />;
+            })}
           </View>
-          <View style={styles.profileDetails}>
+        </View>
+        <View style={styles.profileDetails}>
+          <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+              <Icon name="exit-outline" size={24} color="#000" />
+          </TouchableOpacity>
+          <View style={[styles.section, styles.sectionProfile]}>
             <Text style={styles.profileName}>Nele 24</Text>
             <View style={styles.profileInfoContainer}>
               <Icon name="person-outline" size={18} color="grey" />
@@ -70,62 +76,103 @@ export default function PerfilContainer() {
               <Icon name="location-outline" size={18} color="grey" />
               <Text style={styles.profileInfo}>8 kilometers away</Text>
             </View>
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Basics</Text>
-              <View style={styles.sectionContent}>
-                <View style={styles.sectionItem}>
-                  <Icon name="planet-outline" size={18} color="white" />
-                  <Text style={styles.sectionItemText}>Capricorn</Text>
-                </View>
-                <View style={styles.sectionItem}>
-                  <Icon name="school-outline" size={18} color="white" />
-                  <Text style={styles.sectionItemText}>Bachelors</Text>
-                </View>
+          </View>
+          <View style={styles.separator} />
+          <View style={styles.section}>
+          <Text style={styles.profileInfo}>Una brave descripcion de cada usuario</Text>
+          </View>
+          <View style={styles.separator} />
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Interests</Text>
+            <View style={styles.sectionContent}>
+              <View style={styles.sectionItem}>
+                <Text style={styles.sectionItemText}>Travel</Text>
               </View>
-            </View>
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Lifestyle</Text>
-              <View style={styles.sectionContent}>
-                <View style={styles.sectionItem}>
-                  <Icon name="paw-outline" size={18} color="white" />
-                  <Text style={styles.sectionItemText}>Cat</Text>
-                </View>
-                <View style={styles.sectionItem}>
-                  <Icon name="wine-outline" size={18} color="white" />
-                  <Text style={styles.sectionItemText}>On special occasions</Text>
-                </View>
-                <View style={styles.sectionItem}>
-                  <Icon name="ban-outline" size={18} color="white" />
-                  <Text style={styles.sectionItemText}>Non-smoker</Text>
-                </View>
+              <View style={styles.sectionItem}>
+                <Text style={styles.sectionItemText}>Music</Text>
               </View>
-            </View>
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Passions</Text>
-              <View style={styles.sectionContent}>
-                <View style={styles.sectionItem}>
-                  <Text style={styles.sectionItemText}>Street Food</Text>
-                </View>
-                <View style={styles.sectionItem}>
-                  <Text style={styles.sectionItemText}>Live Music</Text>
-                </View>
-                <View style={styles.sectionItem}>
-                  <Text style={styles.sectionItemText}>Travel</Text>
-                </View>
-                <View style={styles.sectionItem}>
-                  <Text style={styles.sectionItemText}>Reading</Text>
-                </View>
-                <View style={styles.sectionItem}>
-                  <Text style={styles.sectionItemText}>Festivals</Text>
-                </View>
+              <View style={styles.sectionItem}>
+                <Text style={styles.sectionItemText}>Reading</Text>
               </View>
             </View>
           </View>
-        </ScrollView>
+          <View style={styles.separator} />
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Languages</Text>
+            <View style={styles.sectionContent}>
+              <View style={styles.sectionItem}>
+                <Text style={styles.sectionItemText}>English</Text>
+              </View>
+              <View style={styles.sectionItem}>
+                <Text style={styles.sectionItemText}>Spanish</Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.separator} />
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Social Links</Text>
+            <View style={styles.sectionContent}>
+              <View style={styles.sectionItem}>
+                <Icon name="logo-instagram" size={18} color="white" />
+                <Text style={styles.sectionItemText}>@instagram_handle</Text>
+              </View>
+              <View style={styles.sectionItem}>
+                <Icon name="logo-twitter" size={18} color="white" />
+                <Text style={styles.sectionItemText}>@twitter_handle</Text>
+              </View>
+              <View style={styles.sectionItem}>
+                <IconIconIcon name="tiktok" size={18} color="white" />
+                <Text style={styles.sectionItemText}>@tiktok_handle</Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.separator} />
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Verifications</Text>
+            <View style={styles.sectionContent}>
+              <View style={styles.sectionItem}>
+                <Icon name="checkmark-circle-outline" size={18} color="white" />
+                <Text style={styles.sectionItemText}>Email Verified</Text>
+              </View>
+              <View style={styles.sectionItem}>
+                <Icon name="checkmark-circle-outline" size={18} color="white" />
+                <Text style={styles.sectionItemText}>Phone Verified</Text>
+              </View>
+              <View style={styles.sectionItem}>
+                <Icon name="checkmark-circle-outline" size={18} color="white" />
+                <Text style={styles.sectionItemText}>ID Verified</Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.separator} />
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Memberships</Text>
+            <View style={styles.sectionContent}>
+              <View style={styles.sectionItem}>
+                <Text style={styles.sectionItemText}>Premium (01/01/2022 - 01/01/2023)</Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.separator} />
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Privacy Settings</Text>
+            <View style={styles.sectionContent}>
+              <View style={styles.sectionItem}>
+                <Text style={styles.sectionItemText}>Profile Visibility: Public</Text>
+              </View>
+              <View style={styles.sectionItem}>
+                <Text style={styles.sectionItemText}>Search Visibility: Yes</Text>
+              </View>
+              <View style={styles.sectionItem}>
+                <Text style={styles.sectionItemText}>Data Sharing: Yes</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -153,10 +200,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   profileDetails: {
-    padding: 20,
     backgroundColor: 'white',
     width: '100%',
     marginTop: -10, // Ajusta este valor para que el perfil toque la imagen
+  },
+  sectionProfile: {
+    marginTop: 10
   },
   profileName: {
     color: '#021121',
@@ -175,7 +224,7 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   section: {
-    marginTop: 20,
+    paddingHorizontal: 20
   },
   sectionTitle: {
     color: '#021121',
@@ -200,5 +249,11 @@ const styles = StyleSheet.create({
   sectionItemText: {
     color: 'white',
     marginLeft: 5,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#E5E5E5',
+    marginVertical: 20,
+    width: '100%',
   },
 });

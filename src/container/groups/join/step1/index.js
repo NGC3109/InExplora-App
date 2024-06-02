@@ -4,7 +4,7 @@ import { requestToJoinGroup } from '../../../../actions/request/requestAction';
 import Join_P1_Template from '../../../../components/groups/join/step1';
 
 const Join_P1_Container = ({ navigation, route }) => {
-    const { groupId } = route.params;
+    const { groupId, userCreator } = route.params;
     const currentUserId = useSelector(state => state.userReducer.user);
     const dispatch = useDispatch();
     const [message, setMessage] = useState('');
@@ -13,8 +13,7 @@ const Join_P1_Container = ({ navigation, route }) => {
 
     const continueButton = () => {
         if(isMessageValid()){
-            console.log('currentUserId.id, groupId, message: ', currentUserId.id, groupId, message)
-            dispatch(requestToJoinGroup(currentUserId.id, groupId, message))
+            dispatch(requestToJoinGroup(currentUserId.id, groupId, message, userCreator))
             setMessageAlert(false)
         }else{
             setMessageAlert(true)

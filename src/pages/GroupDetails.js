@@ -8,7 +8,7 @@ const DetailGroup = ({ navigation, route }) => {
   const { groupId } = route.params;
   const dispatch = useDispatch();
   const groupDetails = useSelector(state => state.groupReducer.groupDetails?.data);
-  const userId = useSelector(state => state.userReducer.userId);
+  const currentUserId = useSelector(state => state.userReducer.user);
 
   useEffect(() => {
     if (groupId) {
@@ -18,7 +18,8 @@ const DetailGroup = ({ navigation, route }) => {
 
   const handleJoinGroup = () => {
     navigation.navigate('join_step1', {
-      groupId: groupId
+      groupId: groupId,
+      userCreator: groupDetails?.userCreator
     });
   };
 
@@ -32,7 +33,7 @@ const DetailGroup = ({ navigation, route }) => {
 
   const { profilePicture, title, startingPlace, description, creatorDetails, ageRange, destination, numberOfPeople, budget, genre, accommodation, travelWithPets, travelMode, startingTravel, members = [] } = groupDetails;
 
-  const userIsMember = members.some(member => member._id === userId);
+  const userIsMember = members.some(member => member._id === currentUserId.id);
   const emptySpots = numberOfPeople - members.length;
 
   const startingTravelText = startingPlace?.startingTravel.split('-')[0];
