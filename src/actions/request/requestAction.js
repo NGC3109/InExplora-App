@@ -10,6 +10,7 @@ import {
     LOAD_GENERAL_REQUESTS_REQUEST,
     LOAD_GENERAL_REQUESTS_SUCCESS,
     LOAD_GENERAL_REQUESTS_FAIL,
+    SET_JOIN_REQUEST_COUNT,
 } from "../../utils/constants";
 
 export const requestToJoinGroup = (userId, groupId, message, userCreator) => async (dispatch) => {
@@ -33,12 +34,15 @@ export const requestToJoinGroup = (userId, groupId, message, userCreator) => asy
 export const acceptJoinRequest = (requestId, accepOrReject) => async (dispatch) => {
     dispatch({ type: ACCEPT_JOIN_REQUEST_REQUEST });
     try {
-        console.log(`${Config.API_ENDPOINT}request/joinRequests/${requestId}`)
       const response = await axios.patch(`${Config.API_ENDPOINT}request/joinRequests/${requestId}`, { action: accepOrReject });
       dispatch({
         type: ACCEPT_JOIN_REQUEST_SUCCESS,
         payload: response.data
       });
+      dispatch({
+        type: SET_JOIN_REQUEST_COUNT,
+        payload: response.data.pendingRequestCount
+      })
     } catch (error) {
       dispatch({
         type: ACCEPT_JOIN_REQUEST_FAIL,

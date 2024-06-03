@@ -8,7 +8,6 @@ const JoinRequestList_Template = ({ navigation }) => {
   const dispatch = useDispatch();
   const generalRequests = useSelector(state => state.requestReducer.generalRequests);
   const currentUserId = useSelector(state => state.userReducer.user);
-
   useEffect(() => {
     if (currentUserId?.id) {
       dispatch(loadGeneralRequestsByGroupId(currentUserId.id));
@@ -18,8 +17,8 @@ const JoinRequestList_Template = ({ navigation }) => {
   const renderGridItem = useCallback(({ item }) => {
     if (!item) return null;
     
-    const { user, group, viewed, requestDate } = item;
-    const { profilePicture, displayName } = user || {};
+    const { userSend, group, viewed, requestDate } = item;
+    const { profilePicture, displayName } = userSend || {};
     const { title } = group || {};
 
     const backgroundColor = viewed ? 'white' : '#e0e0e0';

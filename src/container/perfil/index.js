@@ -1,6 +1,6 @@
 // src/screens/PerfilContainer.js
 import React from 'react';
-import { SafeAreaView, ScrollView, View, StyleSheet, TouchableOpacity, Text, StatusBar } from 'react-native';
+import { ScrollView, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconIconIcon from 'react-native-vector-icons/FontAwesome6';
 import ImageGallery from '../../components/ui/ImageGallery';
@@ -16,8 +16,6 @@ function PerfilContainer() {
   const { logout } = useAuth();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
       <ScrollView style={styles.container}>
         <ImageGallery images={images} />
         <View style={styles.profileDetails}>
@@ -128,7 +126,6 @@ function PerfilContainer() {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
   );
 }
 

@@ -25,7 +25,6 @@ const Grupos = () => {
     const currentUserId = useSelector(state => state.userReducer.user);
     const currentBookmarks = useSelector(state => state.bookmarkReducer.bookmarks);
     const viewableItems = useRef(new Set());
-    console.log('groupsData?.data:; ', groupsData?.data)
     useEffect(() => {
         dispatch(loadGroups(currentUserId.id));
     }, [dispatch]);

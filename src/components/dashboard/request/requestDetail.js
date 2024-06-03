@@ -1,24 +1,28 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { acceptJoinRequest } from '../../../actions/request/requestAction';
 
 const RequestDetail = () => {
     const route = useRoute();
     const dispatch = useDispatch();
+    const navigation = useNavigation();
     const { group } = route.params;
 
     const handleChangeStatusRequest = (idRequest, accepOrReject) => {
         dispatch(acceptJoinRequest(idRequest, accepOrReject))
+        navigation.navigate('MainTabs', {
+            screen: 'Inicio'
+        });
       }
     return (
         <View style={styles.container}>
-            <Text style={styles.subtitle}>{group?.user?.displayName} <Text style={styles.titleGroup}>a solicitado unirse a tu grupo</Text> {group?.group?.title}</Text>
+            <Text style={styles.subtitle}>{group?.userSend?.displayName} <Text style={styles.titleGroup}>a solicitado unirse a tu grupo</Text> {group?.group?.title}</Text>
             <View style={styles.userInfo}>
-                <Image source={{ uri: group?.user?.profilePicture || 'https://via.placeholder.com/150' }} style={styles.profileImage} />
+                <Image source={{ uri: group?.userSend?.profilePicture || 'https://via.placeholder.com/150' }} style={styles.profileImage} />
                 <View style={styles.userDetails}>
-                    <Text style={styles.userName}>{group?.user?.displayName}</Text>
+                    <Text style={styles.userName}>{group?.userSend?.displayName}</Text>
                     <Text style={styles.requestDate}>{new Date().toLocaleDateString()}</Text>
                 </View>
                 <TouchableOpacity style={styles.profileButton}>
@@ -28,7 +32,7 @@ const RequestDetail = () => {
             <Text style={styles.messageText}>{group?.message}</Text>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
-                    onPress={() => {}}
+                    onPress={() => handleChangeStatusRequest(group._id, 'reject')}
                     style={styles.button}
                 >
                     <Text style={[styles.buttonText, styles.rejectButton]}>Rechazar</Text>
