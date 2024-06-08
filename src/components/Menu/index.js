@@ -46,6 +46,7 @@ import Grupos from '../../container/groups/list/Groups';
 import RequestDetail from '../dashboard/request/requestDetail';
 import NotificationsList_Template from '../dashboard/notifications';
 import PerfilPublicoContainer from '../../container/publico/perfil';
+import DashboardProfile from '../../container/perfil/dashboard';
 
 
 const Tab = createBottomTabNavigator();
@@ -139,7 +140,7 @@ const MainTabNavigator = () => {
       <Tab.Screen name="destinos" component={Grupos} options={{ headerTitleAlign: 'center' }} />
       <Tab.Screen 
         name="MiPerfil" 
-        component={PerfilContainer}
+        component={DashboardProfile} //PerfilContainer
         options={{ headerShown: false }}
       />
     </Tab.Navigator>
