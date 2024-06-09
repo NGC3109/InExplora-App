@@ -1,57 +1,56 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 import { LeafSeparator } from '../../../assets/vectores';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import Config from 'react-native-config';
+import io from 'socket.io-client';
+
+const socket = io(Config.SOCKET);
 
 const Comments = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { destinyId } = route.params;
+  const [comments, setComments] = useState([]);
+  
+  useEffect(() => {
+    socket.emit('fetchComments', { commentableId: destinyId, onModel: 'Destiny' });
+
+    const handleCommentsFetched = ({ success, comments }) => {
+      if (success) {
+        const sortedComments = comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setComments(sortedComments);
+      }
+    };
+
+    socket.on('commentsFetched', handleCommentsFetched);
+
+    return () => {
+      socket.off('commentsFetched', handleCommentsFetched);
+    };
+  }, [destinyId]);
   return (
     <ScrollView style={styles.container}>
       <View style={styles.profileDetails}>
         <View style={styles.section}>
-          <View style={styles.reference}>
-            <Image
-              style={styles.referenceImage}
-              source={{ uri: 'https://via.placeholder.com/50' }}
-            />
-            <View style={styles.referenceContent}>
-              <Text style={styles.referenceName}>Zehra</Text>
-              <Text style={styles.referenceDate}>10 de enero 2024</Text>
-              <Text style={styles.referenceText}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-              </Text>
-            </View>
-          </View>
-          <View style={styles.referenceSeparator}>
-            <LeafSeparator />
-          </View>
-          <View style={styles.reference}>
-            <Image
-              style={styles.referenceImage}
-              source={{ uri: 'https://via.placeholder.com/50' }}
-            />
-            <View style={styles.referenceContent}>
-              <Text style={styles.referenceName}>Emilia</Text>
-              <Text style={styles.referenceDate}>10 de Julio 2022</Text>
-              <Text style={styles.referenceText}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-              </Text>
-            </View>
-          </View>
-          <View style={styles.referenceSeparator}>
-            <LeafSeparator />
-          </View>
-          <View style={styles.reference}>
-            <Image
-              style={styles.referenceImage}
-              source={{ uri: 'https://via.placeholder.com/50' }}
-            />
-            <View style={styles.referenceContent}>
-              <Text style={styles.referenceName}>Emilia</Text>
-              <Text style={styles.referenceDate}>10 de Julio 2022</Text>
-              <Text style={styles.referenceText}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-              </Text>
-            </View>
-          </View>
+            {comments.map(comment => (
+              <View key={comment._id}>
+                <View style={styles.reference}>
+                  <Image
+                    style={styles.referenceImage}
+                    source={{ uri: comment.user.profilePicture || 'https://via.placeholder.com/50' }}
+                  />
+                  <View style={styles.referenceContent}>
+                    <Text style={styles.referenceName}>{comment.user.displayName}</Text>
+                    <Text style={styles.referenceDate}>{new Date(comment.createdAt).toLocaleDateString()}</Text>
+                    <Text style={styles.referenceText}>{comment.text}</Text>
+                  </View>
+                </View>
+                <View style={styles.referenceSeparator}>
+                  <LeafSeparator />
+                </View>
+              </View>
+            ))}
         </View>
       </View>
     </ScrollView>

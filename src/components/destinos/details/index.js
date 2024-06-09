@@ -46,6 +46,7 @@ const DetailDestiny = () => {
           }
           return updatedComments;
         });
+        setTotalComments(totalComments)
       }
     };
 
@@ -176,7 +177,7 @@ const DetailDestiny = () => {
         <View style={styles.section}>
           <View style={styles.referencesHeader}>
             <Text style={styles.sectionTitle}>Comentarios</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('comments')}>
+            <TouchableOpacity onPress={() => navigation.navigate('comments', {destinyId: destinyId})}>
               <Text style={styles.viewAll}>Ver todo ({totalComments})</Text>
             </TouchableOpacity>
           </View>
