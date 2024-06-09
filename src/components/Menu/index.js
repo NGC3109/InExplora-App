@@ -3,13 +3,10 @@ import { TouchableOpacity, View, ActivityIndicator, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Home from '../../pages/Home';
 import MessageScreen from '../../container/messages';
 import ChatHeader from '../../pages/ChatHeader';
 import GroupHeader from '../../pages/steps/GroupHeader';
 import Congratuilations from '../../pages/steps/Congratulations';
-import Itinerario from '../../pages/Itinerario';
 import DetailGroup from '../../pages/GroupDetails';
 import Login from '../../pages/login';
 import Chats from '../../pages/ChatContainer';
@@ -35,7 +32,6 @@ import P1_SignUp_Container from '../../container/login/signup/step1';
 import HeaderWithIcons from '../ui/HeaderWithIcons';
 import auth from '@react-native-firebase/auth';
 import { getUser } from '../../actions/users/userActions';
-import PerfilContainer from '../../container/perfil';
 import { useDispatch, useSelector } from 'react-redux';
 import UpdateUser from '../perfil/update';
 import UpdateGroups from '../groups/update';
@@ -47,6 +43,9 @@ import RequestDetail from '../dashboard/request/requestDetail';
 import NotificationsList_Template from '../dashboard/notifications';
 import PerfilPublicoContainer from '../../container/publico/perfil';
 import DashboardProfile from '../../container/perfil/dashboard';
+import HomeScreen from '../dashboard/home';
+import Destinos from '../destinos';
+import DetailDestiny from '../destinos/details';
 
 
 const Tab = createBottomTabNavigator();
@@ -115,7 +114,7 @@ const MainTabNavigator = () => {
         tabBarLabel: () => null,
       })}
     >
-      <Tab.Screen name="Inicio" component={Home} options={{
+      <Tab.Screen name="Inicio" component={HomeScreen} options={{
         headerTitle: () => <HeaderWithIcons />,
         headerStyle,
       }} />
@@ -137,7 +136,7 @@ const MainTabNavigator = () => {
             headerStyle,
           }}
         />
-      <Tab.Screen name="destinos" component={Grupos} options={{ headerTitleAlign: 'center' }} />
+      <Tab.Screen name="destinos" component={Destinos} options={{ headerTitleAlign: 'center' }} />
       <Tab.Screen 
         name="MiPerfil" 
         component={DashboardProfile} //PerfilContainer
@@ -321,6 +320,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="request_detail" component={RequestDetail} options={{ title: 'Solicitud', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="notifications_detail" component={NotificationsList_Template} options={{ title: 'Notificaciones', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="profile_public" component={PerfilPublicoContainer} options={{ headerShown: false, gestureEnabled: false, }}/>
+        <RootStack.Screen name="detail_destiny" component={DetailDestiny} options={{ headerShown: false, gestureEnabled: false, }}/>
     </RootStack.Navigator>
   );
 };
