@@ -11,6 +11,7 @@ import notificationsReducer from './reducers/notifications/notificationsReducer'
 import requestReducer from './reducers/request/requestReducer';
 import userPublicReducer from './reducers/userPublic/userPublicReducer';
 import destinationsReducer from './reducers/destinations/destinationsReducer';
+import commentsReducers from './reducers/comments/commentsReducers';
 
 // Combinamos los reductores si tienes más de uno
 const rootReducer = combineReducers({
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   requestReducer: requestReducer,
   userPublicReducer: userPublicReducer,
   destinationsReducer: destinationsReducer,
+  commentsReducers: commentsReducers,
 });
 
 // Creamos el almacenamiento (store) y aplicamos middleware (thunk en este caso) y herramientas de desarrollo

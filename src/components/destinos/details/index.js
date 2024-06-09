@@ -1,24 +1,69 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ScrollView, View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
+import { ScrollView, View, StyleSheet, Text, TouchableOpacity, Image, TextInput, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImageGallery from '../../../components/ui/ImageGallery';
 import SkeletonLoader from '../../../components/ui/SkeletonLoader';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { fetchDestinyById } from '../../../actions/destinations/destinationsActions';
 import { IconLeaf, LeafSeparator } from '../../../assets/vectores';
+import Config from 'react-native-config';
+import io from 'socket.io-client';
+
+const socket = io(Config.SOCKET);
 
 const DetailDestiny = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { destinyId } = route.params;
   const dispatch = useDispatch();
+  const currentUser = useSelector(state => state.userReducer.user);
 
   const { destiny, loading, error } = useSelector(state => state.destinationsReducer);
-
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
+  const [totalComments, setTotalComments] = useState(0);
+  
   useEffect(() => {
     dispatch(fetchDestinyById(destinyId));
+    socket.emit('fetchComments', { commentableId: destinyId, onModel: 'Destiny', limit: 3 });
+    socket.emit('joinComment', { userId: currentUser.id, commentableId: destinyId });
+
+    const handleCommentsFetched = ({ success, comments, totalComments }) => {
+      if (success) {
+        const sortedComments = comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setComments(sortedComments);
+        setTotalComments(totalComments)
+      }
+    };
+
+    const handleNewComment = ({ commentableId, comment, totalComments }) => {
+      if (commentableId === destinyId) {
+        setComments(prevComments => {
+          const updatedComments = [comment, ...prevComments];
+          if (updatedComments.length > 3) {
+            updatedComments.pop();
+          }
+          return updatedComments;
+        });
+      }
+    };
+
+    socket.on('commentsFetched', handleCommentsFetched);
+    socket.on('newComment', handleNewComment);
+
+    return () => {
+      socket.off('commentsFetched', handleCommentsFetched);
+      socket.off('newComment', handleNewComment);
+    };
   }, [dispatch, destinyId]);
+
+  const handleComment = () => {
+    if (newComment.trim()) {
+      socket.emit('addComment', { userId: currentUser.id, commentableId: destinyId, onModel: 'Destiny', text: newComment });
+      setNewComment('');
+    }
+  };
 
   if (loading) {
     return (
@@ -33,7 +78,7 @@ const DetailDestiny = () => {
         </View>
         <View style={styles.profileDetails}>
           <View style={[styles.section, styles.sectionProfile]}>
-            <SkeletonLoader width={200} height={30} style={[styles.skeleton, {marginBottom: 5}]} />
+            <SkeletonLoader width={200} height={30} style={[styles.skeleton, { marginBottom: 5 }]} />
             <SkeletonLoader width={150} height={20} style={styles.skeleton} />
           </View>
           <View style={styles.separator} />
@@ -117,57 +162,42 @@ const DetailDestiny = () => {
         </View>
         <View style={styles.separator} />
         <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Deja un comentario</Text>
+          <TextInput
+            style={styles.textArea}
+            placeholder="Escribe tu comentario..."
+            value={newComment}
+            onChangeText={setNewComment}
+            multiline
+          />
+          <Button title="Comentar" onPress={handleComment} />
+        </View>
+        <View style={styles.separator} />
+        <View style={styles.section}>
           <View style={styles.referencesHeader}>
             <Text style={styles.sectionTitle}>Comentarios</Text>
-            <TouchableOpacity>
-              <Text style={styles.viewAll}>Ver todo (60)</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('comments')}>
+              <Text style={styles.viewAll}>Ver todo ({totalComments})</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.reference}>
-            <Image
-              style={styles.referenceImage}
-              source={{ uri: 'https://via.placeholder.com/50' }}
-            />
-            <View style={styles.referenceContent}>
-              <Text style={styles.referenceName}>Zehra</Text>
-              <Text style={styles.referenceDate}>10 de enero 2024</Text>
-              <Text style={styles.referenceText}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-              </Text>
+          {comments.slice(0, 3).map(comment => (
+            <View key={comment._id}>
+              <View style={styles.reference}>
+                <Image
+                  style={styles.referenceImage}
+                  source={{ uri: comment.user.profilePicture || 'https://via.placeholder.com/50' }}
+                />
+                <View style={styles.referenceContent}>
+                  <Text style={styles.referenceName}>{comment.user.displayName}</Text>
+                  <Text style={styles.referenceDate}>{new Date(comment.createdAt).toLocaleDateString()}</Text>
+                  <Text style={styles.referenceText}>{comment.text}</Text>
+                </View>
+              </View>
+              <View style={styles.referenceSeparator}>
+                <LeafSeparator />
+              </View>
             </View>
-          </View>
-          <View style={styles.referenceSeparator}>
-            <LeafSeparator />
-          </View>
-          <View style={styles.reference}>
-            <Image
-              style={styles.referenceImage}
-              source={{ uri: 'https://via.placeholder.com/50' }}
-            />
-            <View style={styles.referenceContent}>
-              <Text style={styles.referenceName}>Emilia</Text>
-              <Text style={styles.referenceDate}>10 de Julio 2022</Text>
-              <Text style={styles.referenceText}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-              </Text>
-            </View>
-          </View>
-          <View style={styles.referenceSeparator}>
-            <LeafSeparator />
-          </View>
-          <View style={styles.reference}>
-            <Image
-              style={styles.referenceImage}
-              source={{ uri: 'https://via.placeholder.com/50' }}
-            />
-            <View style={styles.referenceContent}>
-              <Text style={styles.referenceName}>Emilia</Text>
-              <Text style={styles.referenceDate}>10 de Julio 2022</Text>
-              <Text style={styles.referenceText}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-              </Text>
-            </View>
-          </View>
+          ))}
         </View>
       </View>
     </ScrollView>
@@ -264,6 +294,14 @@ const styles = StyleSheet.create({
     color: 'gray',
     fontSize: 18,
     fontStyle: 'italic',
+  },
+  textArea: {
+    height: 100,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
   },
   sectionContent: {
     flexDirection: 'row',

@@ -9,7 +9,7 @@ const CommentSection = ({ groupId, socket, onClose, currentUserId }) => {
   const [newComment, setNewComment] = useState('');
 
   useEffect(() => {
-    socket.emit('fetchComments', { groupId });
+    socket.emit('fetchComments', { commentableId: groupId, onModel: 'Group' });
 
     const handleCommentsFetched = ({ success, comments }) => {
       if (success) {
@@ -17,8 +17,8 @@ const CommentSection = ({ groupId, socket, onClose, currentUserId }) => {
       }
     };
 
-    const handleNewComment = ({ groupId: commentGroupId, comment, totalComments }) => {
-      if (commentGroupId === groupId) {
+    const handleNewComment = ({ commentableId, comment, totalComments }) => {
+      if (commentableId === groupId) {
         setComments((prevComments) => [...prevComments, comment]);
       }
     };
@@ -44,7 +44,7 @@ const CommentSection = ({ groupId, socket, onClose, currentUserId }) => {
 
   const handleAddComment = () => {
     if (newComment.trim()) {
-      socket.emit('addComment', { userId: currentUserId, groupId, text: newComment });
+      socket.emit('addComment', { userId: currentUserId, commentableId: groupId, onModel: 'Group', text: newComment });
       setNewComment('');
     }
   };

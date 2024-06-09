@@ -41,14 +41,14 @@ const GroupItem = ({
       }
     };
 
-    const handleNewComment = ({ groupId, totalComments }) => {
-      if (groupId === item._id) {
+    const handleNewComment = ({ commentableId, totalComments }) => {
+      if (commentableId === item._id) {
         setComments(totalComments);
       }
     };
 
-    const handleRemoveComment = ({ groupId, totalComments }) => {
-      if (groupId === item._id) {
+    const handleRemoveComment = ({ commentableId, totalComments }) => {
+      if (commentableId === item._id) {
         setComments(totalComments);
       }
     };

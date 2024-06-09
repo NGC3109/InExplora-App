@@ -42,7 +42,7 @@ const Grupos = () => {
         const removed = new Set([...viewableItems.current].filter(x => !newViewableItems.has(x)));
         added.forEach(groupId => {
             socket.emit('joinGroup', { userId: currentUserId.id, groupId });
-            socket.emit('joinComment', { userId: currentUserId.id, groupId });
+            socket.emit('joinComment', { userId: currentUserId.id, commentableId: groupId });
         });
         removed.forEach(groupId => {
             socket.emit('leaveRoom', { userId: currentUserId.id, groupId });

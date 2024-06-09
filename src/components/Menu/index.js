@@ -46,6 +46,7 @@ import DashboardProfile from '../../container/perfil/dashboard';
 import HomeScreen from '../dashboard/home';
 import Destinos from '../destinos';
 import DetailDestiny from '../destinos/details';
+import Comments from '../destinos/comments';
 
 
 const Tab = createBottomTabNavigator();
@@ -321,6 +322,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="notifications_detail" component={NotificationsList_Template} options={{ title: 'Notificaciones', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="profile_public" component={PerfilPublicoContainer} options={{ headerShown: false, gestureEnabled: false, }}/>
         <RootStack.Screen name="detail_destiny" component={DetailDestiny} options={{ headerShown: false, gestureEnabled: false, }}/>
+        <RootStack.Screen name="comments" component={Comments} options={{ title: 'Comentarios', headerTitleAlign: 'center' }}/>
     </RootStack.Navigator>
   );
 };
