@@ -1,6 +1,14 @@
-import React from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity, Text, Image, ScrollView } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, TouchableOpacity, Text, Image, ScrollView } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { getDestinationsBySeason, getDestinationsHaunted, getDestinationsAmazing } from '../../../actions/dashboard/dashboardActions';
+import { useNavigation } from '@react-navigation/native';
+import { styles } from '../../../styles/destinos';
+import io from 'socket.io-client';
+import Config from 'react-native-config';
+
+const socket = io(Config.SOCKET);
 
 const categories = [
   { id: '1', name: 'Top 20 destacados', icon: 'star' },
@@ -8,30 +16,111 @@ const categories = [
   { id: '3', name: 'Sol y Arena', icon: 'sun-o' },
 ];
 
-const destinations = [
-  { id: '1', name: 'Torres del Paine', image: require('../../../assets/bg1.jpg'), height: 200 },
-  { id: '2', name: 'Torres del Paine', image: require('../../../assets/bg2.jpg'), height: 250 },
-  { id: '3', name: 'Torres del Paine', image: require('../../../assets/bg3.jpg'), height: 300 },
-  { id: '4', name: 'Torres del Paine', image: require('../../../assets/bg4.jpg'), height: 250 },
-];
-
-const hexImages = [
-  { id: '1', name: 'Torres del Paine', image: require('../../../assets/hex1.png') },
-  { id: '2', name: 'Torres del Paine', image: require('../../../assets/hex2.png') },
-  { id: '3', name: 'Torres del Paine', image: require('../../../assets/hex2.png') },
-];
-
 const lastGroups = [
   { id: '1', name: 'Torres del Paine', image: require('../../../assets/bg4.jpg'), days: '4N/5D' },
   { id: '2', name: 'Torres del Paine', image: require('../../../assets/bg3.jpg'), days: '4N/5D' },
 ];
 
-const hauntedDestinations = [
-  { id: '1', name: 'Torres del Paine', image: require('../../../assets/bg2.jpg'), days: '4N/5D' },
-  { id: '2', name: 'Torres del Paine', image: require('../../../assets/bg1.jpg'), days: '4N/5D' },
-];
-
 const HomeScreen = () => {
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const seasonDestinations = useSelector(state => state.dashboardReducer.seasonDestinations.data);
+  const hauntedDestinations = useSelector(state => state.dashboardReducer.hauntedDestinations.data);
+  const amazingPlaces = useSelector(state => state.dashboardReducer.amazingDestinations.data);
+  const currentUserId = useSelector(state => state.userReducer.user);
+
+  const [likedItems, setLikedItems] = useState({}); // { itemId: { likedByUser, likeId, totalLikes } }
+
+  useEffect(() => {
+    if (currentUserId?.id) {
+      dispatch(getDestinationsBySeason(3, currentUserId.id));
+      dispatch(getDestinationsHaunted(3, currentUserId.id));
+      dispatch(getDestinationsAmazing(3, currentUserId.id));
+    }
+  }, [dispatch, currentUserId]);
+
+  useEffect(() => {
+    if (currentUserId?.id) {
+      socket.emit('joinLikeable', { userId: currentUserId.id });
+    }
+
+    const handleNewLike = ({ likeableId, like, totalLikes }) => {
+      setLikedItems(prevState => ({
+        ...prevState,
+        [likeableId]: { ...prevState[likeableId], likedByUser: true, likeId: like._id, totalLikes }
+      }));
+    };
+
+    const handleRemoveLike = ({ likeableId, likeId, totalLikes }) => {
+      setLikedItems(prevState => ({
+        ...prevState,
+        [likeableId]: { ...prevState[likeableId], likedByUser: false, likeId: null, totalLikes }
+      }));
+    };
+
+    socket.on('newLike', handleNewLike);
+    socket.on('newDislike', handleRemoveLike);
+
+    socket.on('likeResponse', (response) => {
+      console.log('likeResponse: ', response)
+      if (response.success) {
+        setLikedItems(prevState => ({
+          ...prevState,
+          [response.like.likeable]: { ...prevState[response.like.likeable], likedByUser: true, likeId: response.like._id, totalLikes: response.totalLikes }
+        }));
+      } else {
+        console.error('Error liking item:', response.error);
+      }
+    });
+
+    socket.on('dislikeResponse', (response) => {
+      console.log('dislikeResponse: ', response)
+      if (response.success) {
+        setLikedItems(prevState => ({
+          ...prevState,
+          [response.likeableId]: { ...prevState[response.likeableId], likedByUser: false, likeId: null, totalLikes: response.totalLikes }
+        }));
+      } else {
+        console.error('Error disliking item:', response.error);
+      }
+    });
+
+    return () => {
+      socket.off('newLike', handleNewLike);
+      socket.off('newDislike', handleRemoveLike);
+      socket.off('likeResponse');
+      socket.off('dislikeResponse');
+    };
+  }, [currentUserId]);
+
+  useEffect(() => {
+    hauntedDestinations.forEach(item => {
+      setLikedItems(prevState => ({
+        ...prevState,
+        [item._id]: { likedByUser: item.likedByUser, likeId: item.likeId || null }
+      }));
+    });
+  }, [hauntedDestinations]);
+
+  const handleLike = (item) => {
+    if (currentUserId?.id) {
+      socket.emit('likeGroup', { userId: currentUserId.id, likeableId: item._id, onModel: 'Destiny' });
+    }
+  };
+
+  const handleDislike = (item) => {
+    if (currentUserId?.id && likedItems[item._id]?.likeId) {
+      socket.emit('dislikeGroup', { 
+        userId: currentUserId.id,
+        likeId: likedItems[item._id].likeId, 
+        likeableId: item._id, 
+        onModel: 'Destiny' 
+      });
+    } else {
+      console.error('No likeId found for item:', item._id);
+    }
+  };
+
   const renderCategory = (item) => (
     <View key={item.id}>
       <TouchableOpacity style={styles.categoryContainer}>
@@ -41,48 +130,86 @@ const HomeScreen = () => {
     </View>
   );
 
-  const renderDestination = (item) => (
-    <View key={item.id} style={[styles.destinationContainer, { height: item.height }]}>
-      <Image source={item.image} style={styles.destinationImage} />
-      <View style={styles.destinationOverlay}>
-        <Icon name="heart" size={24} color="#fff" style={styles.heartIcon} />
-        <Text style={styles.destinationName}>{item.name}</Text>
+  const renderDestination = (item) => {
+    const likedItem = likedItems[item._id] || item;
+    return (
+      <View key={item._id} style={[styles.destinationContainer, { height: 200 }]}>
+        <TouchableOpacity onPress={() => navigation.navigate('detail_destiny', { destinyId: item._id })}>
+          <Image source={{ uri: item.thumbnail }} style={styles.destinationImage} />
+          <View style={styles.destinationOverlay}>
+            <TouchableOpacity onPress={() => likedItem.likedByUser ? handleDislike(item) : handleLike(item)}>
+            {
+                likedItem.likedByUser ?
+                  (<Icon name="heart-sharp" size={24} color="#EF312E" style={styles.hauntedHeartIcon} />)
+                :
+                  (<Icon name="heart-outline" size={24} color="#3d444d" style={styles.hauntedHeartIcon} />)
+              }
+            </TouchableOpacity>
+            <Text style={styles.destinationName}>{item.nombre}</Text>
+          </View>
+        </TouchableOpacity>
       </View>
-    </View>
-  );
+    );
+  };
 
-  const renderHexImage = (item) => (
-    <View key={item.id} style={styles.hexImageContainer}>
-      <Image source={item.image} style={styles.hexImage} />
-      <View style={styles.hexImageOverlay}>
-        <Icon name="heart" size={24} color="#fff" style={styles.hexHeartIcon} />
-        <Text style={styles.hexImageName}>{item.name}</Text>
+  const renderHexImage = (item) => {
+    const likedItem = likedItems[item._id] || item;
+    return (
+      <View key={item._id} style={styles.hexImageContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('detail_destiny', { destinyId: item._id })}>
+          <Image source={{ uri: item.thumbnail }} style={styles.hexImage} />
+          <View style={styles.hexImageOverlay}>
+            <TouchableOpacity onPress={() => likedItem.likedByUser ? handleDislike(item) : handleLike(item)}>
+            {
+                likedItem.likedByUser ?
+                  (<Icon name="heart-sharp" size={24} color="#EF312E" style={styles.hexHeartIcon} />)
+                :
+                  (<Icon name="heart-outline" size={24} color="#3d444d" style={styles.hexHeartIcon} />)
+              }
+            </TouchableOpacity>
+            <Text style={styles.hexImageName}>{item.nombre}</Text>
+          </View>
+        </TouchableOpacity>
       </View>
-    </View>
-  );
+    );
+  };
 
   const renderLastGroup = (item) => (
     <View key={item.id} style={styles.lastGroupContainer}>
-      <Image source={item.image} style={styles.lastGroupImage} />
-      <View style={styles.lastGroupOverlay}>
-        <View style={styles.lastGroupHeader}>
-          <Text style={styles.lastGroupName}>{item.name}</Text>
-          <Icon name="heart" size={24} color="#fff" style={styles.heartIcon} />
+      <TouchableOpacity>
+        <Image source={item.image} style={styles.lastGroupImage} />
+        <View style={styles.lastGroupOverlay}>
+          <View style={styles.lastGroupHeader}>
+            <Text style={styles.lastGroupName}>{item.name}</Text>
+            <Icon name="heart" size={24} color="#fff" style={styles.heartIcon} />
+          </View>
         </View>
-      </View>
-      <Text style={styles.lastGroupDays}>{item.days}</Text>
+        <Text style={styles.lastGroupDays}>{item.days}</Text>
+      </TouchableOpacity>
     </View>
   );
 
-  const renderHauntedDestination = (item) => (
-    <View key={item.id} style={styles.hauntedDestinationContainer}>
-      <Image source={item.image} style={styles.hauntedDestinationImage} />
-      <View style={styles.hauntedDestinationOverlay}>
-        <Icon name="heart" size={24} color="#fff" style={styles.hauntedHeartIcon} />
-        <Text style={styles.hauntedDestinationName}>{item.name}</Text>
+  const renderHauntedDestination = (item) => {
+    const likedItem = likedItems[item._id] || item;
+    return (
+      <View key={item._id} style={styles.hauntedDestinationContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('detail_destiny', { destinyId: item._id })}>
+          <Image source={{ uri: item.thumbnail }} style={styles.hauntedDestinationImage} />
+          <View style={styles.hauntedDestinationOverlay}>
+            <TouchableOpacity onPress={() => likedItem.likedByUser ? handleDislike(item) : handleLike(item)}>
+              {
+                likedItem.likedByUser ?
+                  (<Icon name="heart-sharp" size={24} color="#EF312E" style={styles.hauntedHeartIcon} />)
+                :
+                  (<Icon name="heart-outline" size={24} color="#3d444d" style={styles.hauntedHeartIcon} />)
+              }
+            </TouchableOpacity>
+            <Text style={styles.hauntedDestinationName}>{item.nombre}</Text>
+          </View>
+        </TouchableOpacity>
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
@@ -97,259 +224,30 @@ const HomeScreen = () => {
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.flatListContainer}>
         {categories.map(renderCategory)}
       </ScrollView>
-      <Text style={styles.destinationTitle}>¿Dónde ir en invierno?</Text>
-      <View style={styles.masonryContainer}>
-        <View style={styles.column}>
-          {destinations.filter((_, index) => index % 2 === 0).map(renderDestination)}
-        </View>
-        <View style={styles.column}>
-          {destinations.filter((_, index) => index % 2 !== 0).map(renderDestination)}
-        </View>
-      </View>
-      <Text style={styles.hexImageTitle}>Lugares increibles</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {hexImages.map(renderHexImage)}
-      </ScrollView>
       <Text style={styles.lastGroupsTitle}>Últimos grupos</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {lastGroups.map(renderLastGroup)}
       </ScrollView>
-      <Text style={styles.hauntedTitle}>Destinos embrujados <Icon name="magic" size={16} color="#000" /></Text>
+      <Text style={styles.hexImageTitle}>Destinos embrujados</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {hauntedDestinations.map(renderHauntedDestination)}
+        {hauntedDestinations.map(renderHexImage)}
+      </ScrollView>
+      <Text style={styles.destinationTitle}>¿Dónde ir en invierno?</Text>
+      <View style={styles.masonryContainer}>
+        <View style={styles.column}>
+          {seasonDestinations.filter((_, index) => index % 2 === 0).map(renderDestination)}
+        </View>
+        <View style={styles.column}>
+          {seasonDestinations.filter((_, index) => index % 2 !== 0).map(renderDestination)}
+        </View>
+      </View>
+      <Text style={styles.hauntedTitle}>Lugares increíbles <Icon name="magic" size={16} color="#000" /></Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {amazingPlaces.map(renderHauntedDestination)}
       </ScrollView>
       <View style={styles.footerSpace} />
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  scrollContainer: {
-    padding: 16,
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    marginBottom: 16,
-    backgroundColor: '#f0f0f0',
-    height: 50,
-  },
-  searchInput: {
-    flex: 1,
-    height: 40,
-  },
-  searchIcon: {
-    marginLeft: 8,
-  },
-  categoryTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    color: 'black'
-  },
-  flatListContainer: {
-    paddingLeft: 8,
-  },
-  categoryContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 10,
-    padding: 8,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
-    height: 48,
-  },
-  categoryText: {
-    marginLeft: 8,
-    fontSize: 14,
-  },
-  destinationTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 16,
-    marginBottom: 8,
-    color: 'black'
-  },
-  masonryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  column: {
-    flex: 1,
-    marginHorizontal: 4,
-  },
-  destinationContainer: {
-    marginBottom: 8,
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  destinationImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 8,
-  },
-  destinationOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'space-between',
-    padding: 8,
-  },
-  destinationName: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 10,
-  },
-  heartIcon: {
-    alignSelf: 'flex-end',
-  },
-  hexImageTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 16,
-    marginBottom: 8,
-    color: 'black'
-  },
-  hexImageContainer: {
-    width: 165,
-    height: 190,
-    marginRight: 16,
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  hexImage: {
-    width: '100%',
-    height: '100%',
-  },
-  hexImageOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'space-between',
-    padding: 8,
-  },
-  hexImageName: {
-    color: 'white',
-    fontSize: 16,
-    marginBottom: 30,
-    fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 10,
-    textAlign: 'center',
-  },
-  hexHeartIcon: {
-    alignSelf: 'flex-end',
-    marginTop: 40
-  },
-  lastGroupsTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 16,
-    marginBottom: 8,
-    color: 'black'
-  },
-  lastGroupContainer: {
-    width: 200,
-    height: 250,
-    marginRight: 16,
-    borderRadius: 8,
-    overflow: 'hidden',
-    backgroundColor: '#f0f0f0',
-  },
-  lastGroupImage: {
-    width: '100%',
-    height: '100%',
-  },
-  lastGroupOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'space-between',
-    padding: 8,
-  },
-  lastGroupHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  lastGroupName: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 10,
-  },
-  lastGroupDays: {
-    position: 'absolute',
-    bottom: 8,
-    right: 8,
-    backgroundColor: '#6b6b6b',
-    color: 'white',
-    fontSize: 14,
-    fontWeight: 'bold',
-    paddingVertical: 2,
-    paddingHorizontal: 6,
-    borderRadius: 4,
-  },
-  hauntedTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 16,
-    marginBottom: 8,
-    color: 'black'
-  },
-  hauntedDestinationContainer: {
-    width: 300,
-    height: 200,
-    marginRight: 16,
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  hauntedDestinationImage: {
-    width: '100%',
-    height: '100%',
-  },
-  hauntedDestinationOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'space-between',
-    padding: 8,
-  },
-  hauntedDestinationName: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 10,
-  },
-  hauntedHeartIcon: {
-    alignSelf: 'flex-end',
-  },
-  footerSpace: {
-    height: 30,
-  },
-});
 
 export default HomeScreen;

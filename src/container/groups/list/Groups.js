@@ -41,11 +41,12 @@ const Grupos = () => {
         const added = new Set([...newViewableItems].filter(x => !viewableItems.current.has(x)));
         const removed = new Set([...viewableItems.current].filter(x => !newViewableItems.has(x)));
         added.forEach(groupId => {
-            socket.emit('joinGroup', { userId: currentUserId.id, groupId });
+            socket.emit('joinLikeable', { userId: currentUserId.id, likeable: groupId });
             socket.emit('joinComment', { userId: currentUserId.id, commentableId: groupId });
         });
         removed.forEach(groupId => {
-            socket.emit('leaveRoom', { userId: currentUserId.id, groupId });
+            socket.emit('leaveRoom', { userId: currentUserId.id, likeableId: groupId });
+            socket.emit('leaveRoomComment', { userId: currentUserId.id, commentableId: groupId });
         });
         viewableItems.current = newViewableItems;
     };
@@ -53,7 +54,8 @@ const Grupos = () => {
     useEffect(() => {
         return () => {
             viewableItems.current.forEach(groupId => {
-                socket.emit('leaveRoom', { userId: currentUserId.id, groupId });
+                socket.emit('leaveRoom', { userId: currentUserId.id, likeableId: groupId });
+                socket.emit('leaveRoomComment', { userId: currentUserId.id, commentableId: groupId });
             });
         };
     }, [currentUserId.id]);
