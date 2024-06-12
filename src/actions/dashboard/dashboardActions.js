@@ -25,7 +25,6 @@ export const getDestinationsBySeason = (limit, userId) => async (dispatch) => {
         const response = await axios.get(`${Config.API_ENDPOINT}dashboard/season/${limit}/${userId}`, {
             params: { limit, userId }
         });
-        console.log('response: ', response.data)
         dispatch({
             type: GET_DESTINATIONS_BY_SEASON_SUCCESS,
             payload: response.data

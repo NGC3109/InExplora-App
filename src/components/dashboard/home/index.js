@@ -11,9 +11,9 @@ import Config from 'react-native-config';
 const socket = io(Config.SOCKET);
 
 const categories = [
-  { id: '1', name: 'Top 20 destacados', icon: 'star' },
-  { id: '2', name: 'Naturaleza', icon: 'tree' },
-  { id: '3', name: 'Sol y Arena', icon: 'sun-o' },
+  { id: '1', name: 'Norte', icon: 'star' },
+  { id: '2', name: 'Centro', icon: 'star' },
+  { id: '3', name: 'Sur', icon: 'star' },
 ];
 
 const lastGroups = [
@@ -62,7 +62,6 @@ const HomeScreen = () => {
     socket.on('newDislike', handleRemoveLike);
 
     socket.on('likeResponse', (response) => {
-      console.log('likeResponse: ', response)
       if (response.success) {
         setLikedItems(prevState => ({
           ...prevState,
@@ -74,7 +73,6 @@ const HomeScreen = () => {
     });
 
     socket.on('dislikeResponse', (response) => {
-      console.log('dislikeResponse: ', response)
       if (response.success) {
         setLikedItems(prevState => ({
           ...prevState,
@@ -244,7 +242,7 @@ const HomeScreen = () => {
           {seasonDestinations.filter((_, index) => index % 2 !== 0).map(renderDestination)}
         </View>
       </View>
-      <Text style={styles.hauntedTitle}>Lugares increíbles <Icon name="magic" size={16} color="#000" /></Text>
+      <Text style={styles.hauntedTitle}>Lugares increíbles <Icon name="star" size={16} color="#000" /></Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {amazingPlaces.map(renderHauntedDestination)}
       </ScrollView>
