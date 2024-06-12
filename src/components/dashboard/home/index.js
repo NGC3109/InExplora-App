@@ -11,9 +11,9 @@ import Config from 'react-native-config';
 const socket = io(Config.SOCKET);
 
 const categories = [
-  { id: '1', name: 'Norte', icon: 'star' },
-  { id: '2', name: 'Centro', icon: 'star' },
-  { id: '3', name: 'Sur', icon: 'star' },
+  { id: '1', name: 'Norte', icon: 'star', value :'norte' },
+  { id: '2', name: 'Centro', icon: 'star', value :'centro' },
+  { id: '3', name: 'Sur', icon: 'star', value :'sur' },
 ];
 
 const lastGroups = [
@@ -121,7 +121,7 @@ const HomeScreen = () => {
 
   const renderCategory = (item) => (
     <View key={item.id}>
-      <TouchableOpacity style={styles.categoryContainer}>
+      <TouchableOpacity style={styles.categoryContainer} onPress={() => navigation.navigate('categories', {region: item.value})}>
         <Icon name={item.icon} size={24} color="#000" />
         <Text style={styles.categoryText}>{item.name}</Text>
       </TouchableOpacity>
