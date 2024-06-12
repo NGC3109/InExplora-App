@@ -17,12 +17,17 @@ export const styles = StyleSheet.create({
       backgroundColor: '#f0f0f0',
       height: 50,
     },
-    searchInput: {
-      flex: 1,
-      height: 40,
+    searchInputContainer: {
+        flex: 1,
+        height: 40,
+        justifyContent: 'center',
+    },
+    searchPlaceholder: {
+        color: '#888',
+        paddingLeft: 10,
     },
     searchIcon: {
-      marginLeft: 8,
+        marginLeft: 8,
     },
     categoryTitle: {
       fontSize: 18,

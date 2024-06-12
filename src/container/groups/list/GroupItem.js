@@ -84,13 +84,7 @@ const GroupItem = ({
 
   const goDetailsGroup = (item) => {
     navigation.navigate('detalleGrupo', { 
-      groupItem: item,
       groupId: item._id,
-      likedByUser: likedByUser, 
-      userId: userId, 
-      likeId: likeId,
-      bookmarked: bookmarkedByUser,
-      bookmark_id: bookmarkId
     })
   }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, TouchableOpacity, Text, Image, ScrollView } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, Image, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { getDestinationsBySeason, getDestinationsHaunted, getDestinationsAmazing } from '../../../actions/dashboard/dashboardActions';
@@ -214,11 +214,14 @@ const HomeScreen = () => {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
       <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="¿A dónde vamos?"
-        />
-        <Icon name="search" size={20} color="#000" style={styles.searchIcon} />
+          <TouchableWithoutFeedback onPress={() => navigation.navigate('search_home')}>
+              <View style={styles.searchInputContainer}>
+                  <Text style={styles.searchPlaceholder}>¿A dónde vamos?</Text>
+              </View>
+          </TouchableWithoutFeedback>
+          <TouchableOpacity onPress={() => navigation.navigate('search_home')}>
+              <Icon name="search" size={20} color="#000" style={styles.searchIcon} />
+          </TouchableOpacity>
       </View>
       <Text style={styles.categoryTitle}>Categorías</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.flatListContainer}>
