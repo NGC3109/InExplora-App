@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 
 export const styles = StyleSheet.create({
     container: {
@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
     description: {
       fontSize: 14,
       color: 'gray',
-      marginBottom: 50,
+      marginBottom: 30,
       color: '#413A3A'
     },
     button: {
@@ -39,5 +39,18 @@ export const styles = StyleSheet.create({
       color: 'white',
       fontSize: 16,
       fontWeight: 'bold',
+    },
+    dateContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 20,
+    },
+    dateText: {
+        fontSize: 16,
+        color: '#000',
+    },
+    datepicker: {
+        width: Dimensions.get('window').width - 40,
+        alignSelf: 'center',
     },
   });

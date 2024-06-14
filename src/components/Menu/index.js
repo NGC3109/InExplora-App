@@ -49,6 +49,7 @@ import DetailDestiny from '../destinos/details';
 import Comments from '../destinos/comments';
 import SearchHome from '../dashboard/search';
 import Categories from '../dashboard/category';
+import GroupStartEnd_Container from '../../container/groups/create/groupStartEnd';
 
 
 const Tab = createBottomTabNavigator();
@@ -129,6 +130,7 @@ const MainTabNavigator = () => {
             tabPress: e => {
               e.preventDefault();
               navigation.navigate('crearGrupo');
+              // navigation.navigate('groupStartEnd')
             }
           })}
           options={{
@@ -299,6 +301,18 @@ const RootStackNavigator = ({ user }) => {
         })}/>
         
         <RootStack.Screen name="step9" component={CreateGroupContainer} options={({navigation}) => ({
+          headerTitle: () => <GroupHeader navigation={navigation} step={11}/>,
+          headerLeft: () => (
+            <Header onPress={() => navigation.goBack()} />
+          ),
+          
+          drawerItemStyle: { height: 0 },
+          headerTitleAlign: 'center',
+          swipeEnabled: false,
+          headerStyle,
+        })}/>
+        
+        <RootStack.Screen name="groupStartEnd" component={GroupStartEnd_Container} options={({navigation}) => ({
           headerTitle: () => <GroupHeader navigation={navigation} step={11}/>,
           headerLeft: () => (
             <Header onPress={() => navigation.goBack()} />

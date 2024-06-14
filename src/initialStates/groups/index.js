@@ -27,7 +27,11 @@ export const initialState = {
             startingTravel: null,
             latitude: null,
             longitude: null,
-        }, // fecha de partida
+        }, // lugar de partida
+        travelDate: {
+          startDate: null,
+          endDate: null,
+        },
     },
     draft: {
         data: null,

@@ -30,7 +30,7 @@ const GroupContainer = ({ navigation }) => {
                 region: destino.region
             }
             dispatch(saveGroupDestinationAndCreateDraft(currentUserId.id, destinosObj))
-            navigation.navigate('step1');
+            navigation.navigate('groupStartEnd');
             setMessageAlert(false)
         }else{
             setMessageAlert(true)

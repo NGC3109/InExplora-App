@@ -46,6 +46,7 @@ import {
   DELETE_DRAFT,
   DELETE_DRAFT_SUCCESS,
   DELETE_DRAFT_FAIL,
+  SAVE_GROUP_DATES,
 } from "../../utils/constants";
 
 const groupReducer = (state = initialState, action) => {
@@ -88,6 +89,7 @@ const groupReducer = (state = initialState, action) => {
     case SAVE_GROUP_GALLERY: return { ...state, groups: { ...state.groups, gallery: action.payload }};
     case SAVE_GROUP_BUDGET: return { ...state, groups: { ...state.groups, budget: action.payload }};
     case SAVE_GROUP_STARTING_TRAVEL: return { ...state, groups: { ...state.groups, startingTravel: action.payload }};
+    case SAVE_GROUP_DATES: return { ...state, groups: { ...state.groups, travelDate: action.payload } };
 
     case SAVE_DRAFT: 
       return { ...state, draft: { ...state.draft, loading: true, error: null } };

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, TouchableOpacity, Text, Image, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
+import IconIcon from 'react-native-vector-icons/Foundation';
+import IconIconIcon from 'react-native-vector-icons/FontAwesome5';
 import { getDestinationsBySeason, getDestinationsHaunted, getDestinationsAmazing } from '../../../actions/dashboard/dashboardActions';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from '../../../styles/destinos';
@@ -11,9 +13,9 @@ import Config from 'react-native-config';
 const socket = io(Config.SOCKET);
 
 const categories = [
-  { id: '1', name: 'Norte', icon: 'star', value :'norte' },
-  { id: '2', name: 'Centro', icon: 'star', value :'centro' },
-  { id: '3', name: 'Sur', icon: 'star', value :'sur' },
+  { id: '1', name: 'Norte', icon: 'sunny-outline', value :'norte', style: { backgroundColor: '#E2D6A3'}},
+  { id: '2', name: 'Centro', icon: 'umbrella-beach', value :'centro', style: { backgroundColor: '#4B7AE2'} },
+  { id: '3', name: 'Sur', icon: 'trees', value :'sur', style: { backgroundColor: '#5DB5A6'} },
 ];
 
 const lastGroups = [
@@ -122,7 +124,11 @@ const HomeScreen = () => {
   const renderCategory = (item) => (
     <View key={item.id}>
       <TouchableOpacity style={styles.categoryContainer} onPress={() => navigation.navigate('categories', {region: item.value})}>
-        <Icon name={item.icon} size={24} color="#000" />
+        <View style={[styles.iconsContainer, item.style]}>
+          {item.value === "sur" && <IconIcon name={item.icon} size={24} color="#FFF" />}
+          {item.value === "norte" && <Icon name={item.icon} size={24} color="#FFF" />}
+          {item.value === "centro" && <IconIconIcon name={item.icon} size={24} color="#FFF" />}
+        </View>
         <Text style={styles.categoryText}>{item.name}</Text>
       </TouchableOpacity>
     </View>

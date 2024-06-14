@@ -39,7 +39,39 @@ import {
     DELETE_DRAFT,
     DELETE_DRAFT_SUCCESS,
     DELETE_DRAFT_FAIL,
+    SAVE_GROUP_DATES,
 } from "../../utils/constants";
+
+export const saveGroupDatesAndUpdateDraft = (draftId, startDate, endDate) => {
+  return async (dispatch, getState) => {
+    // Primero despachamos la acción para guardar las fechas en el estado de Redux
+    dispatch({
+      type: SAVE_GROUP_DATES,
+      payload: { startDate, endDate }
+    });
+
+    // Luego obtenemos el estado actualizado
+    const { groupReducer: { groups } } = getState();
+
+    // Actualizamos el borrador con los datos actuales
+    dispatch({ type: UPDATE_DRAFT });
+    console.log(`${Config.API_ENDPOINT}drafts/update`)
+    console.log('draftId: ', draftId)
+    console.log('fechas: ', startDate, endDate)
+    try {
+      const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, travelDate: { startDate, endDate } }, currentStep: 'step1' });
+      dispatch({
+        type: UPDATE_DRAFT_SUCCESS,
+        payload: response.data.draft
+      });
+    } catch (error) {
+      dispatch({
+        type: UPDATE_DRAFT_FAIL,
+        payload: error.response ? error.response.data.error : 'Error desconocido'
+      });
+    }
+  };
+};
 
 export const saveGroupDestinationAndCreateDraft = (userId, destination) => {
   return async (dispatch, getState) => {

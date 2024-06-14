@@ -5,6 +5,10 @@ export const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: 'white',
     },
+    iconsContainer:{
+      padding: 5,
+      borderRadius: 8
+    },
     scrollContainer: {
       padding: 16,
     },
@@ -40,6 +44,7 @@ export const styles = StyleSheet.create({
     },
     categoryContainer: {
       flexDirection: 'row',
+      justifyContent: 'space-between',
       alignItems: 'center',
       justifyContent: 'center',
       marginRight: 10,

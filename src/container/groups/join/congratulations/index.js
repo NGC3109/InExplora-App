@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Image } from 'react-native';
-import ConfettiCannon from 'react-native-confetti-cannon';
 
 const CongratulationsRequestToJoin = ({ navigation }) => {
   const confettiRef = useRef(null);
@@ -19,7 +18,6 @@ const CongratulationsRequestToJoin = ({ navigation }) => {
       source={require('./../../../../assets/pattern2.png')} // Cambia a tu nueva imagen de fondo
       style={styles.container}
     >
-      <ConfettiCannon ref={confettiRef} count={400} origin={{x: -10, y: 0}} />
       <View style={styles.content}>
         <View style={styles.checkmarkCircle}>
           <Image source={require('./../../../../assets/check.png')} style={{width:80, height: 80}} />

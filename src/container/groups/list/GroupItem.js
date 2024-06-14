@@ -109,7 +109,7 @@ const GroupItem = ({
             <TouchableOpacity onPress={() => goProfileUser(item.userCreator)}>
               <Text style={styles.userName}>{item.creatorName}</Text>
             </TouchableOpacity>
-            <Text style={styles.userArticles}>21 días</Text>
+            <Text style={styles.userArticles}>{item.numberOfDays || 0} días</Text>
           </View>
           {bookmarkedByUser ? 
             <TouchableOpacity onPress={() => handleDeleteBookmark(bookmarkId, setBookmarkedByUser, setBookmarkId)}>

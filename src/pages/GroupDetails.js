@@ -33,7 +33,6 @@ const DetailGroup = ({ navigation, route }) => {
   }
 
   const { 
-    profilePicture,
     title, 
     description, 
     emptySpots, 
@@ -50,6 +49,8 @@ const DetailGroup = ({ navigation, route }) => {
     travelMode, 
     members = [],
     gallery = [],
+    formattedStartDate,
+    formattedEndDate,
   } = groupDetails;
 
   // Verificación de la galería
@@ -138,7 +139,7 @@ const DetailGroup = ({ navigation, route }) => {
           <View style={styles.sectionContent}>
             <View style={styles.sectionItem}>
               <Icon name="calendar-outline" size={18} color="white" />
-              <Text style={styles.sectionItemText}>Desde el 7/7/2024 hasta el 20/7/2024</Text>
+              <Text style={styles.sectionItemText}>Desde el {formattedStartDate} hasta el {formattedEndDate}</Text>
             </View>
           </View>
 
