@@ -461,7 +461,7 @@ export const loadJoinRequestsByGroupId = (userId) => async (dispatch) => {
 export const loadGroupById = (groupId, userId) => async (dispatch) => {
   dispatch({ type: LOAD_GROUP_BY_ID_REQUEST });
   try {
-    console.log(`${Config.API_ENDPOINT}groups/${groupId}`)
+    console.log(`${Config.API_ENDPOINT}groups/${groupId}/userId/${userId}`)
     const response = await axios.get(`${Config.API_ENDPOINT}groups/${groupId}/userId/${userId}`);
     dispatch({
       type: LOAD_GROUP_BY_ID_SUCCESS,
@@ -475,12 +475,19 @@ export const loadGroupById = (groupId, userId) => async (dispatch) => {
   }
 };
 
-export const loadGroups = (userId) => async (dispatch) => {
+export const loadGroups = (userId, ageRange, budget, gender, travelWithPets, travelWithChildren, selectedTransport) => async (dispatch) => {
   dispatch({ type: LOAD_GROUPS_REQUEST });
   try {
     const requestBody = {
-      userId: userId
+      userId: userId,
+      ageRange, 
+      budget, 
+      gender, 
+      travelWithPets, 
+      travelWithChildren, 
+      selectedTransport
     };
+    console.log(`${Config.API_ENDPOINT}groups/`, requestBody)
     const response = await axios.post(`${Config.API_ENDPOINT}groups/`, requestBody);
     dispatch({
       type: LOAD_GROUPS_SUCCESS,
@@ -489,10 +496,11 @@ export const loadGroups = (userId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: LOAD_GROUPS_FAIL,
-      payload: error.response ? error.response.data.error : 'Error desconocido'
+      payload: error.response ? error.response.data.error : 'Unknown error'
     });
   }
 };
+
 
 export const loadGroupByUser = (userId) => async (dispatch) => {
   dispatch({ type: LOAD_GROUP_BY_USER_REQUEST });

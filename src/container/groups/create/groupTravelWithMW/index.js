@@ -9,8 +9,6 @@ const P1_GroupTravelWith_Women_Men_Container = ({ navigation }) => {
     const [messageAlert, setMessageAlert] = useState(false);
     const draftState = useSelector(state => state.groupReducer.draft);
 
-    console.log('draftState: ', draftState)
-
     const handleGeneroChange = (itemValue) => {
         setGeneroViaje(itemValue);
         setMessageAlert(false)

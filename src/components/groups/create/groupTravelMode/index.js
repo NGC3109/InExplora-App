@@ -4,6 +4,7 @@ import { Checkbox, NativeBaseProvider, Select } from 'native-base';
 import { styles } from '../../../../styles/groups/step2';
 import ButtonCustom from '../../../ui/Button';
 import { Alert } from '../../../ui/Alert';
+import ButtonWithIcon from '../../../ui/ButtonWithIcon';
 
 const P2_TravelMode_Template = ({ 
   transporte,
@@ -69,9 +70,10 @@ const P2_TravelMode_Template = ({
           </View>
         )}
         <View style={{ flex: 1 }} />
-        <ButtonCustom
-          title="Continuar"
-          onPress={() => continueButton()}
+        <ButtonWithIcon 
+            handleClick={continueButton}
+            title="Continuar"
+            width='100%'
         />
       </View>
     </NativeBaseProvider>

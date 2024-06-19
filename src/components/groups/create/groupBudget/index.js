@@ -4,6 +4,7 @@ import { styles } from '../../../../styles/groups/step3';
 import { Alert } from '../../../ui/Alert';
 import ButtonCustom from '../../../ui/Button';
 import MoneyInput from '../../../ui/TextInputSearch';
+import ButtonWithIcon from '../../../ui/ButtonWithIcon';
 
 const P8_9_Budget_Template = ({ 
     continueButton,
@@ -34,9 +35,10 @@ const P8_9_Budget_Template = ({
         }
         </View>
         <View style={{ flex: 1 }} />
-        <ButtonCustom 
-          onPress={continueButton}
-          title="Continuar"
+        <ButtonWithIcon 
+            handleClick={continueButton}
+            title="Continuar"
+            width='100%'
         />
       </View>
   );

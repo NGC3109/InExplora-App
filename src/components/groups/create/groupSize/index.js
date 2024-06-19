@@ -4,6 +4,7 @@ import { NativeBaseProvider, Select } from 'native-base';
 import { Alert } from '../../../ui/Alert';
 import { styles } from '../../../../styles/groups/step4';
 import ButtonCustom from '../../../ui/Button';
+import ButtonWithIcon from '../../../ui/ButtonWithIcon';
 
 const P4_GroupSize_Template = ({
     groupSize,
@@ -23,7 +24,7 @@ const P4_GroupSize_Template = ({
                 selectedValue={groupSize}
                 minWidth={200}
                 accessibilityLabel="Seleccione un número de personas"
-                placeholder="Seleccione un alojamiento"
+                placeholder="Seleccione un número de personas"
                 _selectedItem={{
                 bg: 'rgba(57, 103, 176, 0.4)',
                 }}
@@ -47,10 +48,11 @@ const P4_GroupSize_Template = ({
             }
         </View>
         <View style={{ flex: 1 }} />
-            <ButtonCustom 
-            onPress={continueButton}
+        <ButtonWithIcon 
+            handleClick={continueButton}
             title="Continuar"
-            />
+            width='100%'
+        />
         </View>
     </NativeBaseProvider>
   );

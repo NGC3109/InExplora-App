@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Image, Text, TouchableOpacity, FlatList } from 'react-native';
-import ButtonCustom from '../../components/ui/Button';
 import Alert from '../ui/Alert';
 import GooglePlacesAutocomplete from '../ui/GooglePlacesAutocomplete';
 import { StarIcon } from '../../assets/vectores';
 import DraftItem from './create/draft';
+import ButtonWithIcon from '../ui/ButtonWithIcon';
 
 const GroupTemplate = ({
   continueButton,
@@ -84,7 +84,7 @@ const GroupTemplate = ({
 
   const renderFooter = () => (
     <View style={styles.buttonContainer}>
-      <ButtonCustom title="Continuar" onPress={continueButton} />
+      <ButtonWithIcon handleClick={continueButton} title="Continuar" width="100%" height={50} />
     </View>
   );
 
@@ -98,6 +98,7 @@ const GroupTemplate = ({
             onDiscard={onDiscard}
           /> 
       : 
+        <>
         <View style={styles.container}>
           <FlatList
             data={activeTab === 'comentarios' ? destino.reviews : []}
@@ -106,10 +107,14 @@ const GroupTemplate = ({
               <Review key={item.id} author={item.author_name} rating={item.rating} text={item.text} photo_profile={item.profile_photo_url} />
             )}
             keyExtractor={(item, index) => index.toString()}
-            ListFooterComponent={renderFooter}
+            ListFooterComponent={<View style={{ height: 100 }} />} // Para asegurar espacio para el footer absoluto
             showsVerticalScrollIndicator={false}
           />
         </View>
+          <View style={styles.footer}>
+            {renderFooter()}
+          </View>
+        </>
     }
     </>
     
@@ -125,7 +130,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   tabs: {
     flexDirection: 'row',
@@ -247,6 +252,14 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 10, // Espaciado antes del botón
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    paddingHorizontal: 20,
+    backgroundColor: 'white',
+    paddingVertical: 10,
   },
 });
 

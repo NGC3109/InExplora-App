@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { styles } from '../../../../styles/groups/step6';
-import { Alert } from '../../../ui/Alert';
 import ButtonCustom from '../../../ui/Button';
 import { NativeBaseProvider, Select } from 'native-base';
+import ButtonWithIcon from '../../../ui/ButtonWithIcon';
 
 const P6_GroupTravelWithChildren_Template = ({
     incluyeMenores,
@@ -13,14 +13,13 @@ const P6_GroupTravelWithChildren_Template = ({
     incluyeNinosConNecesidadesEspeciales,
     setIncluyeNinosConNecesidadesEspeciales,
     continueButton,
-    messageAlert,
  }) => {
   return (
     <NativeBaseProvider>
     <View style={styles.container}>
-      <Text style={styles.subtitle}>¿Prefieres viajar con o sin niños?</Text>
+      <Text style={styles.subtitle}>¿Prefieres viajar con o sin menores?</Text>
       <Text style={styles.description}>
-        Decidan si incluirán niños en su grupo de viaje para conectar con otras familias. Viajar juntos ofrece una experiencia más segura y enriquecedora para los pequeños.
+        Decidan si incluirán menores en su grupo de viaje para conectar con otras familias. Viajar juntos ofrece una experiencia más segura y enriquecedora para los pequeños.
       </Text>
       <View>
         <Select
@@ -34,21 +33,14 @@ const P6_GroupTravelWithChildren_Template = ({
             mt={1}
             onValueChange={itemValue => handleIncluyeMenoresChange(itemValue)}
         >
-            <Select.Item label="No" value="no" />
-            <Select.Item label="Sí" value="si" />
+            <Select.Item label="No" value={0} />
+            <Select.Item label="Sí" value={1} />
         </Select>
-        <Text style={styles.infoText}>¿Incluirán niñas/niños/adolescentes en su viaje?</Text>
+        <Text style={styles.infoText}>¿Incluirán menores en su viaje?</Text>
         <Text style={styles.helperText}>
-          Seleccionen si viajarán con niñas/niños/adolescentes.
+          Seleccionen si viajarán con menores.
         </Text>
-        {messageAlert && (
-          <Alert
-            message="Ingresa una respuesta."
-            type="danger"
-            Customstyle={{marginTop: 5}}
-          />
-        )}
-        {incluyeMenores === 'si' && (
+        {incluyeMenores === 1 && (
           <View>
             <Text style={styles.label}>¿Necesidades de atención especial?</Text>
             <Select
@@ -62,11 +54,11 @@ const P6_GroupTravelWithChildren_Template = ({
                 mt={1}
                 onValueChange={itemValue => setIncluyeNinosConNecesidadesEspeciales(itemValue)}
             >
-                <Select.Item label="No" value="no" />
-                <Select.Item label="Sí" value="si" />
+                <Select.Item label="No" value={0} />
+                <Select.Item label="Sí" value={1} />
             </Select>
             <Text style={styles.helperText}>
-              Indiquen si algunos de los niños tienen necesidades de atención especial.
+              Indiquen si algunos de los menores tienen necesidades de atención especial.
             </Text>
           </View>
         )}
@@ -95,9 +87,10 @@ const P6_GroupTravelWithChildren_Template = ({
         )} */}
       </View>
       <View style={{ flex: 1 }} />
-      <ButtonCustom 
-        onPress={continueButton}
-        title="Continuar"
+      <ButtonWithIcon 
+          handleClick={continueButton}
+          title="Continuar"
+          width='100%'
       />
     </View>
     </NativeBaseProvider>

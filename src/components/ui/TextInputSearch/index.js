@@ -16,7 +16,7 @@ const MoneyInput = ({ placeholder, placeholderTextColor, infoText, onChangeText,
           onChangeText={text => {
             const nonNumericRemoved = text.replace(/[^0-9]/g, '');
             const formattedText = nonNumericRemoved.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-            onChangeText(formattedText);
+            onChangeText(formattedText, nonNumericRemoved);
           }}
           keyboardType='numeric'
         />

@@ -8,6 +8,7 @@ import { Alert } from '../../../ui/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveGroupDatesAndUpdateDraft } from '../../../../actions/groups/groupAction';
 import { useNavigation } from '@react-navigation/native';
+import ButtonWithIcon from '../../../ui/ButtonWithIcon';
 
 LocaleConfig.locales['es-cl'] = {
     monthNames: [
@@ -156,9 +157,10 @@ const GroupStartEnd_Template = ({ messageAlert, continueButton }) => {
                     />
                 </View>
                 <View style={{ flex: 1 }} />
-                <ButtonCustom
-                    onPress={handleContinue}
+                <ButtonWithIcon 
+                    handleClick={handleContinue}
                     title="Continuar"
+                    width='100%'
                 />
             </View>
         </ScrollView>

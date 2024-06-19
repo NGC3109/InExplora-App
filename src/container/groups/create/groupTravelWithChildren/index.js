@@ -6,40 +6,28 @@ import P6_GroupTravelWithChildren_Template from '../../../../components/groups/c
 const P6_GroupTravelWithChildren_Container = ({ navigation }) => {
     const dispatch = useDispatch();
     const draftState = useSelector(state => state.groupReducer.draft);
-    const [incluyeMenores, setIncluyeMenores] = useState('no');
+    const [incluyeMenores, setIncluyeMenores] = useState(0);
     const [edadMayorMenor, setEdadMayorMenor] = useState(0);
-    const [incluyeNinosConNecesidadesEspeciales, setIncluyeNinosConNecesidadesEspeciales] = useState('no');
-    const [messageAlert, setMessageAlert] = useState(false);
+    const [incluyeNinosConNecesidadesEspeciales, setIncluyeNinosConNecesidadesEspeciales] = useState(0);
 
     const handleIncluyeMenoresChange = (itemValue) => {
-        if(itemValue === "no"){
-            setIncluyeNinosConNecesidadesEspeciales('no')
+        if(itemValue === 0){
+            setIncluyeNinosConNecesidadesEspeciales(0)
         }
         setIncluyeMenores(itemValue);
-        setMessageAlert(false);
     };
 
     const handleIncluyeNinosConNecesidadesEspecialesChange = (itemValue) => {
         setIncluyeNinosConNecesidadesEspeciales(itemValue);
-        setMessageAlert(false);
     };
 
     const continueButton = () => {
-        if (isIncluyeMenoresValid()) {
-            dispatch(saveGroupTravelWithChildrenAndUpdateDraft(draftState.id, {
-                incluyeMenores,
-                edadMayorMenor,
-                incluyeNinosConNecesidadesEspeciales
-            }));
-            navigation.navigate('step7');
-            setMessageAlert(false);
-        } else {
-            setMessageAlert(true);
-        }
-    };
-
-    const isIncluyeMenoresValid = () => {
-        return incluyeMenores.trim().length > 0;
+        dispatch(saveGroupTravelWithChildrenAndUpdateDraft(draftState.id, {
+            incluyeMenores,
+            edadMayorMenor,
+            incluyeNinosConNecesidadesEspeciales
+        }));
+        navigation.navigate('step7');
     };
 
     return (
@@ -51,7 +39,6 @@ const P6_GroupTravelWithChildren_Container = ({ navigation }) => {
             setIncluyeNinosConNecesidadesEspeciales={handleIncluyeNinosConNecesidadesEspecialesChange}
             handleIncluyeMenoresChange={handleIncluyeMenoresChange}
             continueButton={continueButton}
-            messageAlert={messageAlert}
         />
     );
 };

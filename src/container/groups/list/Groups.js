@@ -25,8 +25,23 @@ const Grupos = () => {
     const currentUserId = useSelector(state => state.userReducer.user);
     const currentBookmarks = useSelector(state => state.bookmarkReducer.bookmarks);
     const viewableItems = useRef(new Set());
+    // Filters Start
+    const [ageRange, setAgeRange] = useState([18, 60]);
+    const [budget, setBudget] = useState(5000000);
+    const [gender, setGender] = useState('');
+    const [travelWithPets, setTravelWithPets] = useState();
+    const [travelWithChildren, setTravelWithChildren] = useState();
+    const [selectedTransport, setSelectedTransport] = useState('');
+    // Filters End
     useEffect(() => {
-        dispatch(loadGroups(currentUserId.id));
+        dispatch(loadGroups(
+                currentUserId.id,
+                ageRange,
+                budget,
+                gender,
+                travelWithPets,
+                travelWithChildren,
+                selectedTransport));
     }, [dispatch]);
 
     const handleSelectChange = useCallback((filterId, itemValue) => {
@@ -35,6 +50,17 @@ const Grupos = () => {
           [filterId]: itemValue === "Seleccionar" ? "" : itemValue
         }));
     }, []);
+
+    const handleApplyFilters = () => {
+        dispatch(loadGroups(
+            currentUserId.id,
+            ageRange,
+            budget,
+            gender,
+            travelWithPets,
+            travelWithChildren,
+            selectedTransport));
+    }
 
     const handleViewableItemsChanged = ({ viewableItems: viewable }) => {
         const newViewableItems = new Set(viewable.map(({ item }) => item._id));
@@ -83,7 +109,21 @@ const Grupos = () => {
     
     return (
         <>
-            <FiltrosComponent />
+            <FiltrosComponent 
+                ageRange={ageRange}
+                setAgeRange={setAgeRange}
+                budget={budget}
+                setBudget={setBudget}
+                gender={gender}
+                setGender={setGender}
+                travelWithPets={travelWithPets}
+                setTravelWithPets={setTravelWithPets}
+                travelWithChildren={travelWithChildren}
+                setTravelWithChildren={setTravelWithChildren}
+                selectedTransport={selectedTransport}
+                setSelectedTransport={setSelectedTransport}
+                handleApplyFilters={handleApplyFilters}
+            />
             {showFilters && (
                 <FiltersContainer 
                     filters={filters}

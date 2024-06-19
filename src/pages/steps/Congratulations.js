@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Image } from 'react-native';
 
-const Congratulations = ({ navigation }) => {
+const Congratulations2 = ({ navigation }) => {
   const confettiRef = useRef(null);
 
   useEffect(() => {
@@ -80,4 +80,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Congratulations;
+export default Congratulations2;

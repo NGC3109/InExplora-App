@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { IconTrash } from '../../../../assets/vectores';
 import { styles } from '../../../../styles/groups/step9/loadingImages';
+import ButtonWithIcon from '../../../ui/ButtonWithIcon';
 
 const LoadingImages = ({ images, removeImage, selectImage, continueButton }) => {
   const renderImageRows = () => {
@@ -51,20 +52,24 @@ const LoadingImages = ({ images, removeImage, selectImage, continueButton }) => 
 
   return (
       <View style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.imageContainer}
-        showsVerticalScrollIndicator={false}
-      >
-          <View style={styles.center}>
-            <Text style={styles.title}>Cargando imágenes</Text>
-            <Text style={styles.counter}>{`${images.length} de ${images.length} imágenes`}</Text>
-              {renderImageRows()}
-          </View>
-      </ScrollView>
-      <TouchableOpacity style={styles.publishButton} onPress={continueButton}>
-        <Text style={styles.publishButtonText}>Publicar</Text>
-      </TouchableOpacity>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.imageContainer}
+          showsVerticalScrollIndicator={false}
+        >
+            <View style={styles.center}>
+              <Text style={styles.title}>Cargando imágenes</Text>
+              <Text style={styles.counter}>{`${images.length} de ${images.length} imágenes`}</Text>
+                {renderImageRows()}
+            </View>
+        </ScrollView>
+        <View style={{marginBottom: 20}}>
+          <ButtonWithIcon 
+              handleClick={continueButton}
+              title="Publicar"
+              width='100%'
+          />
+        </View>
       </View>
   );
 };

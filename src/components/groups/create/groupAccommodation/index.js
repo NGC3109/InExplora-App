@@ -4,6 +4,7 @@ import { NativeBaseProvider, Select } from 'native-base';
 import { styles } from '../../../../styles/groups/step3';
 import { Alert } from '../../../ui/Alert';
 import ButtonCustom from '../../../ui/Button';
+import ButtonWithIcon from '../../../ui/ButtonWithIcon';
 
 const P3_Accommodation_Template = ({ 
     continueButton,
@@ -54,9 +55,10 @@ const P3_Accommodation_Template = ({
           }
         </View>
         <View style={{ flex: 1 }} />
-        <ButtonCustom 
-          onPress={continueButton}
-          title="Continuar"
+        <ButtonWithIcon 
+            handleClick={continueButton}
+            title="Continuar"
+            width='100%'
         />
       </View>
     </NativeBaseProvider>

@@ -6,7 +6,6 @@ import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/
 import MessageScreen from '../../container/messages';
 import ChatHeader from '../../pages/ChatHeader';
 import GroupHeader from '../../pages/steps/GroupHeader';
-import Congratuilations from '../../pages/steps/Congratulations';
 import DetailGroup from '../../pages/GroupDetails';
 import Login from '../../pages/login';
 import Chats from '../../pages/ChatContainer';
@@ -50,6 +49,7 @@ import Comments from '../destinos/comments';
 import SearchHome from '../dashboard/search';
 import Categories from '../dashboard/category';
 import GroupStartEnd_Container from '../../container/groups/create/groupStartEnd';
+import Congratulations from '../congratulations';
 
 
 const Tab = createBottomTabNavigator();
@@ -323,7 +323,7 @@ const RootStackNavigator = ({ user }) => {
           swipeEnabled: false,
           headerStyle,
         })}/>
-        <RootStack.Screen name="congratulations" component={Congratuilations} options={{ title: 'Felicidades', headerTitleAlign: 'center' }}/>
+        {/* <RootStack.Screen name="congratulations" component={Congratuilations} options={{ title: 'Felicidades', headerTitleAlign: 'center' }}/> */}
         <RootStack.Screen name="joinRequest" component={JoinRequestList_Template} options={{ title: 'Solicitudes', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="join_step1" component={Join_P1_Container} options={{ title: 'Solicitud', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="congratulations_request_to_join" component={CongratulationsRequestToJoin} options={{ title: 'Felicidades', headerTitleAlign: 'center' }}/>
@@ -341,6 +341,7 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="comments" component={Comments} options={{ title: 'Comentarios', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="search_home" component={SearchHome} options={{ headerShown: false, }}/>
         <RootStack.Screen name="categories" component={Categories} options={{ title: 'Categorias', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="congratulations" component={Congratulations} options={{ headerShown: false, }}/>
     </RootStack.Navigator>
   );
 };

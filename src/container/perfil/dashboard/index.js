@@ -2,8 +2,10 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CirclePerfil from '../../../assets/vectores/CirclePerfil';
+import useAuth from '../../../utils/hooks/useAuth';
 
 function DashboardProfile({ progress = 95 }) {
+  const { logout } = useAuth();
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
@@ -14,7 +16,7 @@ function DashboardProfile({ progress = 95 }) {
       </View>
       
       <View style={styles.iconContainerRow}>
-        <TouchableOpacity style={styles.iconButton}>
+        <TouchableOpacity style={styles.iconButton} onPress={logout}>
           <View style={styles.iconCircle}>
             <Icon name="settings-outline" size={30} color="#000" />
           </View>

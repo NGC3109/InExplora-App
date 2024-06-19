@@ -4,6 +4,7 @@ import ButtonCustom from '../../../ui/Button';
 import { styles } from '../../../../styles/groups/step8';
 import { AlertIcon } from '../../../../assets/vectores';
 import { Alert } from '../../../ui/Alert';
+import ButtonWithIcon from '../../../ui/ButtonWithIcon';
 
 const P8_GroupDescriptionTemplate = ({ descripcion, setDescripcion, continueButton, limiteCaracteres, messageAlert }) => {
   return (
@@ -41,10 +42,11 @@ const P8_GroupDescriptionTemplate = ({ descripcion, setDescripcion, continueButt
         
       </View>
       <View style={{ flex: 1 }} />
-      <ButtonCustom 
-        onPress={continueButton}
-        title="Continuar"
-      />
+      <ButtonWithIcon 
+            handleClick={continueButton}
+            title="Continuar"
+            width='100%'
+        />
     </View>
   );
 };

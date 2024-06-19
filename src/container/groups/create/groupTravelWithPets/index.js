@@ -37,7 +37,7 @@ const P7_GroupTravelWithPets_Container = ({ navigation }) => {
     })
   }
   const isIncluyePetsValid = () => {
-      return incluyeMascotas?.incluyeMascotas.trim().length > 0;
+      return true;
   };
   return (
     <P7_GroupTravelWithPets_Template 

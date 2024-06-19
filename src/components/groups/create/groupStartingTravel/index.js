@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, FlatList, StyleSheet, Animated, Easing } from 'react-native';
+import { View, Text, FlatList, Animated, Easing } from 'react-native';
 import { styles } from '../../../../styles/groups/step3';
-import ButtonCustom from '../../../ui/Button';
 import Autocomplete from '../../../ui/Autocomplete';
 import MapView, { Marker } from 'react-native-maps';
+import ButtonWithIcon from '../../../ui/ButtonWithIcon';
 
 const P8_9_1_StartingTravel_Template = ({
     continueButton,
@@ -61,10 +61,10 @@ const P8_9_1_StartingTravel_Template = ({
                         >
                             <Marker coordinate={region} />
                         </MapView>
-                        <ButtonCustom
-                            onPress={continueButton}
+                        <ButtonWithIcon 
+                            handleClick={continueButton}
                             title="Continuar"
-                            customStyle={{ marginTop: 10 }}
+                            width='100%'
                         />
                     </>
                 }

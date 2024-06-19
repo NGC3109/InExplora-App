@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from '../../../styles/groups/group_item';
+import { formatToThousands } from '../../../utils/functions';
 
 const GroupItem = ({ 
   item, 
@@ -75,11 +76,10 @@ const GroupItem = ({
       socket.emit('dislikeGroup', { likeId, likeableId: item._id, onModel: 'Group' });
   };
   const formatAmount = (amount) => {
-    const numericAmount = parseInt(amount.replace(/\./g, ''), 10);
-    if (numericAmount >= 1000000) {
-      return `${(numericAmount / 1000000).toFixed(0)} Millon`;
+    if (amount >= 1000000) {
+      return `${(amount / 1000000).toFixed(0)} Millon`;
     }
-    return amount;
+    return formatToThousands(amount).toString();
   };
 
   const goDetailsGroup = (item) => {

@@ -7,5 +7,9 @@ export const isEmailValid = (email) => {
 };
 
 export const formatToThousands = (numero) => {
-    return numero.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    if(numero){
+        return numero.toLocaleString('de-DE', { maximumFractionDigits: 0 });
+    }else{
+        return numero
+    }
 };

@@ -6,15 +6,17 @@ import P8_9_Budget_Template from '../../../../components/groups/create/groupBudg
 const P8_9_Budget_Container = ({ navigation }) => {
   const dispatch = useDispatch();
   const [budget, setBudget] = useState('');
+  const [budgetNumeric, setBudgetNumeric] = useState('');
   const [messageAlert, setMessageAlert] = useState(false);
   const draftState = useSelector(state => state.groupReducer.draft);
 
-  const handleBudgetsChange = (itemValue) => {
+  const handleBudgetsChange = (itemValue, numericValue) => {
     setBudget(itemValue);
+    setBudgetNumeric(numericValue)
     setMessageAlert(false)
   };
   const continueButton = () => {
-    dispatch(saveGroupBudgetAndUpdateDraft(draftState.id, budget))
+    dispatch(saveGroupBudgetAndUpdateDraft(draftState.id, budgetNumeric))
     if(isBudgetValid()){
         navigation.navigate('step8_9_1');
         setMessageAlert(false)

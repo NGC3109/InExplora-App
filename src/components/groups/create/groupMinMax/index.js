@@ -4,6 +4,7 @@ import { styles } from '../../../../styles/groups/step5';
 import { NativeBaseProvider, Select } from 'native-base';
 import { Alert } from '../../../ui/Alert';
 import ButtonCustom from '../../../ui/Button';
+import ButtonWithIcon from '../../../ui/ButtonWithIcon';
 
 const P5_GroupMinMax_Template = ({
     updateMinGroupSize,
@@ -66,9 +67,10 @@ const P5_GroupMinMax_Template = ({
                 }
             </View>
         <View style={{ flex: 1 }} />
-            <ButtonCustom 
-                onPress={continueButton}
+            <ButtonWithIcon 
+                handleClick={continueButton}
                 title="Continuar"
+                width='100%'
             />
         </View>
     </NativeBaseProvider>

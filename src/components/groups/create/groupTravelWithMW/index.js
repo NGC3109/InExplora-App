@@ -4,6 +4,7 @@ import { NativeBaseProvider, Select } from 'native-base';
 import ButtonCustom from '../../../ui/Button';
 import { Alert } from '../../../ui/Alert';
 import { styles } from '../../../../styles/groups/step6';
+import ButtonWithIcon from '../../../ui/ButtonWithIcon';
 
 const P1_GroupTravelWith_Women_Men_Template = ({
     generoViaje,
@@ -50,9 +51,10 @@ const P1_GroupTravelWith_Women_Men_Template = ({
         }
       </View>
       <View style={{ flex: 1 }} />
-      <ButtonCustom 
-        onPress={continueButton}
-        title="Continuar"
+      <ButtonWithIcon 
+          handleClick={continueButton}
+          title="Continuar"
+          width='100%'
       />
     </View>
     </NativeBaseProvider>

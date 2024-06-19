@@ -4,6 +4,7 @@ import { Alert } from '../../../ui/Alert';
 import { styles } from '../../../../styles/groups/step7';
 import { NativeBaseProvider, Select } from 'native-base';
 import ButtonCustom from '../../../ui/Button';
+import ButtonWithIcon from '../../../ui/ButtonWithIcon';
 
 const P7_GroupTravelWithPets_Template = ({ 
     continueButton,
@@ -32,8 +33,8 @@ const P7_GroupTravelWithPets_Template = ({
                 mt={1}
                 onValueChange={itemValue => handleIncluyeMascotasChange(itemValue)}
             >
-                <Select.Item label="No" value="no" />
-                <Select.Item label="Sí" value="si" />
+                <Select.Item label="No" value={0} />
+                <Select.Item label="Sí" value={1} />
             </Select>
             <Text style={styles.infoText}>¿Incluirán mascotas en su viaje?</Text>
             <Text style={styles.helperText}>
@@ -49,7 +50,7 @@ const P7_GroupTravelWithPets_Template = ({
                         />
                     </>
             }
-            {incluyeMascotas.incluyeMascotas === 'si' && (
+            {incluyeMascotas.incluyeMascotas === 1 && (
             <View>
                 <Text style={styles.label}>¿De qué tamaño es su mascota?</Text>            
                 <Select
@@ -75,9 +76,10 @@ const P7_GroupTravelWithPets_Template = ({
             )}
         </View>
         <View style={{ flex: 1 }} />
-            <ButtonCustom 
-                onPress={continueButton}
+            <ButtonWithIcon 
+                handleClick={continueButton}
                 title="Continuar"
+                width='100%'
             />
         </View>
     </NativeBaseProvider>

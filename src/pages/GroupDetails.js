@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadGroupById } from '../actions/groups/groupAction';
 import ImageGallery from '../components/ui/ImageGallery';
+import { formatToThousands } from '../utils/functions';
 
 const DetailGroup = ({ navigation, route }) => {
   const { groupId } = route.params;
@@ -105,7 +106,7 @@ const DetailGroup = ({ navigation, route }) => {
             </View>
             <View style={styles.sectionItem}>
               <Icon name="cash-outline" size={18} color="white" />
-              <Text style={styles.sectionItemText}>{budget}</Text>
+              <Text style={styles.sectionItemText}>{formatToThousands(budget)}</Text>
             </View>
             <View style={styles.sectionItem}>
               <Icon name="female-outline" size={18} color="white" />
