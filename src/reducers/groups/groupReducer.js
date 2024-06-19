@@ -47,6 +47,9 @@ import {
   DELETE_DRAFT_SUCCESS,
   DELETE_DRAFT_FAIL,
   SAVE_GROUP_DATES,
+  UPLOAD_IMAGES,
+  UPLOAD_IMAGES_SUCCESS,
+  UPLOAD_IMAGES_FAIL,
 } from "../../utils/constants";
 
 const groupReducer = (state = initialState, action) => {
@@ -150,6 +153,13 @@ const groupReducer = (state = initialState, action) => {
         ...state,
         draft: { ...state.draft, loading: false, error: action.payload }
       };
+    case UPLOAD_IMAGES:
+      return { ...state, uploading: true, error: null };
+    case UPLOAD_IMAGES_SUCCESS:
+      return { ...state, uploading: false, data: action.payload };
+    case UPLOAD_IMAGES_FAIL:
+      return { ...state, uploading: false, error: action.payload };
+
     default: return state;
   }  
 };

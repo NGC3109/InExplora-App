@@ -17,7 +17,7 @@ const HeaderWithIcons = () => {
   return(
   <View style={styles.headerContainer}>
     <>
-    <Text style={styles.headerText}>INEXPL<Text><LogoInBlack /></Text><Text>RA</Text></Text>
+    <Text style={styles.headerText}>INEXPL<Text><LogoInBlack width={20} height={20} /></Text><Text>RA</Text></Text>
     </>
     
     <View style={styles.iconsContainer}>

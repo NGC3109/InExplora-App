@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
-import Config from 'react-native-config';
+import { useSelector, useDispatch } from 'react-redux';
+import { uploadAllImages } from '../../../../actions/groups/groupAction';
 import CreateGroupTemplate from '../../../../components/groups/create/groupUpload';
 
 const CreateGroupContainer = ({ navigation }) => {
+  const dispatch = useDispatch();
   const currentGroup = useSelector(state => state.groupReducer.groups);
   const currentUserId = useSelector(state => state.userReducer.user);
+  const uploading = useSelector(state => state.groupReducer.uploading);
   const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   const selectImage = () => {
     const options = {
@@ -36,48 +36,13 @@ const CreateGroupContainer = ({ navigation }) => {
     setImages(filteredImages);
   };
 
-  const uploadAllImages = async () => {
-    const formData = new FormData();
-    images.forEach((imageUri, index) => {
-      if (imageUri) {
-        formData.append('images', {
-          uri: imageUri,
-          type: 'image/jpeg',
-          name: `photo_${index}.jpg`,
-        });
-      }
-    });
-
-    Object.keys(currentGroup).forEach(key => {
-      if (typeof currentGroup[key] === 'object') {
-        formData.append(key, JSON.stringify(currentGroup[key]));
-      } else {
-        formData.append(key, currentGroup[key]);
-      }
-    });
-    formData.append('userId', currentUserId.id);
-    const config = {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    };
-    try {
-      const response = await axios.post(`${Config.API_ENDPOINT}groups/create`, formData, config);
-      console.log('Upload successful', response.data);
-      navigation.navigate('congratulations');
-    } catch (error) {
-      console.error('Error uploading images:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const continueButton = () => {
-    uploadAllImages();
-    setLoading(true);
+    dispatch(uploadAllImages(images, currentGroup, currentUserId, navigation));
   };
 
   return (
     <>
-      {loading && (
+      {uploading && (
         <View style={styles.loadingContainer}>
           <View style={styles.overlay} />
           <ActivityIndicator size="large" color="#0000ff" style={styles.indicator} />

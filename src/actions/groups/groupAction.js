@@ -40,24 +40,68 @@ import {
     DELETE_DRAFT_SUCCESS,
     DELETE_DRAFT_FAIL,
     SAVE_GROUP_DATES,
+    UPLOAD_IMAGES,
+    UPLOAD_IMAGES_SUCCESS,
+    UPLOAD_IMAGES_FAIL,
 } from "../../utils/constants";
+
+export const uploadAllImages = (images, currentGroup, currentUserId, navigation) => async (dispatch) => {
+  dispatch({ type: UPLOAD_IMAGES });
+
+  const formData = new FormData();
+  images.forEach((imageUri, index) => {
+    if (imageUri) {
+      formData.append('images', {
+        uri: imageUri,
+        type: 'image/jpeg',
+        name: `photo_${index}.jpg`,
+      });
+    }
+  });
+
+  Object.keys(currentGroup).forEach(key => {
+    if (typeof currentGroup[key] === 'object') {
+      formData.append(key, JSON.stringify(currentGroup[key]));
+    } else {
+      formData.append(key, currentGroup[key]);
+    }
+  });
+  formData.append('userId', currentUserId.id);
+
+  const config = {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  };
+
+  try {
+    const response = await axios.post(`${Config.API_ENDPOINT}groups/create`, formData, config);
+    dispatch({
+      type: UPLOAD_IMAGES_SUCCESS,
+      payload: response.data,
+    });
+    dispatch({
+      type: UPDATE_DRAFT_SUCCESS,
+      payload: null
+    });
+    navigation.navigate('congratulations');
+  } catch (error) {
+    dispatch({
+      type: UPLOAD_IMAGES_FAIL,
+      payload: error.response ? error.response.data.error : 'Error desconocido',
+    });
+  }
+};
 
 export const saveGroupDatesAndUpdateDraft = (draftId, startDate, endDate) => {
   return async (dispatch, getState) => {
-    // Primero despachamos la acción para guardar las fechas en el estado de Redux
+
     dispatch({
       type: SAVE_GROUP_DATES,
       payload: { startDate, endDate }
     });
 
-    // Luego obtenemos el estado actualizado
     const { groupReducer: { groups } } = getState();
 
-    // Actualizamos el borrador con los datos actuales
     dispatch({ type: UPDATE_DRAFT });
-    console.log(`${Config.API_ENDPOINT}drafts/update`)
-    console.log('draftId: ', draftId)
-    console.log('fechas: ', startDate, endDate)
     try {
       const response = await axios.put(`${Config.API_ENDPOINT}drafts/update`, { draftId, draftData: { ...groups, travelDate: { startDate, endDate } }, currentStep: 'step1' });
       dispatch({

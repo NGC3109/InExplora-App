@@ -73,4 +73,7 @@ export const initialState = {
         loading: false,
         error: null,
     },
+    uploading: false,
+    error: null,
+    data: null,
 };
