@@ -521,17 +521,19 @@ export const loadGroupById = (groupId, userId) => async (dispatch) => {
 
 export const loadGroups = (userId, ageRange, budget, gender, travelWithPets, travelWithChildren, selectedTransport) => async (dispatch) => {
   dispatch({ type: LOAD_GROUPS_REQUEST });
+
+  const requestBody = {
+    userId,
+    ageRange: ageRange || [0, 60],
+    budget: budget || 5000000,
+    gender: gender || '', 
+    travelWithPets: travelWithPets !== undefined ? travelWithPets : -1,
+    travelWithChildren: travelWithChildren !== undefined ? travelWithChildren : -1,
+    selectedTransport: selectedTransport || '',
+  };
+
   try {
-    const requestBody = {
-      userId: userId,
-      ageRange, 
-      budget, 
-      gender, 
-      travelWithPets, 
-      travelWithChildren, 
-      selectedTransport
-    };
-    console.log(`${Config.API_ENDPOINT}groups/`, requestBody)
+    console.log(`${Config.API_ENDPOINT}groups/`, requestBody);
     const response = await axios.post(`${Config.API_ENDPOINT}groups/`, requestBody);
     dispatch({
       type: LOAD_GROUPS_SUCCESS,
