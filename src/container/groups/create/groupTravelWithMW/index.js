@@ -5,7 +5,7 @@ import P1_GroupTravelWith_Women_Men_Template from '../../../../components/groups
 
 const P1_GroupTravelWith_Women_Men_Container = ({ navigation }) => {
     const dispatch = useDispatch();
-    const [generoViaje, setGeneroViaje] = useState('');
+    const [generoViaje, setGeneroViaje] = useState('Hombres y mujeres');
     const [messageAlert, setMessageAlert] = useState(false);
     const draftState = useSelector(state => state.groupReducer.draft);
 

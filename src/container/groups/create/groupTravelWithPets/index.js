@@ -7,7 +7,7 @@ const P7_GroupTravelWithPets_Container = ({ navigation }) => {
   const dispatch = useDispatch();
   const draftState = useSelector(state => state.groupReducer.draft);
   const [incluyeMascotas, setIncluyeMascotas] = useState({
-    incluyeMascotas: 'no',
+    incluyeMascotas: 0,
     petSize: null
   });
   const [tamanoMascota, setTamanoMascota] = useState('');
