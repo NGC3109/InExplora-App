@@ -77,7 +77,8 @@ const GroupItem = ({
   };
   const formatAmount = (amount) => {
     if (amount >= 1000000) {
-      return `${(amount / 1000000).toFixed(0)} Millon`;
+        const millions = amount / 1000000;
+        return `${millions % 1 === 0 ? millions.toFixed(0) : millions.toFixed(1)} Millon`;
     }
     return formatToThousands(amount).toString();
   };
