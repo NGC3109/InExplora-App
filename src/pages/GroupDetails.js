@@ -71,7 +71,7 @@ const DetailGroup = ({ navigation, route }) => {
           <ImageGallery images={gallery} />
           <View style={styles.header}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Icon name="chevron-back-outline" size={30} color="#fff" />
+              <Icon name="chevron-back-outline" size={30} color="#000" />
             </TouchableOpacity>
             <Icon name="bookmark-outline" size={30} color="#fff" />
           </View>
