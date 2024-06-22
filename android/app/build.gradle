@@ -122,7 +122,8 @@ dependencies {
     // Dependencia de Firebase Analytics
     // No necesitas especificar una versión aquí, ya que se manejará a través del BoM
     implementation 'com.google.firebase:firebase-analytics'
-
+    
+    implementation project(':react-native-fs')
     // Agrega aquí más dependencias de Firebase según sea necesario
 }
 

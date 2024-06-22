@@ -1,6 +1,44 @@
 import React from 'react';
 import Svg, { G, Polygon, Path, Ellipse, Circle, Line, Rect, Stop, Defs, LinearGradient} from 'react-native-svg';
 
+export const IconCheck = () => (
+  <Svg width="14" height="9" viewBox="0 0 14 9" fill="none">
+    <Path
+      d="M1 5.05263L3.90909 8L10.0909 1"
+      stroke="#7D848D"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M6.81836 8L13.0002 1"
+      stroke="#7D848D"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
+export const IconCheckGreen = () => (
+  <Svg width="14" height="9" viewBox="0 0 14 9" fill="none">
+    <Path
+      d="M1 5.05263L3.90909 8L10.0909 1"
+      stroke="#19B000"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M6.81836 8L13.0002 1"
+      stroke="#19B000"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
 export const ArrowLeft = () => (
   <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <Path d="M11.6666 -1.33514e-05L13.7447 2.04165L5.57805 10.2083L23.3333 10.2083V13.125L5.57805 13.125L13.7447 21.2916L11.6666 23.3333L-7.43866e-05 11.6666L11.6666 -1.33514e-05Z" fill="black"/>
