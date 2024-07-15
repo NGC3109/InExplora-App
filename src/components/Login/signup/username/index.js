@@ -4,7 +4,7 @@ import { styles } from '../../../../styles/groups/step3';
 import { Alert } from '../../../ui/Alert';
 import ButtonCustom from '../../../ui/Button';
 import { Input, NativeBaseProvider } from 'native-base';
-const P1_signUp_Template = ({
+const SignUp_Displayname_Template = ({
     continueButton,
     handleDisplayNameChange,
     messageAlert,
@@ -41,4 +41,4 @@ const P1_signUp_Template = ({
   );
 };
 
-export default P1_signUp_Template;
+export default SignUp_Displayname_Template;

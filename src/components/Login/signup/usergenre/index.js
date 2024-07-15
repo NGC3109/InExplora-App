@@ -3,12 +3,12 @@ import { View, Text } from 'react-native';
 import { styles } from '../../../../styles/groups/step3';
 import { Alert } from '../../../ui/Alert';
 import ButtonCustom from '../../../ui/Button';
-import { Input, NativeBaseProvider } from 'native-base';
+import { Select, CheckIcon, NativeBaseProvider } from 'native-base';
 const P2_signUp_Template = ({
     continueButton,
-    handleDisplayNameChange,
+    handleGenreChange,
     messageAlert,
-    displayName,
+    genre,
  }) => {
   return (
     <NativeBaseProvider>
@@ -17,10 +17,20 @@ const P2_signUp_Template = ({
             <Text style={styles.description}>
                 De esta forma podremos brindarte una experiencia mas personalizada.
             </Text>
-            <Input 
-                value={displayName}
-                onChangeText={handleDisplayNameChange}
-            />
+            <Select
+                selectedValue={genre}
+                minWidth="50"
+                accessibilityLabel="Cual es tu genero?"
+                placeholder="Cual es tu genero?"
+                _selectedItem={{
+                bg: "teal.600",
+                endIcon: <CheckIcon size="1" />
+                }}
+                onValueChange={handleGenreChange}
+            >
+                <Select.Item key="1" label="Mujer" value="Mujer" />
+                <Select.Item key="2" label="Hombre" value="Hombre" />
+            </Select>
             <View>
             {
                 messageAlert &&

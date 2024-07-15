@@ -7,6 +7,7 @@ import {
   GET_USER, 
   CLEAR_USER, 
   UPDATE_FOLLOWERS_COUNT,
+  GENRE_TO_CREATE,
 } from '../../utils/constants';
 
 export const clearUserData = () => {
@@ -27,6 +28,9 @@ export const saveUser = (userData) => {
       const apiUrl = `${Config.API_ENDPOINT}users/`;
       // Enviar la solicitud al backend para crear el usuario
       const { data } = await axios.post(apiUrl, userData);
+      console.log(apiUrl)
+      console.log(userData)
+      console.log(data)
       // Verificar la respuesta del backend
       if (data) {
         // Usuario creado exitosamente, guardar en el store
@@ -78,6 +82,15 @@ export const displayNameToCreate = (displayName) => {
     dispatch({
       type: DISPLAYNAME_TO_CREATE,
       payload: displayName
+    });
+  };
+};
+
+export const genreToCreate = (genre) => {
+  return (dispatch) => {
+    dispatch({
+      type: GENRE_TO_CREATE,
+      payload: genre
     });
   };
 };

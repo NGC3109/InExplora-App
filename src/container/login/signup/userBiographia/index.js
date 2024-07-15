@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import P1_signUp_Template from '../../../../components/Login/signup/step1';
+import P1_signUp_Template from '../../../../components/Login/signup/username';
 import { useNavigation } from '@react-navigation/native';
 import { displayNameToCreate } from '../../../../actions/users/userActions';
 

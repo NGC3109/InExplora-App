@@ -27,15 +27,15 @@ import JoinRequestList_Template from '../dashboard/request';
 import Join_P1_Container from '../../container/groups/join/step1';
 import CongratulationsRequestToJoin from '../../container/groups/join/congratulations';
 import SignUp_Container from '../Login/signup';
-import P1_SignUp_Container from '../../container/login/signup/step1';
+import SignUp_Displayname_Container from '../../container/login/signup/userName';
 import HeaderWithIcons from '../ui/HeaderWithIcons';
 import auth from '@react-native-firebase/auth';
 import { getUser } from '../../actions/users/userActions';
 import { useDispatch, useSelector } from 'react-redux';
 import UpdateUser from '../perfil/update';
 import UpdateGroups from '../groups/update';
-import P2_SignUp_Container from '../../container/login/signup/step2';
-import P3_SignUp_Container from '../../container/login/signup/step3';
+import P2_SignUp_Container from '../../container/login/signup/userGenre';
+import SignUp_Birthday_Container from '../../container/login/signup/userBirthday';
 import { IconEarth, IconGroup, IconHome, IconPlusQuad } from '../../assets/vectores';
 import Grupos from '../../container/groups/list/Groups';
 import RequestDetail from '../dashboard/request/requestDetail';
@@ -328,12 +328,12 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="join_step1" component={Join_P1_Container} options={{ title: 'Solicitud', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="congratulations_request_to_join" component={CongratulationsRequestToJoin} options={{ title: 'Felicidades', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="signup" component={SignUp_Container} options={{ title: 'Únete a InExplora Hoy ✨', headerTitleAlign: 'center' }}/>
-        <RootStack.Screen name="signUp_displayname" component={P1_SignUp_Container} options={{ title: 'Registra un nombre', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="signUp_displayname" component={SignUp_Displayname_Container} options={{ title: 'Registra un nombre', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="messages" component={Chats} options={{ title: 'Mensajes', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="update_user" component={UpdateUser} options={{ title: 'Actualizar perfil', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="update_groups" component={UpdateGroups} options={{ title: 'Actualizar grupo', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="p2_signUp_genre" component={P2_SignUp_Container} options={{ title: 'Registra tu genero', headerTitleAlign: 'center' }}/>
-        <RootStack.Screen name="p3_signUp_birthday" component={P3_SignUp_Container} options={{ title: 'Registra tu fecha de nacimiento', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="p3_signUp_birthday" component={SignUp_Birthday_Container} options={{ title: 'Registra tu fecha de nacimiento', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="request_detail" component={RequestDetail} options={{ title: 'Solicitud', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="notifications_detail" component={NotificationsList_Template} options={{ title: 'Notificaciones', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="profile_public" component={PerfilPublicoContainer} options={{ headerShown: false, gestureEnabled: false, }}/>
