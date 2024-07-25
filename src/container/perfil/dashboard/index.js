@@ -1,30 +1,36 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import IconIcon from 'react-native-vector-icons/Octicons';
 import CirclePerfil from '../../../assets/vectores/CirclePerfil';
-import useAuth from '../../../utils/hooks/useAuth';
+import { calculateProfileCompletion, getAge } from '../../../utils/functions';
+import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
-function DashboardProfile({ progress = 95 }) {
-  const { logout } = useAuth();
+function DashboardProfile() {
+  const navigation = useNavigation()
+  const currentUser = useSelector(state => state.userReducer.user);
+  const progress = calculateProfileCompletion(currentUser);
+  const age = currentUser ? getAge(currentUser?.birthday) : 0;
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
-        <CirclePerfil progress={progress} />
+        <CirclePerfil progress={progress} profilePicture={currentUser && currentUser?.profilePicture} />
         <Text style={styles.profileName}>
-          Marvilo, 25 <Icon name="checkmark-circle" size={20} color="#4CAF50" />
+          {currentUser && currentUser?.displayName}, {age} <Icon name="checkmark-circle" size={20} color="#4CAF50" />
         </Text>
       </View>
       
       <View style={styles.iconContainerRow}>
-        <TouchableOpacity style={styles.iconButton} onPress={logout}>
+        <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate('dashboard_settings')}>
           <View style={styles.iconCircle}>
-            <Icon name="settings-outline" size={30} color="#000" />
+            <IconIcon name="gear" size={30} color="#000" />
           </View>
           <Text style={styles.iconLabel}>Ajustes</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton}>
+        <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate('updateProfile')}>
           <View style={styles.iconCircle}>
-            <Icon name="pencil-outline" size={30} color="#000" />
+            <IconIcon name="pencil" size={30} color="#000" />
           </View>
           <Text style={styles.iconLabel}>Editar perfil</Text>
         </TouchableOpacity>

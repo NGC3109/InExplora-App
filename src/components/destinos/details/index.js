@@ -7,10 +7,6 @@ import SkeletonLoader from '../../../components/ui/SkeletonLoader';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { fetchDestinyById } from '../../../actions/destinations/destinationsActions';
 import { IconLeaf, LeafSeparator } from '../../../assets/vectores';
-import Config from 'react-native-config';
-import io from 'socket.io-client';
-
-const socket = io(Config.SOCKET);
 
 const DetailDestiny = () => {
   const navigation = useNavigation();
@@ -18,6 +14,7 @@ const DetailDestiny = () => {
   const { destinyId } = route.params;
   const dispatch = useDispatch();
   const currentUser = useSelector(state => state.userReducer.user);
+  const socket = useSelector(state => state.initSocketReducer.socket);
 
   const { destiny, loading, error } = useSelector(state => state.destinationsReducer);
   const [comments, setComments] = useState([]);

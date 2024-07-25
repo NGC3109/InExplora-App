@@ -2,13 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 import { LeafSeparator } from '../../../assets/vectores';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import Config from 'react-native-config';
-import io from 'socket.io-client';
+import { useSelector } from 'react-redux';
 
-const socket = io(Config.SOCKET);
-
-const Comments = () => {
-  const navigation = useNavigation();
+const Comments = () => {  
+  const socket = useSelector(state => state.initSocketReducer.socket);
   const route = useRoute();
   const { destinyId } = route.params;
   const [comments, setComments] = useState([]);

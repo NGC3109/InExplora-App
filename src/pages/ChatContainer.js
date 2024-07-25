@@ -1,30 +1,28 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, Image, TouchableWithoutFeedback } from 'react-native';
-import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 import { styles } from '../styles/ListMessages';
-import Config from 'react-native-config';
 
 const Chats = ({ navigation }) => {
   const currentUser = useSelector(state => state.userReducer.user);
+  const socket = useSelector(state => state.initSocketReducer.socket);
   const [chats, setChats] = useState([]);
 
   useEffect(() => {
-    const newSocket = io(Config.SOCKET);
 
     const fetchChats = () => {
-      newSocket.emit("getChatsByUserId", { userId: currentUser.id });
+      socket.emit("getChatsByUserId", { userId: currentUser.id });
     };
 
-    newSocket.on("connect", fetchChats);
-    newSocket.on("chatsByUserId", ({ success, data }) => {
+    socket.on("connect", fetchChats);
+    socket.on("chatsByUserId", ({ success, data }) => {
       if (success) {
         setChats(data);
       } else {
         console.error('Error al recibir los chats');
       }
     });
-    newSocket.on("chatUpdated", (update) => {
+    socket.on("chatUpdated", (update) => {
       setChats(currentChats => currentChats.map(chat => {
         if (chat._id === update.chatId) {
           return {
@@ -41,10 +39,10 @@ const Chats = ({ navigation }) => {
     const unsubscribe = navigation.addListener('focus', fetchChats);
 
     return () => {
-      newSocket.off("connect", fetchChats);
-      newSocket.off("chatsByUserId");
-      newSocket.off("chatUpdated");
-      newSocket.disconnect();
+      socket.off("connect", fetchChats);
+      socket.off("chatsByUserId");
+      socket.off("chatUpdated");
+      socket.disconnect();
       unsubscribe();
     };
   }, [currentUser.id, navigation]);

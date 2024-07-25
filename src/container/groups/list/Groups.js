@@ -6,13 +6,9 @@ import FiltrosComponent from '../../../components/ui/Filtros';
 import FiltersContainer from '../../../components/FiltersContainer';
 import { filters } from './DataMock';
 import { loadGroups } from '../../../actions/groups/groupAction';
-import Config from 'react-native-config';
-import io from 'socket.io-client';
 import CommentSection from './CommentSection';
 import { bookmark, removeBookmark } from '../../../actions/bookmark/bookmarkAction';
 import { useNavigation } from '@react-navigation/native';
-
-const socket = io(Config.SOCKET);
 
 const Grupos = () => {
     const dispatch = useDispatch();
@@ -24,6 +20,7 @@ const Grupos = () => {
     const groupsData = useSelector(state => state.groupReducer.allGroups);
     const currentUserId = useSelector(state => state.userReducer.user);
     const currentBookmarks = useSelector(state => state.bookmarkReducer.bookmarks);
+    const socket = useSelector(state => state.initSocketReducer.socket);
     const viewableItems = useRef(new Set());
     // Filters Start
     const [ageRange, setAgeRange] = useState([18, 60]);
@@ -67,11 +64,11 @@ const Grupos = () => {
         const added = new Set([...newViewableItems].filter(x => !viewableItems.current.has(x)));
         const removed = new Set([...viewableItems.current].filter(x => !newViewableItems.has(x)));
         added.forEach(groupId => {
-            socket.emit('joinLikeable', { userId: currentUserId.id, likeable: groupId });
+            socket.emit('joinLikeable', { userId: currentUserId.id });
             socket.emit('joinComment', { userId: currentUserId.id, commentableId: groupId });
         });
         removed.forEach(groupId => {
-            socket.emit('leaveRoom', { userId: currentUserId.id, likeableId: groupId });
+            socket.emit('leaveRoom', { userId: currentUserId.id, likeable: groupId });
             socket.emit('leaveRoomComment', { userId: currentUserId.id, commentableId: groupId });
         });
         viewableItems.current = newViewableItems;
@@ -80,7 +77,7 @@ const Grupos = () => {
     useEffect(() => {
         return () => {
             viewableItems.current.forEach(groupId => {
-                socket.emit('leaveRoom', { userId: currentUserId.id, likeableId: groupId });
+                socket.emit('leaveRoom', { userId: currentUserId.id, likeable: groupId });
                 socket.emit('leaveRoomComment', { userId: currentUserId.id, commentableId: groupId });
             });
         };

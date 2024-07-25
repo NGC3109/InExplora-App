@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Image, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from '../../../styles/groups/group_item';
@@ -14,17 +14,19 @@ const GroupItem = ({
   navigation,
 }) => {
   const [likes, setLikes] = useState(item.totalLikes);
-  const [bookmarkedByUser, setBookmarkedByUser] = useState(item.bookmarkedByUser)
-  const [bookmarkId, setBookmarkId] = useState(item.bookmarkId)
+  const [bookmarkedByUser, setBookmarkedByUser] = useState(item.bookmarkedByUser);
+  const [bookmarkId, setBookmarkId] = useState(item.bookmarkId);
   const [likedByUser, setLikedByUser] = useState(item.likedByUser);
   const [likeId, setLikeId] = useState(item.likeId);
   const [comments, setComments] = useState(item.totalComments || 0);
+  
+  const isMounted = useRef(true);
 
   const startingTravelText = item?.startingPlace?.startingTravel.split('-')[0];
 
   useEffect(() => {
-    const handleNewLike = ({ groupId, like, totalLikes }) => {
-      if (groupId === item._id) {
+    const handleNewLike = ({ likeableId, like, totalLikes }) => {
+      if (likeableId === item._id) {
         setLikes(totalLikes);
         if (!likedByUser && like.user === userId) {
           setLikedByUser(true);
@@ -33,8 +35,8 @@ const GroupItem = ({
       }
     };
 
-    const handleRemoveLike = ({ groupId, likeId: removedLikeId, totalLikes }) => {
-      if (groupId === item._id) {
+    const handleRemoveLike = ({ likeableId, likeId: removedLikeId, totalLikes }) => {
+      if (likeableId === item._id) {
         setLikes(totalLikes);
         if (likedByUser && removedLikeId === likeId) {
           setLikedByUser(false);
@@ -55,30 +57,62 @@ const GroupItem = ({
       }
     };
 
+    const handleLikeResponse = (response) => {
+      console.log('likeResponse: ', response.like.likeable, item._id);
+      if (response.like.likeable === item._id) {
+        if (response.success) {
+          setLikes(response.totalLikes);
+          setLikedByUser(true);
+          setLikeId(response.like._id);
+        } else {
+          console.error('Error liking item:', response.error);
+        }
+      }
+    };
+
+    const handleDislikeResponse = (response) => {
+      console.log('dislikeResponse: ', response.likeableId, item._id);
+      if (response.likeableId === item._id) {
+        if (response.success) {
+          setLikes(response.totalLikes);
+          setLikedByUser(false);
+          setLikeId(null);
+        } else {
+          console.error('Error disliking item:', response.error);
+        }
+      }
+    };
+
+    socket.on('likeResponse', handleLikeResponse);
+    socket.on('dislikeResponse', handleDislikeResponse);
     socket.on('newLike', handleNewLike);
     socket.on('newDislike', handleRemoveLike);
     socket.on('newComment', handleNewComment);
     socket.on('commentRemoved', handleRemoveComment);
 
     return () => {
+      isMounted.current = false;
+      socket.off('likeResponse', handleLikeResponse);
+      socket.off('dislikeResponse', handleDislikeResponse);
       socket.off('newLike', handleNewLike);
       socket.off('newDislike', handleRemoveLike);
       socket.off('newComment', handleNewComment);
       socket.off('commentRemoved', handleRemoveComment);
     };
-  }, [item._id, likedByUser, userId, likeId]);
+  }, [item._id, likedByUser, userId, likeId, socket]);
 
   const handleLike = () => {
-    socket.emit('likeGroup', { userId, likeableId: item._id, onModel: 'Group'});
+    socket.emit('likeGroup', { userId, likeableId: item._id, onModel: 'Group' });
   };
 
   const handleDislike = () => {
-      socket.emit('dislikeGroup', { likeId, likeableId: item._id, onModel: 'Group' });
+    socket.emit('dislikeGroup', { likeId, likeableId: item._id, onModel: 'Group' });
   };
+
   const formatAmount = (amount) => {
     if (amount >= 1000000) {
-        const millions = amount / 1000000;
-        return `${millions % 1 === 0 ? millions.toFixed(0) : millions.toFixed(1)} Millon`;
+      const millions = amount / 1000000;
+      return `${millions % 1 === 0 ? millions.toFixed(0) : millions.toFixed(1)} Millon`;
     }
     return formatToThousands(amount).toString();
   };
@@ -86,18 +120,19 @@ const GroupItem = ({
   const goDetailsGroup = (item) => {
     navigation.navigate('detalleGrupo', { 
       groupId: item._id,
-    })
-  }
+    });
+  };
 
   const goProfileUser = (userPublic) => {
-    if(userPublic === userId){
+    if (userPublic === userId) {
       navigation.navigate('MainTabs', {
         screen: 'MiPerfil'
       });
-    }else{
-      navigation.navigate('profile_public', { userId: userPublic })
+    } else {
+      navigation.navigate('profile_public', { userId: userPublic });
     }
-  }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={() => goDetailsGroup(item)}>
       <View style={styles.container}>
@@ -160,15 +195,14 @@ const GroupItem = ({
             <Text style={styles.footerText}>{formatAmount(item.budget)}</Text>
           </View>
           <View style={styles.footerIcon}>
-            {item.genre == "Solo mujeres" && <Icon name="female-sharp" size={24} color="#3d444d" />}
-            {item.genre == "Solo hombres" && <Icon name="male-sharp" size={24} color="#3d444d" />}
-            {item.genre == "Hombres y mujeres" && <Icon name="male-female-sharp" size={24} color="#3d444d" />}
+            {item.genre === "Solo mujeres" && <Icon name="female-sharp" size={24} color="#3d444d" />}
+            {item.genre === "Solo hombres" && <Icon name="male-sharp" size={24} color="#3d444d" />}
+            {item.genre === "Hombres y mujeres" && <Icon name="male-female-sharp" size={24} color="#3d444d" />}
           </View>
         </View>
       </View>
     </TouchableWithoutFeedback>
   );
 };
-
 
 export default GroupItem;

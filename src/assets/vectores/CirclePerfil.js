@@ -1,13 +1,15 @@
 import React from 'react';
 import Svg, { Circle } from 'react-native-svg';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const CirclePerfil = ({ progress }) => {
+const CirclePerfil = ({ progress, profilePicture }) => {
   const radius = 60;
   const strokeWidth = 6;
   const circumference = 2 * Math.PI * radius;
   const progressOffset = circumference - (progress / 100) * circumference;
+  const hasCustomProfilePicture = profilePicture !== 'https://via.placeholder.com/150';
+  const circleColor = progress === 100 ? '#4CAF50' : '#FF3E3E';
 
   return (
     <View style={styles.profileImageContainer}>
@@ -21,7 +23,7 @@ const CirclePerfil = ({ progress }) => {
           strokeWidth={strokeWidth}
         />
         <Circle
-          stroke="#FF3E3E"
+          stroke={circleColor}
           fill="none"
           cx="70"
           cy="70"
@@ -33,9 +35,13 @@ const CirclePerfil = ({ progress }) => {
         />
       </Svg>
       <View style={styles.iconContainer}>
-        <Icon name="albums-outline" size={80} color="#A061C9" />
+        {hasCustomProfilePicture ? (
+          <Image source={{ uri: profilePicture }} style={styles.profileImage} />
+        ) : (
+          <Icon name="albums-outline" size={80} color="#A061C9" />
+        )}
       </View>
-      <View style={styles.progressTextContainer}>
+      <View style={[styles.progressTextContainer, progress === 100 ? styles.backgrounPorcentajeGreen : styles.backgrounPorcentajeRed]}>
         <Text style={styles.progressText}>{progress}% completado</Text>
       </View>
     </View>
@@ -56,13 +62,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  profileImage: {
+    width: 110,
+    height: 110,
+    borderRadius: 60,
+  },
   progressTextContainer: {
     position: 'absolute',
     bottom: -10,
-    backgroundColor: '#FF3E3E',
     borderRadius: 15,
     paddingVertical: 2,
     paddingHorizontal: 10,
+  },
+  backgrounPorcentajeGreen: {
+    backgroundColor: '#4CAF50',
+  },
+  backgrounPorcentajeRed: {
+    backgroundColor: '#FF3E3E',
   },
   progressText: {
     color: '#fff',

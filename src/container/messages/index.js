@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { format } from 'date-fns';
-import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
 import MessageTemplate from '../../components/messages';
 import { ObjectId } from 'bson';
 import 'react-native-get-random-values';
-import Config from 'react-native-config';
 import RNFS from 'react-native-fs';
 import { PermissionsAndroid, Platform } from 'react-native';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
@@ -21,13 +19,13 @@ const MessageScreen = () => {
   const [messageText, setMessageText] = useState('');
   const [audioFile, setAudioFile] = useState(null);
   const [audioDuration, setAudioDuration] = useState(0);
-  const [socket, setSocket] = useState(null);
   const [page, setPage] = useState(1);
   const [loadingOldMessages, setLoadingOldMessages] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isCancelled, setIsCancelled] = useState(false); // Estado de cancelación
   const scrollViewRef = useRef(null);
   const currentUserId = useSelector(state => state.userReducer.user);
+  const socket = useSelector(state => state.initSocketReducer.socket);
 
   useEffect(() => {
     const requestPermissions = async () => {
@@ -54,15 +52,12 @@ const MessageScreen = () => {
 
     requestPermissions();
 
-    const newSocket = io(Config.SOCKET);
-    setSocket(newSocket);
-
-    newSocket.on("connect", () => {
-      newSocket.emit("joinChat", { chatId });
-      loadOldMessages(newSocket, chatId, page);
+    socket.on("connect", () => {
+      socket.emit("joinChat", { chatId });
+      loadOldMessages(socket, chatId, page);
     });
 
-    newSocket.on("oldMessages", (response) => {
+    socket.on("oldMessages", (response) => {
       const formattedNewMessages = formatMessages(response.data.map(msg => ({
         ...msg,
         isSentByCurrentUser: msg.sender === currentUserId.id,
@@ -73,7 +68,7 @@ const MessageScreen = () => {
       setLoadingOldMessages(false);
     });
 
-    newSocket.on("newMessage", (newMessage) => {
+    socket.on("newMessage", (newMessage) => {
       setMessages((prevMessages) => {
         const messageExists = prevMessages.some(msg => msg._id === newMessage._id);
         if (!messageExists) {
@@ -85,10 +80,10 @@ const MessageScreen = () => {
     });
 
     return () => {
-      newSocket.off("connect");
-      newSocket.off("oldMessages");
-      newSocket.off("newMessage");
-      newSocket.disconnect();
+      socket.off("connect");
+      socket.off("oldMessages");
+      socket.off("newMessage");
+      socket.disconnect();
     };
   }, [chatId, currentUserId, page]);
 

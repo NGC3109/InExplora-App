@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useSocket } from '../../../utils/hooks/useSocket';
+import { useSocketHome } from '../../../utils/hooks/useSocket';
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { IconBubbleChat, IconHeartWithoutFill, LogoInBlack } from '../../../assets/vectores';
@@ -13,7 +13,7 @@ const HeaderWithIcons = () => {
   const generalNotificationsCount = useSelector(state => state.socketReducer.generalNotificationsCount); //contador de notificaciones
   
   const navigation = useNavigation()
-  useSocket(currentUser?.id)
+  useSocketHome(currentUser?.id)
   return(
   <View style={styles.headerContainer}>
     <>

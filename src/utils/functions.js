@@ -42,5 +42,37 @@ export const formatCustomDate = (date) => {
     } else {
         return capitalizeFirstLetter(messageDate.format('MMMM'));
     }
-  };
+};
+
+export const calculateProfileCompletion = (user) => {
+    const fieldsToCheck = ['displayName', 'email', 'profilePicture', 'genre', 'birthday', 'pais', 'bio', 'interests', 'languages', 'cellphone', 'superpower'];
+    const totalFields = fieldsToCheck.length;
+    let completedFields = 0;
+  
+    fieldsToCheck.forEach(field => {
+      if (field === 'profilePicture' && user[field] === 'https://via.placeholder.com/150') {
+        return;
+      }
+      
+      if (Array.isArray(user[field]) && user[field].length > 0) {
+        completedFields++;
+      } else if (user[field] && !Array.isArray(user[field])) {
+        completedFields++;
+      }
+    });
+  
+    return Math.round((completedFields / totalFields) * 100);
+};
+
+export const getAge = (birthday) => {
+  const birthDate = new Date(birthday);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+};
+  
   

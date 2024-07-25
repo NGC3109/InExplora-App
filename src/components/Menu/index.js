@@ -50,6 +50,10 @@ import SearchHome from '../dashboard/search';
 import Categories from '../dashboard/category';
 import GroupStartEnd_Container from '../../container/groups/create/groupStartEnd';
 import Congratulations from '../congratulations';
+import UpdateProfile from '../../container/perfil/update';
+import UpdateProfile_Information from '../../container/perfil/update/information';
+import Settings from '../../container/perfil/dashboard/settings';
+import { setSocket } from '../../actions/sockets/initSocketActions';
 
 
 const Tab = createBottomTabNavigator();
@@ -342,6 +346,9 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="search_home" component={SearchHome} options={{ headerShown: false, }}/>
         <RootStack.Screen name="categories" component={Categories} options={{ title: 'Categorias', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="congratulations" component={Congratulations} options={{ headerShown: false, }}/>
+        <RootStack.Screen name="updateProfile" component={UpdateProfile} options={{ title: 'Actualizar', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="updateProfile_information" component={UpdateProfile_Information} options={{ title: 'Información', headerTitleAlign: 'center' }}/>
+        <RootStack.Screen name="dashboard_settings" component={Settings} options={{ title: 'Ajustes', headerTitleAlign: 'center' }}/>
     </RootStack.Navigator>
   );
 };
@@ -359,6 +366,7 @@ const Menu = () => {
   const onAuthStateChanged = (user) => {
     if(user){
       dispatch(getUser(user.email));
+      dispatch(setSocket());
     }
     setUser(user);
     if (initializing) setInitializing(false);

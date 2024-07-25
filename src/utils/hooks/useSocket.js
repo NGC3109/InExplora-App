@@ -1,15 +1,11 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setJoinRequestCount, socketConnectionError, setUnreadMessageCount, setGeneralRequestCount } from "../../actions/sockets/socketAction";
-import { io } from "socket.io-client";
-import Config from "react-native-config";
 
-export const useSocket = (userId) => {
+export const useSocketHome = (userId) => {
     const dispatch = useDispatch();
-  
+    const socket = useSelector(state => state.initSocketReducer.socket);
     useEffect(() => {
-        const socket = io(Config.SOCKET);
-  
         socket.on('connect', () => {
             console.log('Socket connected');
             socket.emit('joinRoom', { userId });

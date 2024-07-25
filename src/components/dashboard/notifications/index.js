@@ -3,15 +3,13 @@ import { View, Text, FlatList, Image, TouchableWithoutFeedback, StyleSheet, Safe
 import { NativeBaseProvider } from "native-base";
 import { useSelector, useDispatch } from 'react-redux';
 import { loadGeneralNotificationsByGroupId } from '../../../actions/notifications/notificationsAction';
-import io from 'socket.io-client';
-import Config from 'react-native-config';
 
-const socket = io(Config.SOCKET);
 
 const NotificationsList_Template = ({ navigation }) => {
   const dispatch = useDispatch();
   const notifications = useSelector(state => state.notificationsReducer.notifications);
   const currentUserId = useSelector(state => state.userReducer.user);
+  const socket = useSelector(state => state.initSocketReducer.socket);
 
   useEffect(() => {
     dispatch(loadGeneralNotificationsByGroupId(currentUserId.id));

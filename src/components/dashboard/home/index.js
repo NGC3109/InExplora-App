@@ -7,10 +7,6 @@ import IconIconIcon from 'react-native-vector-icons/FontAwesome5';
 import { getDestinationsBySeason, getDestinationsHaunted, getDestinationsAmazing } from '../../../actions/dashboard/dashboardActions';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from '../../../styles/destinos';
-import io from 'socket.io-client';
-import Config from 'react-native-config';
-
-const socket = io(Config.SOCKET);
 
 const categories = [
   { id: '1', name: 'Norte', icon: 'sunny-outline', value :'norte', style: { backgroundColor: '#E2D6A3'}},
@@ -30,6 +26,7 @@ const HomeScreen = () => {
   const hauntedDestinations = useSelector(state => state.dashboardReducer.hauntedDestinations.data);
   const amazingPlaces = useSelector(state => state.dashboardReducer.amazingDestinations.data);
   const currentUserId = useSelector(state => state.userReducer.user);
+  const socket = useSelector(state => state.initSocketReducer.socket);
 
   const [likedItems, setLikedItems] = useState({}); // { itemId: { likedByUser, likeId, totalLikes } }
 
