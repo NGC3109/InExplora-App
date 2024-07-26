@@ -71,3 +71,6 @@ yarn.lock
 .env
 .env.development
 .env.vm-google
+permisos.txt
+yarn.lock
+package-lock.json

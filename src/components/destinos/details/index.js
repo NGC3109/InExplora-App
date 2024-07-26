@@ -113,7 +113,11 @@ const DetailDestiny = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.headerContainer}>
-        {images.length > 0 && <ImageGallery images={images} />}
+        {images.length > 0 ? 
+          <ImageGallery images={images} /> 
+        : 
+          <Image source={{ uri: 'https://storage.googleapis.com/inexplora/inexplora-recursos/placeholder-img.png' }} style={styles.imagePlaceholder} />
+        }
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Icon name="chevron-back-outline" size={30} color="#000" />
@@ -207,6 +211,11 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     padding: 20,
+  },
+  imagePlaceholder: {
+      width: '100%',
+      height: 400,
+      resizeMode: 'cover',
   },
   headerContainer: {
     position: 'relative',

@@ -181,31 +181,3 @@ export const styles = StyleSheet.create({
     },
     // ...otros lugares
   ];
-
-  export const exploreMoreData = [
-    {
-      id: '3',
-      name: 'Bali',
-      country: 'Indonesia',
-      image: require('../assets/bg5.jpg'), // Asegúrate de cambiar esto por la ruta correcta de tu imagen
-      likes: '12k',
-      userImages: [
-        require('../assets/person1.jpg'), // Rutas de ejemplo, reemplácelas por las correctas
-        require('../assets/person4.jpg'),
-        require('../assets/person2.jpg'),
-      ],
-    },
-    {
-      id: '4',
-      name: 'Soneva Jani',
-      country: 'Maldives',
-      image: require('../assets/bg4.jpg'),
-      likes: '12k',
-      userImages: [
-        require('../assets/person5.jpg'),
-        require('../assets/person3.jpg'),
-        require('../assets/person6.jpg'),
-      ],
-    },
-    // ...más datos
-  ];

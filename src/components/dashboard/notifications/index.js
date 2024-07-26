@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, FlatList, Image, TouchableWithoutFeedback, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { View, Text, FlatList, Image, TouchableWithoutFeedback, StyleSheet, SafeAreaView } from 'react-native';
 import { NativeBaseProvider } from "native-base";
 import { useSelector, useDispatch } from 'react-redux';
 import { loadGeneralNotificationsByGroupId } from '../../../actions/notifications/notificationsAction';
-
 
 const NotificationsList_Template = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -13,54 +12,59 @@ const NotificationsList_Template = ({ navigation }) => {
 
   useEffect(() => {
     dispatch(loadGeneralNotificationsByGroupId(currentUserId.id));
-  }, [dispatch]);
+  }, [dispatch, currentUserId.id]);
 
   const handleNotificationPress = useCallback((notificationId, groupId, viewed) => {
-    if(!viewed){
+    if (!viewed) {
       socket.emit('notificationViewed', { userId: currentUserId.id, notificationId });
     }
     navigation.navigate('detalleGrupo', { groupId });
-  }, [currentUserId.id, navigation]);
+  }, [currentUserId.id, navigation, socket]);
 
-  const renderGridItem = useCallback(({ item }) =>  {
+  const renderGridItem = useCallback(({ item }) => {
     const backgroundColor = item.viewed ? 'white' : '#e0e0e0';
     const coverImage = item.coverImage || 'https://via.placeholder.com/150';
-    return(
-       <TouchableWithoutFeedback onPress={() => handleNotificationPress(item._id, item.group._id, item.viewed)}>
-          <View style={[styles.cardContainer, { backgroundColor }]}>
-            <Image source={{ uri: coverImage }} style={styles.cardImage} />
-            <View style={styles.cardDetailsContainer}>
-              {item.associatedName && (
-                <Text style={styles.cardTitle}>{item.associatedName}</Text>
-              )}
-              <Text style={styles.cardSubTitle}>{item.message}</Text>
-              <Text style={styles.cardDate}>{new Date(item.createdAt).toLocaleDateString()}</Text>
-            </View>
+    return (
+      <TouchableWithoutFeedback onPress={() => handleNotificationPress(item._id, item.group._id, item.viewed)}>
+        <View style={[styles.cardContainer, { backgroundColor }]}>
+          <Image source={{ uri: coverImage }} style={styles.cardImage} />
+          <View style={styles.cardDetailsContainer}>
+            {item.associatedName && (
+              <Text style={styles.cardTitle}>{item.associatedName}</Text>
+            )}
+            <Text style={styles.cardSubTitle}>{item.message}</Text>
+            <Text style={styles.cardDate}>{new Date(item.createdAt).toLocaleDateString()}</Text>
           </View>
-       </TouchableWithoutFeedback>
+        </View>
+      </TouchableWithoutFeedback>
     )
-  }, []);
+  }, [handleNotificationPress]);
 
   const renderEmptyComponent = () => (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>No hay solicitudes para mostrar.</Text>
+      <Image source={{ uri: 'https://storage.googleapis.com/inexplora/inexplora-recursos/notifications-zero.png' }} style={styles.emptyIcon}/>
+      <Text style={styles.emptyText}>No tienes ninguna notificación</Text>
+      <Text style={styles.emptySubText}>
+        Aún no has recibido notificaciones de invitaciones a grupos, aceptación de solicitudes, personas que te siguen, etc.
+      </Text>
     </View>
   );
+
   return (
     <NativeBaseProvider>
-       <SafeAreaView style={styles.container}>
-          <View>
-            <View style={styles.tabContent}>
-              <FlatList
-                data={notifications?.data}
-                renderItem={renderGridItem}
-                keyExtractor={(item, index) => index.toString()}
-                numColumns={1}
-                showsVerticalScrollIndicator={false}
-                ListEmptyComponent={renderEmptyComponent}
-              />
-            </View>
+      <SafeAreaView style={styles.container}>
+        <View>
+          <View style={styles.tabContent}>
+            <FlatList
+              data={notifications?.data}
+              renderItem={renderGridItem}
+              keyExtractor={(item, index) => index.toString()}
+              numColumns={1}
+              showsVerticalScrollIndicator={false}
+              ListEmptyComponent={renderEmptyComponent}
+            />
           </View>
+        </View>
       </SafeAreaView>
     </NativeBaseProvider>
   );
@@ -105,5 +109,30 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: 'grey',
   },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  emptyIcon: {
+    width: 150,
+    height: 150,
+    marginBottom: 20,
+    resizeMode: 'contain', // Asegúrate de que la imagen se muestre correctamente
+  },
+  emptyText: {
+    fontSize: 18,
+    color: '#001422',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  emptySubText: {
+    fontSize: 16,
+    color: '#001422',
+    textAlign: 'center',
+    marginTop: 10,
+  },
 });
+
 export default NotificationsList_Template;

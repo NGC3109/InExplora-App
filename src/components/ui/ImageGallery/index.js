@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Image, Dimensions, StyleSheet, FlatList, Modal, TouchableWithoutFeedback } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, interpolate } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -9,6 +9,7 @@ const ImageGallery = ({ images }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [scrollIndex, setScrollIndex] = useState(0);
   const scrollX = useSharedValue(0);
+  const flatListRef = useRef(null);
 
   const handleScroll = (event) => {
     scrollX.value = event.nativeEvent.contentOffset.x;
@@ -23,8 +24,22 @@ const ImageGallery = ({ images }) => {
     setIsExpanded(false);
   };
 
+  const getItemLayout = (data, index) => ({
+    length: width,
+    offset: width * index,
+    index,
+  });
+
+  const onScrollToIndexFailed = (info) => {
+    const wait = new Promise(resolve => setTimeout(resolve, 500));
+    wait.then(() => {
+      flatListRef.current?.scrollToIndex({ index: info.index, animated: true });
+    });
+  };
+
   const renderGallery = (imageStyle) => (
     <FlatList
+      ref={flatListRef}
       data={images}
       keyExtractor={(item, index) => index.toString()}
       horizontal
@@ -35,11 +50,13 @@ const ImageGallery = ({ images }) => {
       renderItem={({ item, index }) => (
         <TouchableWithoutFeedback onPress={() => handleImagePress(index)}>
           <View>
-            <Image source={{ uri: item }} style={imageStyle} />
+            <Image source={{ uri: item || 'https://storage.googleapis.com/inexplora/inexplora-recursos/placeholder-img.png' }} style={imageStyle} />
           </View>
         </TouchableWithoutFeedback>
       )}
       initialScrollIndex={scrollIndex}
+      getItemLayout={getItemLayout}
+      onScrollToIndexFailed={onScrollToIndexFailed}
     />
   );
 

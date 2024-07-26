@@ -4,12 +4,9 @@ import { Image, Dimensions, View, ActivityIndicator, Text, TouchableOpacity } fr
 import MasonryList from '@react-native-seoul/masonry-list';
 import { fetchCategoryByRegion } from '../../../actions/category/categoryActions';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { getRandomHeight } from '../../../utils/functions';
 
 const { width } = Dimensions.get('window');
-
-const getRandomHeight = () => {
-  return Math.floor(Math.random() * (350 - 200 + 1)) + 200;
-};
 
 const Categories = () => {
   const route = useRoute();

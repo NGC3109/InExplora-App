@@ -64,7 +64,7 @@ const SearchHome = ({ navigation }) => {
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => (
                         <TouchableOpacity style={styles.groupContainer} onPress={() => handleNavigation(item)}>
-                            <Image source={{ uri: item.url }} style={styles.groupImage} />
+                            <Image source={{ uri: item.url || 'https://storage.googleapis.com/inexplora/inexplora-recursos/placeholder-img.png' }} style={styles.groupImage} />
                             <View style={styles.textContainer}>
                                 <Text style={styles.groupName}>{item.displayName}</Text>
                                 <Text style={styles.groupTag}>{item.type}</Text>

@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, TouchableOpacity, Text, Image, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import { View, Dimensions, TouchableOpacity, Text, Image, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconIcon from 'react-native-vector-icons/Foundation';
 import IconIconIcon from 'react-native-vector-icons/FontAwesome5';
 import { getDestinationsBySeason, getDestinationsHaunted, getDestinationsAmazing } from '../../../actions/dashboard/dashboardActions';
 import { useNavigation } from '@react-navigation/native';
+import MasonryList from '@react-native-seoul/masonry-list';
 import { styles } from '../../../styles/destinos';
+import { getRandomHeight } from '../../../utils/functions';
+
+const { width } = Dimensions.get('window');
 
 const categories = [
   { id: '1', name: 'Norte', icon: 'sunny-outline', value :'norte', style: { backgroundColor: '#E2D6A3'}},
@@ -32,11 +36,17 @@ const HomeScreen = () => {
 
   useEffect(() => {
     if (currentUserId?.id) {
-      dispatch(getDestinationsBySeason(3, currentUserId.id));
+      dispatch(getDestinationsBySeason(4, currentUserId.id));
       dispatch(getDestinationsHaunted(3, currentUserId.id));
       dispatch(getDestinationsAmazing(3, currentUserId.id));
     }
   }, [dispatch, currentUserId]);
+
+  const formattedDestinations = seasonDestinations.map((item) => ({
+    ...item,
+    height: getRandomHeight(),
+    width: (width / 2) - 30,
+  }));
 
   useEffect(() => {
     if (currentUserId?.id) {
@@ -131,25 +141,31 @@ const HomeScreen = () => {
     </View>
   );
 
-  const renderDestination = (item) => {
+  const renderDestinationItem = ({ item }) => {
     const likedItem = likedItems[item._id] || item;
     return (
-      <View key={item._id} style={[styles.destinationContainer, { height: 200 }]}>
-        <TouchableOpacity onPress={() => navigation.navigate('detail_destiny', { destinyId: item._id })}>
-          <Image source={{ uri: item.thumbnail }} style={styles.destinationImage} />
-          <View style={styles.destinationOverlay}>
-            <TouchableOpacity onPress={() => likedItem.likedByUser ? handleDislike(item) : handleLike(item)}>
-            {
-                likedItem.likedByUser ?
-                  (<Icon name="heart-sharp" size={24} color="#EF312E" style={styles.hauntedHeartIcon} />)
-                :
-                  (<Icon name="heart-outline" size={24} color="#3d444d" style={styles.hauntedHeartIcon} />)
-              }
-            </TouchableOpacity>
-            <Text style={styles.destinationName}>{item.nombre}</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity onPress={() => navigation.navigate('detail_destiny', { destinyId: item._id })}>
+        <Image
+          source={{ uri: item.thumbnail }}
+          style={{
+            width: item.width,
+            height: item.height,
+            margin: 4,
+            resizeMode: 'cover',
+            borderRadius: 20,
+          }}
+        />
+        <View style={styles.destinationOverlay}>
+          <TouchableOpacity onPress={() => likedItem.likedByUser ? handleDislike(item) : handleLike(item)}>
+            {likedItem.likedByUser ? (
+              <Icon name="heart-sharp" size={24} color="#EF312E" style={styles.hauntedHeartIcon} />
+            ) : (
+              <Icon name="heart-outline" size={24} color="#3d444d" style={styles.hauntedHeartIcon} />
+            )}
+          </TouchableOpacity>
+          <Text style={styles.destinationName}>{item.nombre}</Text>
+        </View>
+      </TouchableOpacity>
     );
   };
 
@@ -238,12 +254,13 @@ const HomeScreen = () => {
       </ScrollView>
       <Text style={styles.destinationTitle}>¿Dónde ir en invierno?</Text>
       <View style={styles.masonryContainer}>
-        <View style={styles.column}>
-          {seasonDestinations.filter((_, index) => index % 2 === 0).map(renderDestination)}
-        </View>
-        <View style={styles.column}>
-          {seasonDestinations.filter((_, index) => index % 2 !== 0).map(renderDestination)}
-        </View>
+        <MasonryList
+          data={formattedDestinations}
+          keyExtractor={(item) => item._id}
+          numColumns={2}
+          renderItem={renderDestinationItem}
+          contentContainerStyle={{ paddingHorizontal: 4 }}
+        />
       </View>
       <Text style={styles.hauntedTitle}>Lugares increíbles <Icon name="star" size={16} color="#000" /></Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>

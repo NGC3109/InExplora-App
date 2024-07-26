@@ -74,5 +74,8 @@ export const getAge = (birthday) => {
   }
   return age;
 };
-  
+
+export const getRandomHeight = () => {
+  return Math.floor(Math.random() * (350 - 200 + 1)) + 200;
+};
   
