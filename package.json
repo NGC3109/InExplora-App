@@ -14,7 +14,9 @@
     "android:dev": "cross-env ENVFILE=.env.development react-native run-android",
     "android:prod": "cross-env ENVFILE=.env react-native run-android",
     "ios:dev": "cross-env ENVFILE=.env.development react-native run-ios",
-    "ios:prod": "cross-env ENVFILE=.env react-native run-ios"
+    "ios:prod": "cross-env ENVFILE=.env react-native run-ios",
+    "assembleDebug:vm": "cd android && cross-env ENVFILE=.env.vm-google ./gradlew assembleDebug",
+    "assembleRelease:vm": "cd android && cross-env ENVFILE=.env.vm-google ./gradlew assembleRelease"
   },
   "dependencies": {
     "@fontsource/roboto": "^5.0.12",

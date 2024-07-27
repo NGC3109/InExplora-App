@@ -5,13 +5,10 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Asegúra
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import Config from 'react-native-config';
-import { useDispatch, useSelector } from 'react-redux';
-import { getUser } from '../actions/users/userActions';
 import { Alert } from '../components/ui/Alert';
 import { styles } from '../styles/login/signIn';
 
 const Login = () => {
-  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
@@ -36,9 +33,6 @@ const Login = () => {
       if (!firebaseResult.user) {
         throw new Error('No se pudo obtener el usuario autenticado.');
       }
-
-      const { email } = firebaseResult.user;
-      dispatch(getUser(email));
     } catch (error) {
       console.error('Error de autenticación o conexión con el backend:', error);
       setErrorMessage(error.message || 'Error al iniciar sesión.');
@@ -52,13 +46,11 @@ const Login = () => {
     setLoading(true);
     setAlert(false);
     setErrorMessage('');
-
     try {
       const response = await auth().signInWithEmailAndPassword(email, password);
       if (!response.user) {
         throw new Error('No se pudo obtener el usuario autenticado.');
       }
-      dispatch(getUser(response.user.email));
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
       setErrorMessage(error.message || 'Error al iniciar sesión con correo y contraseña.');

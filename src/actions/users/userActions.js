@@ -51,8 +51,7 @@ export const saveUser = (userData) => {
 export const getUser = (email) => {
   return async (dispatch) => {
     try {
-      const apiUrl = `${Config.API_ENDPOINT}users/${email}`;
-      const response = await axios.get(apiUrl);
+      const response = await axios.get(`${Config.API_ENDPOINT}users/${email}`);
       const data = response.data;
       if (data) {
         dispatch({

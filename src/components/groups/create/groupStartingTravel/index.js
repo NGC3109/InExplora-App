@@ -43,9 +43,9 @@ const P8_9_1_StartingTravel_Template = ({
                     <Animated.View style={[styles.animatedContainer, { opacity: animation }]}>
                         {showContent && (
                             <>
-                                <Text style={styles.subtitle}>Define el costo de tu Aventura</Text>
+                                <Text style={styles.subtitle}>Define el punto de partida de tu Aventura</Text>
                                 <Text style={styles.description}>
-                                    Ingresa un presupuesto aproximado que necesitaran las personas que quieren unirse a tu viaje.
+                                    Ingresa un lugar aproximado desde donde iniciaran el viaje, recuerda no dar informacion sensible.
                                 </Text>
                             </>
                         )}

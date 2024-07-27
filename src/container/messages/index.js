@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { format } from 'date-fns';
+// MessageScreen.js
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
 import MessageTemplate from '../../components/messages';
@@ -8,6 +8,7 @@ import 'react-native-get-random-values';
 import RNFS from 'react-native-fs';
 import { PermissionsAndroid, Platform } from 'react-native';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import { format } from 'date-fns';
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
@@ -39,9 +40,7 @@ const MessageScreen = () => {
 
           const allGranted = Object.values(granted).every(result => result === PermissionsAndroid.RESULTS.GRANTED);
 
-          if (allGranted) {
-            console.log('Todos los permisos concedidos');
-          } else {
+          if (!allGranted) {
             console.log('Permisos denegados');
           }
         } catch (err) {
@@ -52,10 +51,17 @@ const MessageScreen = () => {
 
     requestPermissions();
 
-    socket.on("connect", () => {
+    const handleConnect = () => {
+      console.log('Socket connected');
       socket.emit("joinChat", { chatId });
       loadOldMessages(socket, chatId, page);
-    });
+    };
+
+    if (socket.connected) {
+      handleConnect();
+    } else {
+      socket.on("connect", handleConnect);
+    }
 
     socket.on("oldMessages", (response) => {
       const formattedNewMessages = formatMessages(response.data.map(msg => ({
@@ -80,12 +86,13 @@ const MessageScreen = () => {
     });
 
     return () => {
-      socket.off("connect");
-      socket.off("oldMessages");
-      socket.off("newMessage");
-      socket.disconnect();
+      if (socket) {
+        socket.off("connect", handleConnect);
+        socket.off("oldMessages");
+        socket.off("newMessage");
+      }
     };
-  }, [chatId, currentUserId, page]);
+  }, [socket, chatId, currentUserId, page]);
 
   const loadOldMessages = (socket, chatId, page) => {
     setLoadingOldMessages(true);
@@ -111,8 +118,8 @@ const MessageScreen = () => {
     });
   };
 
-  const handleSend = (audio) => {
-    if (!messageText.trim() && !audio) return;
+  const handleSend = () => {
+    if (!messageText.trim() && !audioFile) return;
 
     const newMessage = {
       _id: new ObjectId().toString(),
@@ -120,11 +127,12 @@ const MessageScreen = () => {
       timestamp: new Date(),
       isSentByCurrentUser: true,
       sender: currentUserId.id,
-      audioFile: audio ? { 
-        buffer: audio.buffer, 
-        originalname: audio.name, 
-        mimetype: audio.type,
-        duration: audio.duration
+      audioFile: audioFile ? { 
+        buffer: audioFile.buffer, 
+        originalname: audioFile.name, 
+        mimetype: audioFile.type,
+        duration: audioFile.duration,
+        url: audioFile.url,
       } : null
     };
 
@@ -182,6 +190,7 @@ const MessageScreen = () => {
           url: result,
           duration: audioDuration,
         });
+        console.log('result: ', result)
       }
     } catch (error) {
       console.error('Error stopping recording:', error);
@@ -235,7 +244,6 @@ const MessageScreen = () => {
       onCancelRecord={onCancelRecord} // Pasa la función de cancelación
       isRecording={isRecording}
       recordedAudio={audioFile} // Pasa el audio grabado al componente MessageTemplate
-      setRecordedAudio={setAudioFile} // Pasa el setter de audio grabado
       scrollViewRef={scrollViewRef}
       messages={messages}
       messageText={messageText}

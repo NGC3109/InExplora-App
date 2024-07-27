@@ -25,7 +25,6 @@ const MessageTemplate = ({
     setMessageText,
     messageText,
     recordedAudio,
-    setRecordedAudio,
     handleViewableItemsChanged,
     handleEndReached,
 }) => {
@@ -34,13 +33,6 @@ const MessageTemplate = ({
   const handleTextChange = (text) => {
     setMessageText(text);
     setIsTyping(text.length > 0);
-  };
-
-  const handleSendAudio = () => {
-    if (recordedAudio) {
-      handleSend(recordedAudio);
-      setRecordedAudio(null);
-    }
   };
 
   const groupMessagesByDate = (messages) => {
@@ -89,7 +81,9 @@ const MessageTemplate = ({
             {item.showAvatar && !item.isSentByCurrentUser && <Text style={styles.senderName}>{item.displayName}</Text>}
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
               {item.message && <Text style={styles.messageText}>{item.message}</Text>}
-              {item.audioFile && <AudioPlayer audioUri={item.audioFile.url} duration={item.audioFile.duration} />}
+              {item.audioFile && item.audioFile.url && (
+                <AudioPlayer audioUri={item.audioFile.url} duration={item.audioFile.duration} />
+              )}
               <View style={styles.timestampContainer}>
                 <Text style={styles.timestamp}>
                   {formatTimestamp(item.timestamp)}
@@ -126,7 +120,7 @@ const MessageTemplate = ({
         {recordedAudio ? (
           <>
             <AudioPlayer audioUri={recordedAudio.url} duration={recordedAudio.duration} customWidth={true}/>
-            <TouchableOpacity onPress={handleSendAudio} style={styles.iconButton}>
+            <TouchableOpacity onPress={handleSend} style={styles.iconButton}>
               <Icon name="send" style={styles.sendIcon} />
             </TouchableOpacity>
           </>

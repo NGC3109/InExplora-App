@@ -145,7 +145,7 @@ const MainTabNavigator = () => {
             headerStyle,
           }}
         />
-      <Tab.Screen name="destinos" component={Destinos} options={{ headerTitleAlign: 'center' }} />
+      <Tab.Screen name="destinos" component={Destinos} options={{ title: 'Destinos', headerTitleAlign: 'center' }} />
       <Tab.Screen 
         name="MiPerfil" 
         component={DashboardProfile} //PerfilContainer
@@ -367,6 +367,7 @@ const Menu = () => {
     if(user){
       dispatch(getUser(user.email));
       dispatch(setSocket());
+      console.log('Socket initialized');
     }
     setUser(user);
     if (initializing) setInitializing(false);

@@ -1,17 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
-import { acceptJoinRequest } from '../../../actions/request/requestAction';
+import { useSelector } from 'react-redux';
 
 const RequestDetail = () => {
     const route = useRoute();
-    const dispatch = useDispatch();
     const navigation = useNavigation();
+    const socket = useSelector(state => state.initSocketReducer.socket);
     const { group } = route.params;
-
     const handleChangeStatusRequest = (idRequest, accepOrReject) => {
-        dispatch(acceptJoinRequest(idRequest, accepOrReject))
+        socket.emit("aceptOrRejectRequestNotification", {requestId: idRequest, action: accepOrReject})
         navigation.navigate('MainTabs', {
             screen: 'Inicio'
         });
