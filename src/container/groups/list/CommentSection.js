@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Animated, TextInput, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import moment from 'moment';
+import { formatDate } from '../../../utils/functions';
 
 const CommentSection = ({ groupId, socket, onClose, currentUserId }) => {
   const [comments, setComments] = useState([]);
@@ -49,47 +49,30 @@ const CommentSection = ({ groupId, socket, onClose, currentUserId }) => {
     }
   };
 
-  const formatDate = (date) => {
-    const now = moment();
-    const commentDate = moment(date);
-    const diffDays = now.diff(commentDate, 'days');
-
-    if (diffDays === 0) {
-      return commentDate.format('HH:mm');
-    } else if (diffDays === 1) {
-      return 'Ayer';
-    } else if (diffDays === 2) {
-      return 'Anteayer';
-    } else if (diffDays <= 7) {
-      return commentDate.format('dddd');
-    } else {
-      return `${diffDays} semanas`;
-    }
-  };
-
-  const renderComment = ({ item }) => (
-    <View style={styles.commentContainer}>
-      <Image source={{ uri: item.user.profilePicture }} style={styles.avatar} />
-      <View style={styles.commentContent}>
-        <View style={styles.commentHeader}>
-          <Text style={styles.commentUser}>{item.user.displayName}</Text>
-          <Text style={styles.commentDate}>{formatDate(item.createdAt)}</Text>
+  const renderComment = ({ item }) => {
+      return(
+        <View style={styles.commentContainer}>
+          <Image source={{ uri: item.user.profilePicture }} style={styles.avatar} />
+          <View style={styles.commentContent}>
+            <View style={styles.commentHeader}>
+              <Text style={styles.commentUser}>{item.user.displayName}</Text>
+              <Text style={styles.commentDate}>{formatDate(item.createdAt)}</Text>
+            </View>
+            <Text style={styles.commentText}>{item.text}</Text>
+          </View>
+          <View style={styles.likeContainer}>
+            <TouchableOpacity onPress={() => handleLikeComment(item._id)}>
+              <Icon name="heart-outline" size={20} color="#3d444d" />
+            </TouchableOpacity>
+            <Text style={styles.likeCount}>{item.likes || ''}</Text>
+          </View>
         </View>
-        <Text style={styles.commentText}>{item.text}</Text>
-      </View>
-      <View style={styles.likeContainer}>
-        <TouchableOpacity onPress={() => handleLikeComment(item._id)}>
-          <Icon name="heart-outline" size={20} color="#3d444d" />
-        </TouchableOpacity>
-        <Text style={styles.likeCount}>{item.likes || ''}</Text>
-      </View>
-    </View>
-  );
+  )}
 
   return (
     <Animated.View style={[styles.container, { transform: [{ translateY: animation.interpolate({ inputRange: [0, 1], outputRange: [500, 0] }) }] }]}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Comments</Text>
+        <Text style={styles.headerTitle}>Comentarios</Text>
         <TouchableOpacity style={styles.closeButton} onPress={onClose}>
           <Icon name="close" size={24} color="#000" />
         </TouchableOpacity>
@@ -102,7 +85,7 @@ const CommentSection = ({ groupId, socket, onClose, currentUserId }) => {
       <View style={styles.newCommentContainer}>
         <TextInput
           style={styles.newCommentInput}
-          placeholder="Add a comment..."
+          placeholder="Agrega un comentario..."
           value={newComment}
           onChangeText={setNewComment}
         />

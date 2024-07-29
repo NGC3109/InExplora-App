@@ -46,7 +46,11 @@ const JoinRequestList_Template = ({ navigation }) => {
 
   const renderEmptyComponent = () => (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>No hay solicitudes para mostrar.</Text>
+      <Image source={{ uri: 'https://storage.googleapis.com/inexplora/inexplora-recursos/notifications-zero.png' }} style={styles.emptyIcon}/>
+      <Text style={styles.emptyText}>No tienes ninguna solicitud pendiente</Text>
+      <Text style={styles.emptySubText}>
+        Aún no has recibido notificaciones de invitaciones a grupos, aceptación de solicitudes, personas que te siguen, etc.
+      </Text>
     </View>
   );
 
@@ -117,11 +121,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
+    paddingVertical: 20,
+  },
+  emptyIcon: {
+    width: 150,
+    height: 150,
+    marginBottom: 20,
+    resizeMode: 'contain', // Asegúrate de que la imagen se muestre correctamente
   },
   emptyText: {
     fontSize: 18,
-    color: 'grey',
+    color: '#001422',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  emptySubText: {
+    fontSize: 16,
+    color: '#001422',
+    textAlign: 'center',
+    marginTop: 10,
   },
 });
 

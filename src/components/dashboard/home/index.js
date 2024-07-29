@@ -9,6 +9,8 @@ import { useNavigation } from '@react-navigation/native';
 import MasonryList from '@react-native-seoul/masonry-list';
 import { styles } from '../../../styles/destinos';
 import { getRandomHeight } from '../../../utils/functions';
+import SkeletonLoader from '../../ui/SkeletonLoader';
+
 
 const { width } = Dimensions.get('window');
 
@@ -26,9 +28,9 @@ const lastGroups = [
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const seasonDestinations = useSelector(state => state.dashboardReducer.seasonDestinations.data);
-  const hauntedDestinations = useSelector(state => state.dashboardReducer.hauntedDestinations.data);
-  const amazingPlaces = useSelector(state => state.dashboardReducer.amazingDestinations.data);
+  const seasonDestinations = useSelector(state => state.dashboardReducer.seasonDestinations);
+  const hauntedDestinations = useSelector(state => state.dashboardReducer.hauntedDestinations);
+  const amazingPlaces = useSelector(state => state.dashboardReducer.amazingDestinations);
   const currentUserId = useSelector(state => state.userReducer.user);
   const socket = useSelector(state => state.initSocketReducer.socket);
 
@@ -42,7 +44,7 @@ const HomeScreen = () => {
     }
   }, [dispatch, currentUserId]);
 
-  const formattedDestinations = seasonDestinations.map((item) => ({
+  const formattedDestinations = seasonDestinations?.data.map((item) => ({
     ...item,
     height: getRandomHeight(),
     width: (width / 2) - 30,
@@ -101,7 +103,7 @@ const HomeScreen = () => {
   }, [currentUserId]);
 
   useEffect(() => {
-    hauntedDestinations.forEach(item => {
+    hauntedDestinations?.data.forEach(item => {
       setLikedItems(prevState => ({
         ...prevState,
         [item._id]: { likedByUser: item.likedByUser, likeId: item.likeId || null }
@@ -248,24 +250,65 @@ const HomeScreen = () => {
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {lastGroups.map(renderLastGroup)}
       </ScrollView>
-      <Text style={styles.hexImageTitle}>Destinos embrujados</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {hauntedDestinations.map(renderHexImage)}
-      </ScrollView>
-      <Text style={styles.destinationTitle}>¿Dónde ir en invierno?</Text>
-      <View style={styles.masonryContainer}>
-        <MasonryList
-          data={formattedDestinations}
-          keyExtractor={(item) => item._id}
-          numColumns={2}
-          renderItem={renderDestinationItem}
-          contentContainerStyle={{ paddingHorizontal: 4 }}
-        />
-      </View>
-      <Text style={styles.hauntedTitle}>Lugares increíbles <Icon name="star" size={16} color="#000" /></Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {amazingPlaces.map(renderHauntedDestination)}
-      </ScrollView>
+      
+      {
+        hauntedDestinations?.loading ? 
+          <>
+            <SkeletonLoader width="100%" height={20} style={styles.skeleton} />
+            <View style={styles.masonryContainer}>
+              <SkeletonLoader width="48%" height={200} style={styles.skeleton} />
+              <SkeletonLoader width="48%" height={200} style={styles.skeleton} />
+            </View>
+          </>
+        :
+          <>
+            <Text style={styles.hexImageTitle}>Destinos embrujados</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {hauntedDestinations?.data.map(renderHexImage)}
+            </ScrollView>
+          </>
+      }
+      {
+        seasonDestinations?.loading ? 
+        <>
+          <SkeletonLoader width="100%" height={20} style={styles.skeleton} />
+          <View style={styles.masonryContainer}>
+            <SkeletonLoader width="48%" height={200} style={styles.skeleton} />
+            <SkeletonLoader width="48%" height={200} style={styles.skeleton} />
+          </View>
+        </>
+        :
+        <>
+          <Text style={styles.destinationTitle}>¿Dónde ir en invierno?</Text>
+            <View style={styles.masonryContainer}>
+              <MasonryList
+                data={formattedDestinations}
+                keyExtractor={(item) => item._id}
+                numColumns={2}
+                renderItem={renderDestinationItem}
+                contentContainerStyle={{ paddingHorizontal: 4 }}
+              />
+          </View>
+        </>
+      }
+      
+      {
+        amazingPlaces?.loading ? 
+        <>
+          <SkeletonLoader width="100%" height={20} style={styles.skeleton} />
+          <View style={styles.masonryContainer}>
+            <SkeletonLoader width="48%" height={200} style={styles.skeleton} />
+            <SkeletonLoader width="48%" height={200} style={styles.skeleton} />
+          </View>
+        </>
+        :
+        <>
+          <Text style={styles.hauntedTitle}>Lugares increíbles <Icon name="star" size={16} color="#000" /></Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {amazingPlaces?.data.map(renderHauntedDestination)}
+          </ScrollView>
+        </>
+      }
       <View style={styles.footerSpace} />
     </ScrollView>
   );

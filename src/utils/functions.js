@@ -21,7 +21,7 @@ export const formatToThousands = (numero) => {
 const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
-
+//FUNCION PARA TIEMPO DE MENSAJES DE AUDIO
 export const formatCustomDate = (date) => {
     const now = moment();
     const messageDate = moment(date, 'ddd MMM DD YYYY');
@@ -42,6 +42,23 @@ export const formatCustomDate = (date) => {
     } else {
         return capitalizeFirstLetter(messageDate.format('MMMM'));
     }
+};
+//funcion para comentarios
+export const formatDate = (date) => {
+  const now = moment();
+  const commentDate = moment(date);
+  const diffDays = now.diff(commentDate, 'days');
+  if (diffDays === 0) {
+    return commentDate.format('HH:mm');
+  } else if (diffDays === 1) {
+    return 'Ayer';
+  } else if (diffDays === 2) {
+    return 'Anteayer';
+  } else if (diffDays <= 7) {
+    return commentDate.format('dddd');
+  } else {
+    return `${Math.round(diffDays / 7)} semanas`;
+  }
 };
 
 export const calculateProfileCompletion = (user) => {

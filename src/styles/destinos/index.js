@@ -5,6 +5,9 @@ export const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: 'white',
     },
+    skeleton: {
+      margin: 5
+    },
     iconsContainer:{
       padding: 5,
       borderRadius: 8
@@ -98,6 +101,7 @@ export const styles = StyleSheet.create({
       textShadowColor: 'rgba(0, 0, 0, 0.75)',
       textShadowOffset: { width: -1, height: 1 },
       textShadowRadius: 10,
+      paddingHorizontal: 10,
     },
     heartIcon: {
       alignSelf: 'flex-end',

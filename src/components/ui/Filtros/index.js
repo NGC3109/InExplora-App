@@ -57,6 +57,16 @@ const FiltrosComponent = ({
             useNativeDriver: true,
         }).start(() => {
             setModalVisible(false);
+        });
+    };
+
+    const applyFilters = () => {
+        Animated.timing(animation, {
+            toValue: 1,
+            duration: 700,
+            useNativeDriver: true,
+        }).start(() => {
+            setModalVisible(false);
             handleApplyFilters();
         });
     };
@@ -236,7 +246,7 @@ const FiltrosComponent = ({
                     ))}
                 </View>
                 <ButtonCustom 
-                    onPress={closeModal}
+                    onPress={applyFilters}
                     title="Aplicar filtros"
                     customStyle={{
                         marginBottom: 10
