@@ -70,6 +70,7 @@ export const styles = StyleSheet.create({
     userName: {
       fontWeight: 'bold',
       fontSize: 16,
+      color: '#111b21'
     },
     lastMessage: {
       color: '#a1a1a1', // Color de texto más claro para el último mensaje

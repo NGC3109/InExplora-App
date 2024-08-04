@@ -33,6 +33,7 @@ export const styles = StyleSheet.create({
       fontSize: 16,
       height: 100, // Altura fija para asegurar espacio suficiente para escribir
       textAlignVertical: 'top', // Alinea el texto al inicio en Android
+      color: '#413A3A'
     },
     caracteresLimit: {
       textAlign: 'right',

@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadGroupById } from '../actions/groups/groupAction';
 import ImageGallery from '../components/ui/ImageGallery';
 import { formatToThousands } from '../utils/functions';
+import ButtonWithIcon from '../components/ui/ButtonWithIcon';
+import { AlertInfo, AlertSuccess } from '../components/ui/Alert';
+
+const { height } = Dimensions.get('window');
 
 const DetailGroup = ({ navigation, route }) => {
   const { groupId } = route.params;
@@ -52,6 +56,7 @@ const DetailGroup = ({ navigation, route }) => {
     gallery = [],
     formattedStartDate,
     formattedEndDate,
+    request,
   } = groupDetails;
 
   // Verificación de la galería
@@ -66,7 +71,7 @@ const DetailGroup = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView contentContainerStyle={request === 'pending' || userIsMember ? styles.scrollWithPending : styles.scrollViewContent}>
         <View style={styles.headerContainer}>
           <ImageGallery images={gallery} />
           <View style={styles.header}>
@@ -156,14 +161,32 @@ const DetailGroup = ({ navigation, route }) => {
               </View>
             ))}
           </View>
-          
-          {!userIsMember && (
-            <TouchableOpacity style={styles.joinButton} onPress={handleJoinGroup}>
-              <Text style={styles.joinButtonText}>Quiero unirme!</Text>
-            </TouchableOpacity>
-          )}
         </View>
       </ScrollView>
+      {!userIsMember ? (
+        request === 'pending' ? (
+          <AlertInfo 
+            Customstyle={{ height: 50 }} 
+            type="info" 
+            message="Ya has enviado una solicitud para unirte a este grupo" 
+          />
+        ) : (
+          <View style={styles.fixedButtonContainer}>
+            <ButtonWithIcon 
+              handleClick={handleJoinGroup}
+              title="Quiero unirme!" 
+              width="100%" 
+              height={50} 
+            />
+          </View>
+        )
+      ) : (
+        <AlertSuccess 
+          Customstyle={{ height: 50 }} 
+          type="success" 
+          message="Ya eres miembro de este grupo" 
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -175,6 +198,11 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     flexGrow: 1,
+    paddingBottom: 80, // Para evitar que el contenido se superponga al botón fijo
+  },
+  scrollWithPending: {
+    flexGrow: 1,
+    paddingBottom: 0, // Para evitar que el contenido se superponga al botón fijo
   },
   headerContainer: {
     position: 'relative',
@@ -282,6 +310,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#021121',
+  },
+  fixedButtonContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 16,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopWidth: 1,
+    borderColor: '#ddd',
   },
   joinButton: {
     backgroundColor: '#5CAD40',

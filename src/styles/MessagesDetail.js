@@ -93,7 +93,7 @@ export const styles = StyleSheet.create({
     },
     messageText: {
       fontSize: 16,
-      color: '#000',
+      color: '#111b21',
     },
     timestampContainer: {
       flexDirection: 'row',
@@ -129,6 +129,7 @@ export const styles = StyleSheet.create({
       paddingHorizontal: 20,
       marginRight: 10,
       fontSize: 16,
+      color: '#111b21'
     },
     iconButton: {
       padding: 10,

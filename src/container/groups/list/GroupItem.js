@@ -25,6 +25,11 @@ const GroupItem = ({
   const startingTravelText = item?.startingPlace?.startingTravel.split('-')[0];
 
   useEffect(() => {
+    if (!socket) {
+      console.error('Socket is null');
+      return;
+    }
+
     const handleNewLike = ({ likeableId, like, totalLikes }) => {
       if (likeableId === item._id) {
         setLikes(totalLikes);
@@ -102,10 +107,18 @@ const GroupItem = ({
   }, [item._id, likedByUser, userId, likeId, socket]);
 
   const handleLike = () => {
+    if (!socket) {
+      console.error('Socket is null');
+      return;
+    }
     socket.emit('likeGroup', { userId, likeableId: item._id, onModel: 'Group' });
   };
 
   const handleDislike = () => {
+    if (!socket) {
+      console.error('Socket is null');
+      return;
+    }
     socket.emit('dislikeGroup', { likeId, likeableId: item._id, onModel: 'Group' });
   };
 

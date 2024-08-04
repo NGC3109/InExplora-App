@@ -1,80 +1,62 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Image } from 'react-native';
+import React from 'react';
+import { View, Text, ImageBackground, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { LogoInBlue } from '../../../../assets/vectores';
+import ButtonWithIcon from '../../../../components/ui/ButtonWithIcon';
+import { useNavigation } from '@react-navigation/native';
 
-const CongratulationsRequestToJoin = ({ navigation }) => {
-  const confettiRef = useRef(null);
+const { width, height } = Dimensions.get('window');
 
-  useEffect(() => {
-    // Dispara el confeti automáticamente al montar el componente
-    confettiRef.current.start();
-  }, []);
-
-  const handlePress = () => {
-    navigation.navigate('Inicio'); // Asegúrate de que 'Login' sea el nombre correcto de la ruta
-  };
-
+const CongratulationsRequestToJoin = () => {
+  const navigation = useNavigation();
   return (
-    <ImageBackground 
-      source={require('./../../../../assets/pattern2.png')} // Cambia a tu nueva imagen de fondo
-      style={styles.container}
-    >
-      <View style={styles.content}>
-        <View style={styles.checkmarkCircle}>
-          <Image source={require('./../../../../assets/check.png')} style={{width:80, height: 80}} />
+    <ImageBackground source={{uri: 'https://storage.googleapis.com/inexplora/inexplora-recursos/congratulations-request-join.jpg'}} style={styles.background}>
+      <View style={styles.overlay}>
+        <View style={styles.header}>
+          <Text style={styles.title}>INEXPL<LogoInBlue />RA</Text>
+          <Text style={styles.subtitle}>La aventura comienza con buenos amigos</Text>
         </View>
-        <Text style={styles.congratsText}>Exito!</Text>
-        <Text style={styles.detailText}>Felicidades! se a solicitado la union al grupo.</Text>
-        <TouchableOpacity style={styles.button} onPress={() => handlePress()}>
-          <Text style={styles.buttonText}>Ir al Inicio</Text>
-        </TouchableOpacity>
+        <View style={styles.containerButton}>
+          <ButtonWithIcon 
+            handleClick={() => 
+              navigation.navigate('MainTabs', {
+                screen: 'Inicio'
+              })}
+            title="Finalizar" 
+            width="100%" 
+            height={50} 
+          />
+        </View>
       </View>
     </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: width,
+    height: height,
   },
-  content: {
-    alignItems: 'center',
+  overlay: {
+    flex: 1,
+    justifyContent: 'space-between',
   },
-  checkmarkCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  checkmarkText: {
-    fontSize: 40,
-    color: '#6ECB63', // Ajusta el color según tu checkmark
-  },
-  congratsText: {
-    fontSize: 28,
+  title: {
+    marginTop: 60,
+    fontSize: 48,
     fontWeight: 'bold',
     color: 'white',
-    marginBottom: 10,
+    textAlign: 'center',
+    letterSpacing: 13,
+    color: '#001422',
   },
-  detailText: {
-    fontSize: 18,
-    color: 'white',
-    marginBottom: 30,
+  subtitle: {
+    fontSize: 16,
+    color: 'black',
     textAlign: 'center',
   },
-  button: {
-    backgroundColor: 'white', // Cambia al color que desees
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-  },
-  buttonText: {
-    fontSize: 20,
-    color: '#007BFF', // Cambia al color que desees
+  containerButton: {
+    marginBottom: 20
   },
 });
 

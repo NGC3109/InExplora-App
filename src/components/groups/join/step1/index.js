@@ -20,6 +20,7 @@ const Join_P1_Template = ({ message, setMessage, continueButton, limiteCaractere
           value={message}
           maxLength={limiteCaracteres}
           placeholder="¿Qué te apasiona de este grupo?"
+          placeholderTextColor="#C3C3C3"
         />
         {
             messageAlert ? 

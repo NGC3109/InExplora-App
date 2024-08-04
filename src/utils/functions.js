@@ -23,25 +23,30 @@ const capitalizeFirstLetter = (string) => {
 };
 //FUNCION PARA TIEMPO DE MENSAJES DE AUDIO
 export const formatCustomDate = (date) => {
-    const now = moment();
-    const messageDate = moment(date, 'ddd MMM DD YYYY');
-    const daysDiff = now.diff(messageDate, 'days');
-  
-    if (daysDiff === 0) {
-      return 'Hoy';
-    } else if (daysDiff === 1) {
-      return 'Ayer';
-    } else if (daysDiff <= 7) {
-        return capitalizeFirstLetter(messageDate.format('dddd'));
-    } else if (daysDiff <= 14) {
-      return 'Hace una semana';
-    } else if (daysDiff <= 21) {
-      return 'Hace dos semanas';
-    } else if (now.year() !== messageDate.year()) {
-        return capitalizeFirstLetter(messageDate.format('MMMM YYYY'));
-    } else {
-        return capitalizeFirstLetter(messageDate.format('MMMM'));
-    }
+  console.log('date: ', date);
+
+  // Convertir la fecha a un formato ISO reconocido por Moment.js
+  const isoDate = moment(new Date(date)).format('YYYY-MM-DD');
+
+  const now = moment().startOf('day');
+  const messageDate = moment(isoDate).startOf('day');
+  const daysDiff = now.diff(messageDate, 'days');
+
+  if (daysDiff === 0) {
+    return 'Hoy';
+  } else if (daysDiff === 1) {
+    return 'Ayer';
+  } else if (daysDiff <= 7) {
+    return capitalizeFirstLetter(messageDate.format('dddd'));
+  } else if (daysDiff <= 14) {
+    return 'Hace una semana';
+  } else if (daysDiff <= 21) {
+    return 'Hace dos semanas';
+  } else if (now.year() !== messageDate.year()) {
+    return capitalizeFirstLetter(messageDate.format('MMMM YYYY'));
+  } else {
+    return capitalizeFirstLetter(messageDate.format('MMMM'));
+  }
 };
 //funcion para comentarios
 export const formatDate = (date) => {

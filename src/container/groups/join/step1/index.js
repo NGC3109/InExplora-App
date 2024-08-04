@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import Join_P1_Template from '../../../../components/groups/join/step1';
+import { useNavigation } from '@react-navigation/native';
 
 const Join_P1_Container = ({ route }) => {
+    const navigation = useNavigation();
     const { groupId, userCreator } = route.params;
     const currentUserId = useSelector(state => state.userReducer.user);
     const socket = useSelector(state => state.initSocketReducer.socket);
@@ -17,8 +19,9 @@ const Join_P1_Container = ({ route }) => {
                 groupId,
                 message,
                 userCreator
-              })
+            })
             setMessageAlert(false)
+            navigation.navigate('congratulations_request_to_join')
         }else{
             setMessageAlert(true)
         }

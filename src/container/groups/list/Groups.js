@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet, Text } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import GroupItem from './GroupItem';
 import FiltrosComponent from '../../../components/ui/Filtros';
@@ -60,6 +60,11 @@ const Grupos = () => {
     }
 
     const handleViewableItemsChanged = ({ viewableItems: viewable }) => {
+        if (!socket) {
+            console.error('Socket is null');
+            return;
+        }
+
         const newViewableItems = new Set(viewable.map(({ item }) => item._id));
         const added = new Set([...newViewableItems].filter(x => !viewableItems.current.has(x)));
         const removed = new Set([...viewableItems.current].filter(x => !newViewableItems.has(x)));
@@ -75,6 +80,11 @@ const Grupos = () => {
     };
 
     useEffect(() => {
+        if (!socket) {
+            console.error('Socket is null');
+            return;
+        }
+
         return () => {
             viewableItems.current.forEach(groupId => {
                 socket.emit('leaveRoom', { userId: currentUserId.id, likeable: groupId });
@@ -104,6 +114,10 @@ const Grupos = () => {
         setBookmarkId(currentBookmarks._id)
     }
     
+    if (!socket) {
+        return <Text>Loading...</Text>;
+    }
+
     return (
         <>
             <FiltrosComponent 
