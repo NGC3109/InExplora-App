@@ -6,8 +6,11 @@ import {
   DISPLAYNAME_TO_CREATE, 
   GET_USER, 
   CLEAR_USER, 
-  UPDATE_FOLLOWERS_COUNT,
-  GENRE_TO_CREATE,
+  UPDATE_FOLLOWERS_COUNT, 
+  GENRE_TO_CREATE, 
+  EMAIL_TO_CREATE, 
+  BIRTHDAY_TO_CREATE,
+  IS_NEW_USER_GOOGLE_LOGIN
 } from '../../utils/constants';
 
 export const clearUserData = () => {
@@ -28,9 +31,6 @@ export const saveUser = (userData) => {
       const apiUrl = `${Config.API_ENDPOINT}users/`;
       // Enviar la solicitud al backend para crear el usuario
       const { data } = await axios.post(apiUrl, userData);
-      console.log(apiUrl)
-      console.log(userData)
-      console.log(data)
       // Verificar la respuesta del backend
       if (data) {
         // Usuario creado exitosamente, guardar en el store
@@ -48,6 +48,7 @@ export const saveUser = (userData) => {
     }
   };
 };
+
 export const getUser = (email) => {
   return async (dispatch) => {
     try {
@@ -90,6 +91,33 @@ export const genreToCreate = (genre) => {
     dispatch({
       type: GENRE_TO_CREATE,
       payload: genre
+    });
+  };
+};
+
+export const emailToCreate = (email) => {
+  return (dispatch) => {
+    dispatch({
+      type: EMAIL_TO_CREATE,
+      payload: email
+    });
+  };
+};
+
+export const birthdayToCreate = (birthday) => {
+  return (dispatch) => {
+    dispatch({
+      type: BIRTHDAY_TO_CREATE,
+      payload: birthday
+    });
+  };
+};
+
+export const isNewUserGoogleLogin = (isNewUser) => {
+  return (dispatch) => {
+    dispatch({
+      type: IS_NEW_USER_GOOGLE_LOGIN,
+      payload: isNewUser
     });
   };
 };

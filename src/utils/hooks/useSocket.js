@@ -43,7 +43,6 @@ export const useSocketHome = (userId) => {
             socket.off('pendingJoinRequestCount');
             socket.off('unreadMessageCount');
             socket.off('connect_error');
-            socket.disconnect();
         };
     }, [userId, dispatch]);
 };

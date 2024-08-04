@@ -53,7 +53,7 @@ import Congratulations from '../congratulations';
 import UpdateProfile from '../../container/perfil/update';
 import UpdateProfile_Information from '../../container/perfil/update/information';
 import Settings from '../../container/perfil/dashboard/settings';
-import { setSocket } from '../../actions/sockets/initSocketActions';
+import { closeSocket, setSocket } from '../../actions/sockets/initSocketActions';
 
 
 const Tab = createBottomTabNavigator();
@@ -332,12 +332,10 @@ const RootStackNavigator = ({ user }) => {
         <RootStack.Screen name="join_step1" component={Join_P1_Container} options={{ title: 'Solicitud', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="congratulations_request_to_join" component={CongratulationsRequestToJoin} options={{ title: 'Felicidades', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="signup" component={SignUp_Container} options={{ title: 'Únete a InExplora Hoy ✨', headerTitleAlign: 'center' }}/>
-        <RootStack.Screen name="signUp_displayname" component={SignUp_Displayname_Container} options={{ title: 'Registra un nombre', headerTitleAlign: 'center' }}/>
+
         <RootStack.Screen name="messages" component={Chats} options={{ title: 'Mensajes', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="update_user" component={UpdateUser} options={{ title: 'Actualizar perfil', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="update_groups" component={UpdateGroups} options={{ title: 'Actualizar grupo', headerTitleAlign: 'center' }}/>
-        <RootStack.Screen name="p2_signUp_genre" component={P2_SignUp_Container} options={{ title: 'Registra tu genero', headerTitleAlign: 'center' }}/>
-        <RootStack.Screen name="p3_signUp_birthday" component={SignUp_Birthday_Container} options={{ title: 'Registra tu fecha de nacimiento', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="request_detail" component={RequestDetail} options={{ title: 'Solicitud', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="notifications_detail" component={NotificationsList_Template} options={{ title: 'Notificaciones', headerTitleAlign: 'center' }}/>
         <RootStack.Screen name="profile_public" component={PerfilPublicoContainer} options={{ headerShown: false, gestureEnabled: false, }}/>
@@ -368,6 +366,8 @@ const Menu = () => {
       dispatch(getUser(user.email));
       dispatch(setSocket());
       console.log('Socket initialized');
+    }else{
+      dispatch(closeSocket());
     }
     setUser(user);
     if (initializing) setInitializing(false);

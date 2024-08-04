@@ -1,23 +1,61 @@
 import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { View, Text, TouchableOpacity, TextInput, ScrollView } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Asegúrate de tener esta librería
+import { Text, TouchableOpacity, ImageBackground, View } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import Config from 'react-native-config';
-import { Alert } from '../components/ui/Alert';
 import { styles } from '../styles/login/signIn';
+import { saveUser } from '../actions/users/userActions';
+import { useDispatch } from 'react-redux';
+import { generateRandomPassword } from '../utils/functions';
+import ISO6391 from 'iso-639-1';
+import { InexploraLoginIcon } from '../assets/vectores';
+
+GoogleSignin.configure({
+  webClientId: Config.WEB_CLIENT_ID,
+  scopes: [
+    `${Config.GOOGLE_BIRTHDAY}`,
+    `${Config.GOOGLE_PROFILE}`,
+    `${Config.GOOGLE_GENDER}`,
+    `${Config.GOOGLE_LANGUAGUE}`,
+  ],
+});
+
+const getUserInfo = async (accessToken) => {
+  try {
+    const response = await fetch(`${Config.GOOGLE_URL_PEOPLE}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const data = await response.json();
+    const birthdate = data.birthdays && data.birthdays[0] ? data.birthdays[0].date : null;
+    const gender = data.genders && data.genders[0] ? data.genders[0].value : null;
+    const languages = data.locales ? data.locales.map(locale => locale.value) : [];
+
+    let birthday = null;
+    if (birthdate) {
+      const { year, month, day } = birthdate;
+      birthday = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+    }
+
+    let genre = null;
+    if (gender) {
+      genre = gender === 'male' ? 'Hombre' : 'Mujer';
+    }
+
+    const preferredLanguage = languages.length > 0 ? ISO6391.getName(languages[0]) : null;
+
+    return { genre, birthday, preferredLanguage };
+  } catch (error) {
+    console.error('Error fetching user info:', error);
+    return { genre: null, birthday: null, preferredLanguage: null };
+  }
+};
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  GoogleSignin.configure({
-    webClientId: Config.WEB_CLIENT_ID,
-  });
 
   const handleLogin = async () => {
     setLoading(true);
@@ -26,15 +64,35 @@ const Login = () => {
 
     try {
       await GoogleSignin.hasPlayServices();
-      const { idToken } = await GoogleSignin.signIn();
+      const userInfo = await GoogleSignin.signIn();
+      const { idToken } = userInfo;
+      const tokens = await GoogleSignin.getTokens();
+      const accessToken = tokens.accessToken;
+
+      if (!accessToken) {
+        throw new Error('Failed to obtain access token');
+      }
+
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       const firebaseResult = await auth().signInWithCredential(googleCredential);
-      
+
       if (!firebaseResult.user) {
         throw new Error('No se pudo obtener el usuario autenticado.');
       }
+
+      const { email, displayName } = firebaseResult.user;
+      const { genre, birthday, preferredLanguage } = await getUserInfo(accessToken);
+
+      const newUser = {
+        email,
+        displayName,
+        password: generateRandomPassword(12),
+        genre,
+        birthday,
+        languages: preferredLanguage,
+      };
+      dispatch(saveUser(newUser));
     } catch (error) {
-      console.error('Error de autenticación o conexión con el backend:', error);
       setErrorMessage(error.message || 'Error al iniciar sesión.');
       setAlert(true);
     } finally {
@@ -42,69 +100,18 @@ const Login = () => {
     }
   };
 
-  const handleEmailLogin = async () => {
-    setLoading(true);
-    setAlert(false);
-    setErrorMessage('');
-    try {
-      const response = await auth().signInWithEmailAndPassword(email, password);
-      if (!response.user) {
-        throw new Error('No se pudo obtener el usuario autenticado.');
-      }
-    } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-      setErrorMessage(error.message || 'Error al iniciar sesión con correo y contraseña.');
-      setAlert(true);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <>
-      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        <Text style={styles.welcomeBack} accessibilityLabel='Bienvenidos'>Bienvenidos 👋</Text>
+    <ImageBackground
+      source={{ uri: `${Config.URL_BACKGROUND_LOGIN}` }}
+      style={styles.background}
+    >
+      <View style={styles.topContainer}>
+        <Text style={styles.welcomeBack} accessibilityLabel='Bienvenidos'>INEXPL<InexploraLoginIcon />RA</Text>
         <Text style={styles.signInText} accessibilityLabel='Inicia sesión y comienza con la gran aventura de descubrir lo InExplora-do'>
           Inicia sesión y comienza con la gran aventura de descubrir lo InExplora-do
         </Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Correo electrónico"
-          value={email}
-          accessibilityLabel='Correo electrónico'
-          onChangeText={setEmail}
-          autoCapitalize="none"
-          keyboardType="email-address"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Contraseña"
-          secureTextEntry
-          accessibilityLabel='Contraseña'
-          value={password}
-          onChangeText={setPassword}
-        />
-        <View style={styles.checkboxContainer}>
-          <TouchableOpacity accessibilityLabel='¿Olvidaste tu contraseña?'>
-            <Text style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Text>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          style={styles.signInButton}
-          onPress={handleEmailLogin}
-          disabled={loading}
-          accessibilityLabel="Iniciar sesión con correo y contraseña"
-        >
-          <Text style={styles.signInButtonText}>Iniciar sesión</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('signup')}
-          accessibilityLabel="Crear una nueva cuenta"
-        >
-          <Text style={styles.forgotPassword}>Crear cuenta</Text>
-        </TouchableOpacity>
-        {alert && <Alert accessibilityLabel="Error en el servicio de autenticación." message={errorMessage} type="danger" />}
-        <Text style={styles.orText} accessibilityLabel="o">o</Text>
+      </View>
+      <View style={styles.middleContainer}>
         <TouchableOpacity
           style={[styles.button, { marginTop: 8 }]}
           onPress={handleLogin}
@@ -117,12 +124,13 @@ const Login = () => {
         <TouchableOpacity
           accessibilityLabel="Iniciar sesión con Facebook"
           style={styles.button}
+          disabled
         >
           <Icon name="facebook" size={24} color="#3b5998" />
           <Text style={styles.buttonText}>Continuar con Facebook</Text>
         </TouchableOpacity>
-      </ScrollView>
-    </>
+      </View>
+    </ImageBackground>
   );
 };
 

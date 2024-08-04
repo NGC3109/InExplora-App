@@ -36,7 +36,7 @@ const CirclePerfil = ({ progress, profilePicture }) => {
       </Svg>
       <View style={styles.iconContainer}>
         {hasCustomProfilePicture ? (
-          <Image source={{ uri: profilePicture }} style={styles.profileImage} />
+          <Image source={{ uri: profilePicture || 'https://via.placeholder.com/150' }} style={styles.profileImage} />
         ) : (
           <Icon name="albums-outline" size={80} color="#A061C9" />
         )}

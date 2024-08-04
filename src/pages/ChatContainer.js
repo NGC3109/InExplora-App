@@ -42,7 +42,6 @@ const Chats = ({ navigation }) => {
       socket.off("connect", fetchChats);
       socket.off("chatsByUserId");
       socket.off("chatUpdated");
-      socket.disconnect();
       unsubscribe();
     };
   }, [currentUser.id, navigation]);

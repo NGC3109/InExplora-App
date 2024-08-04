@@ -1,6 +1,32 @@
 import React from 'react';
 import Svg, { G, Polygon, Path, Ellipse, Circle, Line, Rect, Stop, Defs, LinearGradient} from 'react-native-svg';
 
+export const InexploraLoginIcon = () => (
+  <Svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 137.89 137.89" width="32" height="32">
+    <G id="Capa_2" data-name="Capa 2">
+      <G id="Layer_1" data-name="Layer 1">
+        <Path
+          d="M67.59,40.57A28.48,28.48,0,0,1,93.74,55.09L108.07,51A43.08,43.08,0,0,0,71.25,26C68.69,25.81,62.68,11.6,56,0Z"
+          fill="#007380"
+        />
+        <Path
+          d="M40.57,70.3A28.48,28.48,0,0,1,55.09,44.15L51,29.81A43.09,43.09,0,0,0,26,66.64C25.81,69.2,11.6,75.21,0,81.9Z"
+          fill="#88abbd"
+        />
+        <Path
+          d="M70.3,97.31A28.48,28.48,0,0,1,44.15,82.79l-14.34,4.1a43.1,43.1,0,0,0,36.83,25c2.56.14,8.57,14.35,15.26,25.95Z"
+          fill="#007380"
+        />
+        <Path
+          d="M97.31,67.59A28.48,28.48,0,0,1,82.79,93.74l4.1,14.33a43.09,43.09,0,0,0,25-36.82c.14-2.56,14.35-8.57,25.95-15.27Z"
+          fill="#88abbd"
+        />
+        <Circle cx="68.94" cy="68.94" r="4.87" fill="#007380" />
+      </G>
+    </G>
+  </Svg>
+);
+
 export const IconCheck = () => (
   <Svg width="14" height="9" viewBox="0 0 14 9" fill="none">
     <Path

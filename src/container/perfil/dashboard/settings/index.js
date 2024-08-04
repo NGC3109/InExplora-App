@@ -46,7 +46,7 @@ function Settings() {
         <Icon name="information-circle-outline" size={24} color="#000" />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+      <TouchableOpacity style={styles.logoutButton} onPress={() => logout()}>
         <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
       </TouchableOpacity>
 

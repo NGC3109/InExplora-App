@@ -17,7 +17,7 @@ function DashboardProfile() {
       <View style={styles.profileContainer}>
         <CirclePerfil progress={progress} profilePicture={currentUser && currentUser?.profilePicture} />
         <Text style={styles.profileName}>
-          {currentUser && currentUser?.displayName}, {age} <Icon name="checkmark-circle" size={20} color="#4CAF50" />
+          {currentUser && currentUser?.displayName}, {age || 0} <Icon name="checkmark-circle" size={20} color="#4CAF50" />
         </Text>
       </View>
       
