@@ -7,12 +7,16 @@ import debounce from 'lodash/debounce';
 
 const SearchHome = ({ navigation }) => {
     const dispatch = useDispatch();
-    const results = useSelector(state => state.searchReducer.results);
+    const results = useSelector(state => state.searchReducer.results) || [];
     const [query, setQuery] = useState('');
     const currentUserId = useSelector(state => state.userReducer.user);
 
     const handleSearch = useCallback(debounce((query) => {
-        dispatch(search(query));
+        if (query.trim()) {
+            dispatch(search(query));
+        } else {
+            dispatch(clearSearchResults());
+        }
     }, 500), []);
 
     const onChangeSearch = (text) => {

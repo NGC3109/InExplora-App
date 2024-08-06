@@ -50,24 +50,25 @@ const CommentSection = ({ groupId, socket, onClose, currentUserId }) => {
   };
 
   const renderComment = ({ item }) => {
-      return(
-        <View style={styles.commentContainer}>
-          <Image source={{ uri: item.user.profilePicture }} style={styles.avatar} />
-          <View style={styles.commentContent}>
-            <View style={styles.commentHeader}>
-              <Text style={styles.commentUser}>{item.user.displayName}</Text>
-              <Text style={styles.commentDate}>{formatDate(item.createdAt)}</Text>
-            </View>
-            <Text style={styles.commentText}>{item.text}</Text>
+    return (
+      <View style={styles.commentContainer}>
+        <Image source={{ uri: item.user.profilePicture }} style={styles.avatar} />
+        <View style={styles.commentContent}>
+          <View style={styles.commentHeader}>
+            <Text style={styles.commentUser}>{item.user.displayName}</Text>
+            <Text style={styles.commentDate}>{formatDate(item.createdAt)}</Text>
           </View>
-          <View style={styles.likeContainer}>
-            <TouchableOpacity onPress={() => handleLikeComment(item._id)}>
-              <Icon name="heart-outline" size={20} color="#3d444d" />
-            </TouchableOpacity>
-            <Text style={styles.likeCount}>{item.likes || ''}</Text>
-          </View>
+          <Text style={styles.commentText}>{item.text}</Text>
         </View>
-  )}
+        <View style={styles.likeContainer}>
+          <TouchableOpacity onPress={() => handleLikeComment(item._id)}>
+            <Icon name="heart-outline" size={20} color="#3d444d" />
+          </TouchableOpacity>
+          <Text style={styles.likeCount}>{item.likes || ''}</Text>
+        </View>
+      </View>
+    );
+  };
 
   return (
     <Animated.View style={[styles.container, { transform: [{ translateY: animation.interpolate({ inputRange: [0, 1], outputRange: [500, 0] }) }] }]}>
@@ -77,11 +78,17 @@ const CommentSection = ({ groupId, socket, onClose, currentUserId }) => {
           <Icon name="close" size={24} color="#000" />
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={comments}
-        keyExtractor={(item) => item._id.toString()}
-        renderItem={renderComment}
-      />
+      {comments.length === 0 ? (
+        <View style={styles.noCommentsContainer}>
+          <Text style={styles.noCommentsText}>Nadie ha comentado aún. ¡Sé el primero en comentar!</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={comments}
+          keyExtractor={(item) => item._id.toString()}
+          renderItem={renderComment}
+        />
+      )}
       <View style={styles.newCommentContainer}>
         <TextInput
           style={styles.newCommentInput}
@@ -96,7 +103,6 @@ const CommentSection = ({ groupId, socket, onClose, currentUserId }) => {
     </Animated.View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -152,7 +158,7 @@ const styles = StyleSheet.create({
   commentDate: {
     fontSize: 14,
     color: '#777',
-    marginLeft: 10
+    marginLeft: 10,
   },
   commentText: {
     fontSize: 14,
@@ -162,7 +168,7 @@ const styles = StyleSheet.create({
   likeContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 15
+    marginRight: 15,
   },
   likeCount: {
     fontSize: 14,
@@ -181,6 +187,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     borderRadius: 20,
     marginRight: 10,
+  },
+  noCommentsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 10
+  },
+  noCommentsText: {
+    fontSize: 16,
+    color: '#777',
   },
 });
 

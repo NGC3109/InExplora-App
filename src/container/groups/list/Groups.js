@@ -9,6 +9,7 @@ import { loadGroups } from '../../../actions/groups/groupAction';
 import CommentSection from './CommentSection';
 import { bookmark, removeBookmark } from '../../../actions/bookmark/bookmarkAction';
 import { useNavigation } from '@react-navigation/native';
+import Loading from '../../../components/ui/Loading';
 
 const Grupos = () => {
     const dispatch = useDispatch();
@@ -84,7 +85,6 @@ const Grupos = () => {
             console.error('Socket is null');
             return;
         }
-
         return () => {
             viewableItems.current.forEach(groupId => {
                 socket.emit('leaveRoom', { userId: currentUserId.id, likeable: groupId });
@@ -115,8 +115,15 @@ const Grupos = () => {
     }
     
     if (!socket) {
-        return <Text>Loading...</Text>;
+        return (
+            <Loading 
+                url="https://storage.googleapis.com/inexplora/inexplora-recursos/loading.gif"
+                size="s"
+                text="Cargando..."
+            />
+        )
     }
+    
 
     return (
         <>
@@ -158,6 +165,15 @@ const Grupos = () => {
                         />
                     )}
                     ListFooterComponent={<View style={styles.footer} />}
+                    ListEmptyComponent={
+                        <View style={{marginTop: '15%', backgroundColor: 'white', borderRadius: 200, padding: 10}}>
+                            <Loading 
+                                url="https://storage.googleapis.com/inexplora/inexplora-recursos/desierto-250.gif"
+                                size="xl"
+                                text="No encontramos grupos que coincidan con tu búsqueda. ¡Es el momento perfecto para crear tu propio grupo y vivir aventuras únicas!'"
+                            />
+                        </View>
+                    }
                     onViewableItemsChanged={handleViewableItemsChanged}
                     viewabilityConfig={{ viewAreaCoveragePercentThreshold: 50 }}
                 />

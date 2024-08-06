@@ -30,7 +30,7 @@ const DetailDestiny = () => {
       if (success) {
         const sortedComments = comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setComments(sortedComments);
-        setTotalComments(totalComments)
+        setTotalComments(totalComments);
       }
     };
 
@@ -43,7 +43,7 @@ const DetailDestiny = () => {
           }
           return updatedComments;
         });
-        setTotalComments(totalComments)
+        setTotalComments(totalComments);
       }
     };
 
@@ -178,28 +178,36 @@ const DetailDestiny = () => {
         <View style={styles.section}>
           <View style={styles.referencesHeader}>
             <Text style={styles.sectionTitle}>Comentarios</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('comments', {destinyId: destinyId})}>
+            <TouchableOpacity onPress={() => {
+              if (totalComments > 0) {
+                navigation.navigate('comments', { destinyId: destinyId });
+              }
+            }}>
               <Text style={styles.viewAll}>Ver todo ({totalComments})</Text>
             </TouchableOpacity>
           </View>
-          {comments.slice(0, 3).map(comment => (
-            <View key={comment._id}>
-              <View style={styles.reference}>
-                <Image
-                  style={styles.referenceImage}
-                  source={{ uri: comment.user.profilePicture || 'https://via.placeholder.com/50' }}
-                />
-                <View style={styles.referenceContent}>
-                  <Text style={styles.referenceName}>{comment.user.displayName}</Text>
-                  <Text style={styles.referenceDate}>{new Date(comment.createdAt).toLocaleDateString()}</Text>
-                  <Text style={styles.referenceText}>{comment.text}</Text>
+          {comments.length === 0 ? (
+            <Text style={styles.noCommentsText}>Nadie ha comentado aún. ¡Sé el primero en comentar!</Text>
+          ) : (
+            comments.slice(0, 3).map(comment => (
+              <View key={comment._id}>
+                <View style={styles.reference}>
+                  <Image
+                    style={styles.referenceImage}
+                    source={{ uri: comment.user.profilePicture || 'https://via.placeholder.com/50' }}
+                  />
+                  <View style={styles.referenceContent}>
+                    <Text style={styles.referenceName}>{comment.user.displayName}</Text>
+                    <Text style={styles.referenceDate}>{new Date(comment.createdAt).toLocaleDateString()}</Text>
+                    <Text style={styles.referenceText}>{comment.text}</Text>
+                  </View>
+                </View>
+                <View style={styles.referenceSeparator}>
+                  <LeafSeparator />
                 </View>
               </View>
-              <View style={styles.referenceSeparator}>
-                <LeafSeparator />
-              </View>
-            </View>
-          ))}
+            ))
+          )}
         </View>
       </View>
     </ScrollView>
@@ -374,6 +382,12 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     marginVertical: 10,
     marginHorizontal: 20,
+  },
+  noCommentsText: {
+    fontSize: 16,
+    color: '#777',
+    textAlign: 'center',
+    paddingBottom: 20
   },
   errorContainer: {
     flex: 1,

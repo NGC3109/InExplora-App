@@ -26,11 +26,17 @@ const Comments = () => {
       socket.off('commentsFetched', handleCommentsFetched);
     };
   }, [destinyId]);
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.profileDetails}>
         <View style={styles.section}>
-            {comments.map(comment => (
+          {comments.length === 0 ? (
+            <View style={styles.noCommentsContainer}>
+              <Text style={styles.noCommentsText}>Nadie ha comentado aún. ¡Sé el primero en comentar!</Text>
+            </View>
+          ) : (
+            comments.map(comment => (
               <View key={comment._id}>
                 <View style={styles.reference}>
                   <Image
@@ -47,7 +53,8 @@ const Comments = () => {
                   <LeafSeparator />
                 </View>
               </View>
-            ))}
+            ))
+          )}
         </View>
       </View>
     </ScrollView>
@@ -102,6 +109,17 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     marginVertical: 10,
     marginHorizontal: 20,
+  },
+  noCommentsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  noCommentsText: {
+    fontSize: 16,
+    color: '#777',
+    textAlign: 'center',
   },
 });
 

@@ -36,7 +36,7 @@ import UpdateUser from '../perfil/update';
 import UpdateGroups from '../groups/update';
 import P2_SignUp_Container from '../../container/login/signup/userGenre';
 import SignUp_Birthday_Container from '../../container/login/signup/userBirthday';
-import { IconEarth, IconGroup, IconHome, IconPlusQuad } from '../../assets/vectores';
+import { IconEarth, IconEarthBlue, IconGroup, IconGroupBlue, IconHome, IconHomeBlue, IconPlusQuad } from '../../assets/vectores';
 import Grupos from '../../container/groups/list/Groups';
 import RequestDetail from '../dashboard/request/requestDetail';
 import NotificationsList_Template from '../dashboard/notifications';
@@ -54,6 +54,7 @@ import UpdateProfile from '../../container/perfil/update';
 import UpdateProfile_Information from '../../container/perfil/update/information';
 import Settings from '../../container/perfil/dashboard/settings';
 import { closeSocket, setSocket } from '../../actions/sockets/initSocketActions';
+import CustomTabBarButton from '../ui/CustomTabBarButton';
 
 
 const Tab = createBottomTabNavigator();
@@ -71,22 +72,6 @@ const styles = {
   },
 };
 const PlaceholderComponent = () => (<View></View>)
-const CustomTabBarButton = ({ children, onPress, focused }) => {
-  return (
-    <TouchableOpacity
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        ...styles.shadow,
-      }}
-      onPress={onPress}
-      activeOpacity={1}
-    >
-      {children}
-    </TouchableOpacity>
-  );
-};
 const MainTabNavigator = () => {
   const currentUser = useSelector(state => state.userReducer.user);
   return (
@@ -98,20 +83,26 @@ const MainTabNavigator = () => {
         tabBarIcon: ({ focused, color }) => {
           switch (route.name) {
             case 'Inicio':
-              return <IconHome />;
+              return focused ? <IconHomeBlue /> : <IconHome />;
             case 'MiPerfil':
               return (
                 <Image
                   source={{ uri: currentUser?.profilePicture || 'https://via.placeholder.com/20' }}
-                  style={{ width: 20, height: 20, borderRadius: 10, borderWidth: 1, borderColor: '#ccc' }}
+                  style={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: focused ? '#0866ff' : '#ccc',
+                  }}
                 />
               );
             case 'Grupos':
-              return <IconGroup />;
+              return focused ? <IconGroupBlue /> : <IconGroup />;
             case 'nuevo':
               return <IconPlusQuad />;
             case 'destinos':
-              return <IconEarth />;
+              return focused ? <IconEarthBlue /> : <IconEarth />;
             default:
               return null;
           }
@@ -122,32 +113,33 @@ const MainTabNavigator = () => {
         tabBarLabel: () => null,
       })}
     >
-      <Tab.Screen name="Inicio" component={HomeScreen} options={{
-        headerTitle: () => <HeaderWithIcons />,
-        headerStyle,
-      }} />
+      <Tab.Screen
+        name="Inicio"
+        component={HomeScreen}
+        options={{
+          headerTitle: () => <HeaderWithIcons />,
+          headerStyle,
+        }}
+      />
       <Tab.Screen name="Grupos" component={Grupos} options={{ headerTitleAlign: 'center' }} />
-      <Tab.Screen 
-          name="nuevo" 
-          component={PlaceholderComponent}
-          listeners={({ navigation }) => ({
-            tabPress: e => {
-              e.preventDefault();
-              navigation.navigate('crearGrupo');
-              // navigation.navigate('groupStartEnd')
-            }
-          })}
-          options={{
-            headerTitle: () => <GroupHeader navigation={navigation} step={1}/>,
-            headerLeft: () => (
-              <Header />
-            ),
-            headerStyle,
-          }}
-        />
+      <Tab.Screen
+        name="nuevo"
+        component={PlaceholderComponent}
+        listeners={({ navigation }) => ({
+          tabPress: e => {
+            e.preventDefault();
+            navigation.navigate('crearGrupo');
+          }
+        })}
+        options={{
+          headerTitle: () => <GroupHeader navigation={navigation} step={1} />,
+          headerLeft: () => <Header />,
+          headerStyle,
+        }}
+      />
       <Tab.Screen name="destinos" component={Destinos} options={{ title: 'Destinos', headerTitleAlign: 'center' }} />
-      <Tab.Screen 
-        name="MiPerfil" 
+      <Tab.Screen
+        name="MiPerfil"
         component={DashboardProfile} //PerfilContainer
         options={{ headerShown: false }}
       />

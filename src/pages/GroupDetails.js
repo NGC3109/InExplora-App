@@ -7,8 +7,7 @@ import ImageGallery from '../components/ui/ImageGallery';
 import { formatToThousands } from '../utils/functions';
 import ButtonWithIcon from '../components/ui/ButtonWithIcon';
 import { AlertInfo, AlertSuccess } from '../components/ui/Alert';
-
-const { height } = Dimensions.get('window');
+import Loading from '../components/ui/Loading';
 
 const DetailGroup = ({ navigation, route }) => {
   const { groupId } = route.params;
@@ -31,9 +30,11 @@ const DetailGroup = ({ navigation, route }) => {
 
   if (!groupDetails) {
     return (
-      <SafeAreaView style={styles.container}>
-        <Text>Loading...</Text>
-      </SafeAreaView>
+      <Loading 
+      url="https://storage.googleapis.com/inexplora/inexplora-recursos/loading.gif"
+      size="s"
+      text="Cargando..."
+      />
     );
   }
 
