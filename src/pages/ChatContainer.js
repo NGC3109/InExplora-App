@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, Image, TouchableWithoutFeedback } from 'react-native';
 import { useSelector } from 'react-redux';
 import { styles } from '../styles/ListMessages';
+import NoMessages from '../components/ui/NoMessages';
 
 const Chats = ({ navigation }) => {
   const currentUser = useSelector(state => state.userReducer.user);
@@ -9,7 +10,6 @@ const Chats = ({ navigation }) => {
   const [chats, setChats] = useState([]);
 
   useEffect(() => {
-
     const fetchChats = () => {
       socket.emit("getChatsByUserId", { userId: currentUser.id });
     };
@@ -85,11 +85,15 @@ const Chats = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={chats}
-        renderItem={({ item }) => <UserItem item={item} />}
-        keyExtractor={item => item._id.toString()}
-      />
+      {chats.length === 0 ? (
+        <NoMessages />
+      ) : (
+        <FlatList
+          data={chats}
+          renderItem={({ item }) => <UserItem item={item} />}
+          keyExtractor={item => item._id.toString()}
+        />
+      )}
     </View>
   );
 };

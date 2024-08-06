@@ -116,7 +116,7 @@ export const styles = StyleSheet.create({
     hexImageContainer: {
       width: 165,
       height: 190,
-      marginRight: 16,
+      marginRight: 8,
       borderRadius: 8,
       overflow: 'hidden',
     },
