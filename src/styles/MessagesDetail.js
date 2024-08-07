@@ -159,6 +159,17 @@ export const styles = StyleSheet.create({
       borderRadius: 15,
       maxWidth: '80%',
     },
+    dateContainerFirstMessage: {
+      alignSelf: 'center',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 30,
+      backgroundColor: '#F7F7F9',
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+      borderRadius: 15,
+      maxWidth: '80%',
+    },
     dateText: {
       fontSize: 14,
       color: '#9CA1A8',

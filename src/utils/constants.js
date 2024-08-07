@@ -150,3 +150,8 @@ export const GENRE_TO_CREATE = 'GENRE_TO_CREATE';
 
 export const SET_SOCKET = 'SET_SOCKET';
 export const CLOSE_SOCKET = 'CLOSE_SOCKET';
+
+export const ADD_MESSAGE = 'ADD_MESSAGE';
+export const LOAD_MESSAGES = 'LOAD_MESSAGES';
+export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
+export const UPDATE_MESSAGE_ID = 'UPDATE_MESSAGE_ID';

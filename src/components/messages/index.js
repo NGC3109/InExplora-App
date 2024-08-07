@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   View,
   TextInput,
@@ -57,6 +57,13 @@ const MessageTemplate = ({
   };
 
   const renderMessageItem = ({ item, index }) => {
+    if (item._id === '66b2ad0d7ce983019afb6e5d') {
+      return (
+        <View style={styles.dateContainerFirstMessage}>
+          <Text style={styles.dateText}>¡Bienvenid@s al grupo! Este es su espacio para planificar y organizar su viaje. InExplora les desea mucho éxito en esta emocionante aventura. Fomenten la amistad, cuídense entre sí y disfruten cada momento de esta increíble experiencia. ❤️</Text>
+        </View>
+      );
+    }
     if (item.type === 'date') {
       return (
         <View style={styles.dateContainer}>
@@ -98,7 +105,6 @@ const MessageTemplate = ({
       </View>
     );
   };
-
   return (
     <View style={styles.container}>
       <FlatList
@@ -142,7 +148,7 @@ const MessageTemplate = ({
                 <Icon name="send" style={styles.sendIcon} />
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPressIn={onStartRecord} 
                 onPressOut={onStopRecord} 
                 style={isRecording ? styles.recordingButton : styles.iconButton}

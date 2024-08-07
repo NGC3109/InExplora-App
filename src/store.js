@@ -1,6 +1,9 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
+import { persistStore, persistReducer } from 'redux-persist';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import userReducer from './reducers/users/userReducer';
 import groupReducer from './reducers/groups/groupReducer';
 import socketReducer from './reducers/sockets/socketReducer';
@@ -16,9 +19,15 @@ import dashboardReducer from './reducers/dashboard/dashboardReducers';
 import searchReducer from './reducers/search/searchReducers';
 import categoryReducer from './reducers/category/categoryReducers';
 import initSocketReducer from './reducers/sockets/initSocketReducer';
+import chatReducer from './reducers/chatReducer/chatReducer';
 
+// Configuración de persistencia para el reductor de chat
+const chatPersistConfig = {
+  key: 'chat',
+  storage: AsyncStorage,
+};
 
-// Combinamos los reductores si tienes más de uno
+// Combinamos los reductores, aplicando persistencia al reductor de chat
 const rootReducer = combineReducers({
   userReducer: userReducer,
   groupReducer: groupReducer,
@@ -35,9 +44,22 @@ const rootReducer = combineReducers({
   searchReducer: searchReducer,
   categoryReducer: categoryReducer,
   initSocketReducer: initSocketReducer,
+  chatReducer: persistReducer(chatPersistConfig, chatReducer), // Aplicar persistencia al chatReducer
 });
 
-// Creamos el almacenamiento (store) y aplicamos middleware (thunk en este caso) y herramientas de desarrollo
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+// Configuramos el persistReducer general
+const persistConfig = {
+  key: 'root',
+  storage: AsyncStorage,
+  whitelist: ['chatReducer'], // Añade aquí otros reductores si deseas persistir más datos
+};
 
-export default store;
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+// Creamos el almacenamiento (store) y aplicamos middleware (thunk en este caso) y herramientas de desarrollo
+const store = createStore(persistedReducer, composeWithDevTools(applyMiddleware(thunk)));
+
+// Creamos el persistor
+const persistor = persistStore(store);
+
+export { store, persistor };

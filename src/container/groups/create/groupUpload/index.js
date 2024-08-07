@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useSelector, useDispatch } from 'react-redux';
 import { uploadAllImages } from '../../../../actions/groups/groupAction';
 import CreateGroupTemplate from '../../../../components/groups/create/groupUpload';
+import Loading from '../../../../components/ui/Loading';
 
 const CreateGroupContainer = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -39,14 +40,14 @@ const CreateGroupContainer = ({ navigation }) => {
   const continueButton = () => {
     dispatch(uploadAllImages(images, currentGroup, currentUserId, navigation));
   };
-
   return (
     <>
       {uploading && (
-        <View style={styles.loadingContainer}>
-          <View style={styles.overlay} />
-          <ActivityIndicator size="large" color="#0000ff" style={styles.indicator} />
-        </View>
+         <Loading 
+            url="https://storage.googleapis.com/inexplora/inexplora-recursos/loading.gif"
+            size="s"
+            text="Cargando..."
+          />
       )}
       <CreateGroupTemplate 
         continueButton={continueButton}

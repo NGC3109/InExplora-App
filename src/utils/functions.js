@@ -23,7 +23,6 @@ const capitalizeFirstLetter = (string) => {
 };
 //FUNCION PARA TIEMPO DE MENSAJES DE AUDIO
 export const formatCustomDate = (date) => {
-  console.log('date: ', date);
 
   // Convertir la fecha a un formato ISO reconocido por Moment.js
   const isoDate = moment(new Date(date)).format('YYYY-MM-DD');

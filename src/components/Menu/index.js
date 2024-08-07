@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, View, ActivityIndicator, Image } from 'react-native';
+import { View, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
@@ -55,6 +55,7 @@ import UpdateProfile_Information from '../../container/perfil/update/information
 import Settings from '../../container/perfil/dashboard/settings';
 import { closeSocket, setSocket } from '../../actions/sockets/initSocketActions';
 import CustomTabBarButton from '../ui/CustomTabBarButton';
+import Loading from '../ui/Loading';
 
 
 const Tab = createBottomTabNavigator();
@@ -365,7 +366,13 @@ const Menu = () => {
     if (initializing) setInitializing(false);
   };
 
-  if (initializing) return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}><ActivityIndicator size="large" /></View>;
+  if (initializing) return (
+    <Loading 
+      url="https://storage.googleapis.com/inexplora/inexplora-recursos/loading.gif"
+      size="s"
+      text="Cargando..."
+    />
+  );
 
   return (
     <NavigationContainer>

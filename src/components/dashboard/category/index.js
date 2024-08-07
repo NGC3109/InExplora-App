@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Image, Dimensions, View, ActivityIndicator, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Image, Dimensions, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import MasonryList from '@react-native-seoul/masonry-list';
 import { fetchCategoryByRegion } from '../../../actions/category/categoryActions';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { getRandomHeight } from '../../../utils/functions';
+import Loading from '../../ui/Loading';
 
 const { width } = Dimensions.get('window');
 
@@ -19,7 +20,13 @@ const Categories = () => {
   }, [dispatch, region]);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return (
+            <Loading 
+              url="https://storage.googleapis.com/inexplora/inexplora-recursos/loading.gif"
+              size="s"
+              text="Cargando..."
+            />
+    )
   }
 
   if (error) {

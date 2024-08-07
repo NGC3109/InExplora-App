@@ -1,14 +1,15 @@
-// MessageScreen.js
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
 import MessageTemplate from '../../components/messages';
-import { ObjectId } from 'bson';
 import 'react-native-get-random-values';
 import RNFS from 'react-native-fs';
 import { PermissionsAndroid, Platform } from 'react-native';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import { format } from 'date-fns';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ADD_MESSAGE, LOAD_MESSAGES } from '../../utils/constants';
+import { ObjectId } from 'bson';  // Importar ObjectId de bson
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
@@ -23,10 +24,11 @@ const MessageScreen = () => {
   const [page, setPage] = useState(1);
   const [loadingOldMessages, setLoadingOldMessages] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [isCancelled, setIsCancelled] = useState(false); // Estado de cancelación
+  const [isCancelled, setIsCancelled] = useState(false);
   const scrollViewRef = useRef(null);
   const currentUserId = useSelector(state => state.userReducer.user);
   const socket = useSelector(state => state.initSocketReducer.socket);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const requestPermissions = async () => {
@@ -51,6 +53,21 @@ const MessageScreen = () => {
 
     requestPermissions();
 
+    const loadCachedMessages = async () => {
+      try {
+        const cachedMessages = await AsyncStorage.getItem(`messages_${chatId}`);
+        if (cachedMessages) {
+          const parsedMessages = JSON.parse(cachedMessages);
+          setMessages(parsedMessages);
+          dispatch({ type: LOAD_MESSAGES, payload: parsedMessages });
+        }
+      } catch (error) {
+        console.error('Error loading cached messages:', error);
+      }
+    };
+
+    loadCachedMessages();
+
     const handleConnect = () => {
       console.log('Socket connected');
       socket.emit("joinChat", { chatId });
@@ -63,23 +80,34 @@ const MessageScreen = () => {
       socket.on("connect", handleConnect);
     }
 
-    socket.on("oldMessages", (response) => {
+    socket.on("oldMessages", async (response) => {
       const formattedNewMessages = formatMessages(response.data.map(msg => ({
         ...msg,
         isSentByCurrentUser: msg.sender === currentUserId.id,
         isReceived: msg.receivedBy.includes(currentUserId.id),
         isRead: msg.readBy.includes(currentUserId.id)
       })));
-      setMessages(prevMessages => [...prevMessages, ...formattedNewMessages]);
+
+      setMessages(prevMessages => {
+        const updatedMessages = [...prevMessages, ...formattedNewMessages];
+        const uniqueMessages = removeDuplicateMessages(updatedMessages);
+        AsyncStorage.setItem(`messages_${chatId}`, JSON.stringify(uniqueMessages));
+        dispatch({ type: LOAD_MESSAGES, payload: uniqueMessages });
+        return uniqueMessages;
+      });
       setLoadingOldMessages(false);
     });
 
-    socket.on("newMessage", (newMessage) => {
-      setMessages((prevMessages) => {
+    socket.on("newMessage", async (newMessage) => {
+      console.log("Received new message from server:", newMessage);
+      setMessages(prevMessages => {
         const messageExists = prevMessages.some(msg => msg._id === newMessage._id);
         if (!messageExists) {
           const updatedMessages = [newMessage, ...prevMessages];
-          return formatMessages(updatedMessages);
+          const uniqueMessages = removeDuplicateMessages(updatedMessages);
+          AsyncStorage.setItem(`messages_${chatId}`, JSON.stringify(uniqueMessages));
+          dispatch({ type: ADD_MESSAGE, payload: newMessage });
+          return uniqueMessages;
         }
         return prevMessages;
       });
@@ -118,11 +146,19 @@ const MessageScreen = () => {
     });
   };
 
-  const handleSend = () => {
+  const removeDuplicateMessages = (messages) => {
+    const uniqueMessagesMap = new Map();
+    messages.forEach(msg => uniqueMessagesMap.set(msg._id, msg));
+    return Array.from(uniqueMessagesMap.values());
+  };
+
+  const handleSend = async () => {
     if (!messageText.trim() && !audioFile) return;
 
+    const newMessageId = new ObjectId().toString();  // Generar un ID único usando ObjectId
+
     const newMessage = {
-      _id: new ObjectId().toString(),
+      _id: newMessageId,  // Asignar el ID generado al mensaje
       message: messageText,
       timestamp: new Date(),
       isSentByCurrentUser: true,
@@ -136,13 +172,17 @@ const MessageScreen = () => {
       } : null
     };
 
-    if (socket) {
-      socket.emit("sendMessage", { ...newMessage, chatId });
-    }
-
     setMessages(prevMessages => {
       const updatedMessages = [newMessage, ...prevMessages];
-      return formatMessages(updatedMessages);
+      const uniqueMessages = removeDuplicateMessages(updatedMessages);
+      AsyncStorage.setItem(`messages_${chatId}`, JSON.stringify(uniqueMessages));
+      dispatch({ type: ADD_MESSAGE, payload: newMessage });
+
+      if (socket) {
+        socket.emit("sendMessage", { chatId, sender: currentUserId.id, message: newMessage, audioFile });
+      }
+
+      return uniqueMessages;
     });
 
     setMessageText('');
@@ -161,15 +201,13 @@ const MessageScreen = () => {
 
   const onStartRecord = async () => {
     try {
-      setIsCancelled(false); // Reinicia el estado de cancelación
+      setIsCancelled(false);
       const result = await audioRecorderPlayer.startRecorder();
       audioRecorderPlayer.addRecordBackListener((e) => {
-        console.log('Recording:', e.currentPosition);
         setAudioDuration(e.currentPosition);
         return;
       });
       setIsRecording(true);
-      console.log('Recording started:', result);
     } catch (error) {
       console.error('Error starting recording:', error);
     }
@@ -181,7 +219,6 @@ const MessageScreen = () => {
         const result = await audioRecorderPlayer.stopRecorder();
         audioRecorderPlayer.removeRecordBackListener();
         setIsRecording(false);
-        console.log('Recording stopped:', result);
         const audioBuffer = await RNFS.readFile(result, 'base64');
         setAudioFile({
           buffer: `data:audio/aac;base64,${audioBuffer}`,
@@ -190,7 +227,6 @@ const MessageScreen = () => {
           url: result,
           duration: audioDuration,
         });
-        console.log('result: ', result)
       }
     } catch (error) {
       console.error('Error stopping recording:', error);
@@ -200,12 +236,11 @@ const MessageScreen = () => {
   const onCancelRecord = async () => {
     try {
       if (isRecording) {
-        setIsCancelled(true); // Establece el estado de cancelación
+        setIsCancelled(true);
         await audioRecorderPlayer.stopRecorder();
         audioRecorderPlayer.removeRecordBackListener();
         setIsRecording(false);
         setAudioFile(null);
-        console.log('Recording cancelled');
       }
     } catch (error) {
       console.error('Error cancelling recording:', error);
@@ -216,8 +251,6 @@ const MessageScreen = () => {
     const ids = viewableItems.map(item => item.item._id);
     if (ids.length > 0 && socket) {
       socket.emit("markMessagesRead", { messageIds: ids, userId: currentUserId.id, chatId });
-    } else {
-      console.log('Socket no está conectado o es null:', socket);
     }
   }, [socket, currentUserId.id, chatId]);
 
@@ -241,9 +274,9 @@ const MessageScreen = () => {
       handleSend={handleSend}
       onStartRecord={onStartRecord}
       onStopRecord={onStopRecord}
-      onCancelRecord={onCancelRecord} // Pasa la función de cancelación
+      onCancelRecord={onCancelRecord}
       isRecording={isRecording}
-      recordedAudio={audioFile} // Pasa el audio grabado al componente MessageTemplate
+      recordedAudio={audioFile}
       scrollViewRef={scrollViewRef}
       messages={messages}
       messageText={messageText}
